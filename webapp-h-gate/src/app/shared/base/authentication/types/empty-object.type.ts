@@ -1,0 +1,1 @@
+export declare type EmptyObject = Record<any, never>;

@@ -1,0 +1,13 @@
+<div class="dialog-container mat-elevation-z24">
+
+   <div class="dialog-header">
+      <h2 class="dialog-title">{{title()}}</h2>
+      @if(!subtitle()) {
+      <h6 class="dialog-subtitle"><i [innerHTML]="subtitle()"></i></h6>
+      }
+   </div>
+
+   <div class="dialog-content">
+      <ng-content></ng-content>
+   </div>
+</div>

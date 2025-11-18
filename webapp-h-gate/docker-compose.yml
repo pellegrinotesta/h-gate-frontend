@@ -1,0 +1,16 @@
+version: '0.1'
+
+services:
+  frontend:
+    build:
+      context: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - angular_cache:/app/.angular/cache
+    ports:
+      - "4200:4200"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+volumes:
+  angular_cache:

@@ -1,0 +1,33 @@
+.dialog-container {
+    padding: 24px;
+    max-width: 600px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dialog-header {
+    margin-bottom: 16px;
+
+    .dialog-title {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .dialog-subtitle {
+        font-size: 14px;
+        color: #666;
+        margin: 4px 0 0 0;
+    }
+}
+
+.dialog-content {
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #333;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+}

@@ -1,0 +1,13 @@
+export enum AdvancedSearchOperator {
+    CONTAINS = "CONTAINS",
+    ENDS_WITH = "ENDS_WITH",
+    EQUALS = "EQUALS",
+    IS_LIKE = "IS_LIKE",
+    NOT_EQUALS = "NOT_EQUALS",
+    STARTS_WITH = "STARTS_WITH",
+    LATEST_DATE = 'LATEST_DATE',
+    IS_DATE_GTS = 'IS_DATE_GTS',
+    IS_DATE_LTS = 'IS_DATE_LTS',
+    IS_NULL = 'IS_NULL',
+    IS_DATE_IN = 'IS_DATE_IN'
+}
