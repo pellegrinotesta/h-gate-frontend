@@ -1,0 +1,112 @@
+<div class="d-flex flex-column min-vh-100 bg-light">
+    <nav class="navbar navbar-dark shadow-sm" style="background-color: #006699;">
+        <div class="container-fluid">
+            <span class="navbar-brand fw-bold d-flex align-items-center">
+                <img src="/assets/adusurc.jpg" alt="Logo ADISU" width="50" class="me-2" />
+                ADISU Rc
+            </span>
+        </div>
+    </nav>
+    <main class="flex-grow-1 d-flex justify-content-center align-items-center">
+        <div class="card shadow p-4" style="width: 400px;">
+
+            <!-- Step 1: Email e Password -->
+            @if(!showOtpForm) {
+            <div>
+                <h3 class="text-center mb-4" style="color: #006699;">Accesso al Portale</h3>
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmitCredentials()">
+                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                        <mat-label>Email istituzionale</mat-label>
+                        <input matInput type="email" formControlName="email" required />
+                        @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                        <mat-error>Email non valida</mat-error>
+                        }
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100 mb-4">
+                        <mat-label>Password</mat-label>
+                        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+                            required />
+                        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                        @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                        <mat-error>Campo obbligatorio</mat-error>
+                        }
+                    </mat-form-field>
+                    <button mat-flat-button color="primary" class="w-100 mb-3"
+                        [disabled]="loginForm.invalid || isLoading">
+                        @if(isLoading) {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        }
+                        Avanti
+                    </button>
+                    <p class="text-center">
+                        <a routerLink="/register" class="text-muted small">Registrati qui</a>
+                    </p>
+                    <!-- <div class="text-center">
+                        <a href="#" class="text-muted small">Hai dimenticato la password?</a>
+                    </div> -->
+                </form>
+            </div>
+            }
+
+            <!-- Step 2: OTP -->
+            <!-- @if(showOtpForm) {
+            <div>
+                <button mat-icon-button (click)="backToLogin()" class="mb-2">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <h3 class="text-center mb-2" style="color: #006699;">Verifica OTP</h3>
+                <p class="text-center text-muted small mb-4">
+                    Inserisci il codice di verifica inviato a<br>
+                    <strong>{{ maskedEmail }}</strong>
+                </p>
+
+                <form [formGroup]="otpForm" (ngSubmit)="onSubmitOtp()">
+                    <div class="mb-4">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Codice OTP</mat-label>
+                            <input #otpInput matInput type="text" maxlength="6" formControlName="otp"
+                                autocomplete="one-time-code" inputmode="numeric" required />
+                            @if(otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched) {
+                            <mat-error>Inserisci un codice OTP valido (6 cifre)</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    @if(otpError) {
+                    <div class="alert alert-danger text-center small py-2 mb-3">
+                        {{ otpError }}
+                    </div>
+                    }
+
+                    <button mat-flat-button color="primary" class="w-100 mb-3"
+                        [disabled]="otpForm.invalid || isLoading">
+                        @if(isLoading) {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        }
+                        Verifica
+                    </button>
+
+                    <div class="text-center">
+                        @if(canResendOtp) {
+                        <button mat-button color="primary" type="button" (click)="resendOtp()" class="small">
+                            Invia nuovamente il codice
+                        </button>
+                        } @else {
+                        <p class="text-muted small mb-0">
+                            Puoi richiedere un nuovo codice tra {{ resendTimer }}s
+                        </p>
+                        }
+                    </div>
+                </form>
+            </div>
+            } -->
+
+
+        </div>
+    </main>
+    <footer class="text-center py-3 small text-muted border-top bg-white">
+        © 2025 ADISU Rc - Area Riservata
+    </footer>
+</div>

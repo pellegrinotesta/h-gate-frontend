@@ -21,6 +21,8 @@
     "@angular/platform-browser-dynamic": "^19.1.0",
     "@angular/router": "^19.1.0",
     "@auth0/angular-jwt": "^5.2.0",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "crypto-js": "^4.2.0",
     "exceljs": "^4.4.0",
     "jwt-decode": "^4.0.0",

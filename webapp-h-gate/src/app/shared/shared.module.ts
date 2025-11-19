@@ -5,7 +5,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { HasRoleDirective } from "./directives/has-role.directive";
+import modules from "tslib";
 
 const components = [
     CommonModule,
@@ -17,8 +17,11 @@ const components = [
 ];
 
 @NgModule({
-    imports: [...components],
-    declarations: [HasRoleDirective],
-    exports: [...components, HasRoleDirective]
+    imports: [
+        ...components,
+    ],
+    exports: [
+        ...components,
+    ]
 })
 export class SharedModule { }

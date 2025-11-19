@@ -1,0 +1,36 @@
+<div class="d-flex flex-column min-vh-100">
+    <nav class="navbar navbar-expand-lg navbar-dark w-100 shadow-sm" style="background-color: #006699;">
+        <div class="container-fluid">
+            <img src="/assets/adusurc.jpg" alt="Logo ADISU" width="60" class="me-3">
+            <app-menu></app-menu>
+
+            <div class="ms-auto d-flex align-items-center">
+                <!-- @if(me) {
+                <div class="me-3 text-start small" style="color: #fff;">
+                    <div>{{me.}} {{me.last_name}}</div>
+                    <div>{{me.email}}</div>
+                </div>
+                } -->
+
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="profile icon" class="btn btn-link p-0">
+                    <mat-icon style="color: #fff;">account_circle</mat-icon>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow-1 container my-5">
+        <router-outlet></router-outlet>
+    </main>
+</div>
+
+<mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/profile">
+        <mat-icon>engineering</mat-icon>
+        Profile
+    </button>
+    <button mat-menu-item (click)="onLogout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+    </button>
+</mat-menu>

@@ -1,47 +1,51 @@
 import { inject, Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from "@angular/router";
-import { Observable, of } from "rxjs";
-import { User } from "../../models/user.model";
-import { UserService } from "../../services/user.service";
-import { AuthenticatedUser } from "../../models/authenticated-user.model";
-import { RoutesEnum } from "../enums/routes.enum";
+import { ActivatedRouteSnapshot, CanActivate, CanActivateFn, RouterStateSnapshot } from "@angular/router";
+import { concatMap, Observable, of } from "rxjs";
+import { AuthFacadeService } from "../services/auth/auth-facade.service";
+import { AuthService } from "../services/auth/auth.service";
 
 @Injectable({
     providedIn: 'root'
 })
-export class RoleGuard {
+export class RoleGuard implements CanActivate {
 
-    currentUser: User | undefined;
+   private authService;
+    private authFacade;
 
-    readonly userService = inject(UserService);
-    readonly router = inject(Router);
-
+    constructor(authService: AuthService, authFacade: AuthFacadeService) {
+        this.authService = authService;
+        this.authFacade = authFacade;
+    }
+    
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-        const currentUserInfo: AuthenticatedUser | null = this.userService.getAuthenticatedUser();
-        if (!currentUserInfo) {
-            this.router.navigate([RoutesEnum.LOGIN]);
-            return of(false);
-        }
-
-        return of(this.hasPermission(route, currentUserInfo));
+        const roles = this.getRolesFromRoute(route);
+        const logicalOp = this.getLogicalOperatorFromRoute(route);
+        console.log('[RoleGuard] roles:', roles, 'logicalOp:', logicalOp);
+        return this.authFacade.getUser().pipe(concatMap((user) => {
+            console.log('[RoleGuard] user:', user);
+            const hasRole = roles?.length > 0 && !!user && this.authService.hasRole(roles, user, logicalOp);
+            console.log('[RoleGuard] access granted?', hasRole);
+            return of(hasRole);
+        }));
     }
-
-    hasPermission(route: ActivatedRouteSnapshot, currentUserInfo: AuthenticatedUser): boolean {
-        const userGroups: string = currentUserInfo?.role;
-        const requiredGroups = this.getRolesFromRoute(route);
-        const hasPermission = requiredGroups.some((reqGroup: string) => userGroups.includes(reqGroup));
-        if (!hasPermission)
-            this.router.navigate(['/profile']);
-        return hasPermission;
-    }
+    
 
     getRolesFromRoute(route: ActivatedRouteSnapshot) {
-        const rolesAttributeName = this.getGroupsAttributeName();
-        return route.data[rolesAttributeName] || [];
+        const rolesAttributeName = this.getRolesAttributeName();
+        return route.data[rolesAttributeName];
     }
 
-    getGroupsAttributeName(): string {
-        return 'groups';
+    getLogicalOperatorFromRoute(route: ActivatedRouteSnapshot) {
+        const logicalOperatorAttributeName = this.getLogicalOperatorAttributeName();
+        return route.data[logicalOperatorAttributeName] || "OR";
+    }
+
+    getRolesAttributeName(): string {
+        return 'roles';
+    }
+    
+    getLogicalOperatorAttributeName(): string {
+        return 'logicalOperator';
     }
 }
 
