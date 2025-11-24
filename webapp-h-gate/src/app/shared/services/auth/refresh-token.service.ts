@@ -22,7 +22,7 @@ export class RefreshTokenService {
     private readonly jwtHelperService: JwtHelperService
   ) {
     authService.userLoggedIn.subscribe(userLoggedIn => {
-      if(userLoggedIn) {
+      if (userLoggedIn) {
         this.scheduleSilentRefresh();
       }
     });
@@ -31,7 +31,16 @@ export class RefreshTokenService {
   private refreshToken(): void {
     const storedUser = this.authService.getStoredUsed();
     if (storedUser) {
-      this.httpClient.put<AuthenticatedUser>(environment.endpoints.auth, {}).subscribe({
+      const token = storedUser.authentication; // il JWT decriptato
+      this.httpClient.put<AuthenticatedUser>(
+        environment.endpoints.auth,
+        {},
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      ).subscribe({
         next: (user: AuthenticatedUser) => {
           this.authService.storeUser(user);
         },
@@ -69,5 +78,5 @@ export class RefreshTokenService {
       }
     }
   }
-  
+
 }

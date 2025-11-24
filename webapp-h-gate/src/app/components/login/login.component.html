@@ -2,8 +2,7 @@
     <nav class="navbar navbar-dark shadow-sm" style="background-color: #006699;">
         <div class="container-fluid">
             <span class="navbar-brand fw-bold d-flex align-items-center">
-                <img src="/assets/adusurc.jpg" alt="Logo ADISU" width="50" class="me-2" />
-                ADISU Rc
+                <img src="/assets/logo.svg" alt="Logo H-GATE" width="50" class="me-2" />
             </span>
         </div>
     </nav>
@@ -11,12 +10,12 @@
         <div class="card shadow p-4" style="width: 400px;">
 
             <!-- Step 1: Email e Password -->
-            @if(!showOtpForm) {
+
             <div>
                 <h3 class="text-center mb-4" style="color: #006699;">Accesso al Portale</h3>
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmitCredentials()">
                     <mat-form-field appearance="outline" class="w-100 mb-3">
-                        <mat-label>Email istituzionale</mat-label>
+                        <mat-label>Email</mat-label>
                         <input matInput type="email" formControlName="email" required />
                         @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
                         <mat-error>Email non valida</mat-error>
@@ -48,7 +47,7 @@
                     </div> -->
                 </form>
             </div>
-            }
+
 
             <!-- Step 2: OTP -->
             <!-- @if(showOtpForm) {
@@ -107,6 +106,6 @@
         </div>
     </main>
     <footer class="text-center py-3 small text-muted border-top bg-white">
-        © 2025 ADISU Rc - Area Riservata
+        © 2025 H-GATE - Area Riservata
     </footer>
 </div>

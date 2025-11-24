@@ -12,6 +12,8 @@ import { RefreshTokenService } from './shared/services/auth/refresh-token.servic
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt';
 import { BrowserModule } from '@angular/platform-browser';
 import { TokenExpiredInterceptor } from './shared/interceptors/tokenExpired.interceptor';
+import { errorInterceptor } from './shared/interceptors/error.interceptor';
+import { authInterceptor } from './shared/interceptors/auth.interceptor';
 
 registerLocaleData(localeIt);
 
@@ -47,12 +49,7 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withPreloading(PreloadAllModules)
     ),
-    provideHttpClient(
-      withInterceptorsFromDi(),
-      withInterceptors([
-        //errorInterceptor,
-      ])
-    ),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     importProvidersFrom(
       BrowserModule,
       JwtModule.forRoot({

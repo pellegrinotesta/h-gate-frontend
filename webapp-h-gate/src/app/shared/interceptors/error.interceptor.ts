@@ -1,21 +1,22 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { SnackbarService } from '../services/snackbar.service';
 import { SNACKBAR } from '../enums/snackbar-class.enum';
+import { AuthService } from '../services/auth/auth.service';
 
 const postWithoutConfirm = ['check-tags'];
 
 export function errorInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
 
     const snackBar = inject(SnackbarService);
-    //const userService = inject(UserService);
+    const authService = inject(AuthService);
 
     return next(req).pipe(
         catchError((res) => {
         if ([401].includes(res.status)) {
             snackBar.openSnackBar('Non Autorizzato', 'Chiudi', SNACKBAR.DANGER);
-            //userService.logout();
+            authService.logout();
         }
         else if ([403].includes(res.status)) {
             snackBar.openSnackBar('Non Autorizzato', 'Chiudi', SNACKBAR.DANGER);

@@ -6,6 +6,8 @@ export const environment = {
         auth: `${apiUrl}/authentication`,
         password: `${apiUrl}/password/`,
         roles: `${apiUrl}/roles/`,
+        profile: `${apiUrl}/profile`,
+        user: `${apiUrl}/user`,
     },
     jwt: {
         encryptionKey: 'Qs23RBNF330ms00n',

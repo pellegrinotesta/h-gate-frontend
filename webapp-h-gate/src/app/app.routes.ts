@@ -9,10 +9,19 @@ export const routes: Routes = [
         path: '',
         component: HomepageComponent,
         canActivate: [authGuard],
-        children: []
+        children: [
+            {
+                path: RoutesEnum.PROFILE,
+                loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
+            },
+        ]
     },
     {
         path: RoutesEnum.LOGIN,
         component: LoginComponent
+    },
+    {
+        path: '**',
+        redirectTo: RoutesEnum.PROFILE
     }
 ];

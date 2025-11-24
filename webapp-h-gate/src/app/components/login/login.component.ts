@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoginService } from '../../services/login.service';
 import { AuthRequest } from '../../models/auth-request.model';
+import { finalize, takeUntil } from 'rxjs';
+import { AuthenticatedUser } from '../../models/authenticated-user.model';
+import { AuthService } from '../../shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +34,7 @@ export class LoginComponent extends FormBasePageComponent {
   @ViewChild('otpInput') otpInput!: ElementRef;
 
   private loginService = inject(LoginService);
+  private authService = inject(AuthService);
 
   loginForm!: FormGroup;
   otpForm!: FormGroup;
@@ -73,20 +77,16 @@ export class LoginComponent extends FormBasePageComponent {
       password: this.loginForm.value.password!
     };
 
-    this.loginService.login(userRequest).subscribe({
-      next: (res: any) => {
-        this.isLoading = false;
-        this.maskEmail(userRequest.username);
-        this.showOtpForm = true;
-        this.startResendTimer();
-
-        setTimeout(() => this.otpInput?.nativeElement.focus(), 100);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        console.error('Login error:', err);
+    this.loginService.login(userRequest).pipe(
+      takeUntil(this.onDestroy$),
+      finalize(() => {
+        this.isLoading = false
       }
-    });
+      )
+    ).subscribe((user: AuthenticatedUser) => {
+      this.authService.storeUser(user);
+      this.router.navigate([RoutesEnum.PROFILE]);
+    })
   }
 
   // onSubmitOtp() {

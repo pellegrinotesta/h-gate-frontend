@@ -2,7 +2,7 @@
     <mat-toolbar color="primary" style="background-color: #006699;">
         @for(item of menuItems; track item) {
         <button mat-button [routerLink]="item.link" matTooltip="{{ item.tooltip }}" matTooltipPosition="below"
-            class="menu-item-link" style="color: #fff;" *hasRole="item.permission">
+            class="menu-item-link" style="color: #fff;">
             {{ item.title }}
         </button>
         }
