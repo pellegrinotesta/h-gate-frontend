@@ -14,8 +14,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { TokenExpiredInterceptor } from './shared/interceptors/tokenExpired.interceptor';
 import { errorInterceptor } from './shared/interceptors/error.interceptor';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
+import { cacheInterceptorFn } from './shared/interceptors/cache.interceptor';
 
 registerLocaleData(localeIt);
+
+export function tokenGetter() {
+  return localStorage.getItem('encryptedUser'); // o 'encryptedUser', se ci salvi il JWT lì
+}
 
 export const IT_DATE_FORMATS = {
   parse: { dateInput: 'DD/MM/YYYY' },
@@ -49,13 +54,24 @@ export const appConfig: ApplicationConfig = {
       withComponentInputBinding(),
       withPreloading(PreloadAllModules)
     ),
-    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    provideHttpClient(
+      withInterceptorsFromDi(),
+      withInterceptors([cacheInterceptorFn])
+    ),
     importProvidersFrom(
       BrowserModule,
       JwtModule.forRoot({
         jwtOptionsProvider: {
           provide: JWT_OPTIONS,
-          useFactory: jwtOptionsFactory,
+          useFactory: (authService: AuthService) => {
+            return {
+              tokenGetter: () => {
+                const storedUser = authService.getEncryptedStoredUsed();
+                return storedUser?.authentication;
+              },
+              allowedDomains: environment.jwt.allowedDomain
+            };
+          },
           deps: [AuthService]
         }
       })
@@ -65,9 +81,9 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: TokenExpiredInterceptor, multi: true },
     {
       provide: APP_INITIALIZER,
-      useFactory: appInitializerFactory,
-      deps: [RefreshTokenService],
-      multi: true
+      useFactory: (refreshTokenService: RefreshTokenService) => () => refreshTokenService.scheduleSilentRefresh(),
+      multi: true,
+      deps: [RefreshTokenService]
     },
     provideRouter(routes) // opzionale se usi standalone routing
   ]

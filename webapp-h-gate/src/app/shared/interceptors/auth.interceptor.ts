@@ -1,9 +1,16 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
+export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) {
 
-    const token = localStorage.getItem('mate_token');
+    const storedUser = localStorage.getItem('encryptedUser');
+    let token: string | null = null;
+
+    if (storedUser) {
+        const user = JSON.parse(storedUser);
+        token = user.authentication;      // <── QUI il vero token criptato
+    }
+
     const authReq = token
         ? req.clone({
             setHeaders: {

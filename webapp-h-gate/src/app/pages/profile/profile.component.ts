@@ -6,6 +6,7 @@ import { BasePageComponent } from '../../shared/components/base/base-page.compon
 import { User } from '../../models/user.model';
 import { ProfileService } from '../../services/profile.service';
 import { AuthFacadeService } from '../../shared/services/auth/auth-facade.service';
+import { AuthService } from '../../shared/services/auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -24,6 +25,7 @@ export class ProfileComponent extends BasePageComponent {
   displayName: string = '';
   readonly profileService = inject(ProfileService);
   readonly authFacadeService = inject(AuthFacadeService);
+  readonly authService = inject(AuthService);
 
   override ngOnInit(): void {
     this.loadProfile();
@@ -31,7 +33,7 @@ export class ProfileComponent extends BasePageComponent {
 
   loadProfile(): void {
 
-     console.log('User profile loaded:', this.authFacadeService.getUser());
+     console.log('User profile loaded:', this.authService.getStoredUsed());
     this.profileService.get().subscribe({
       next: (user: User) => {
         this.currentUser = user;
