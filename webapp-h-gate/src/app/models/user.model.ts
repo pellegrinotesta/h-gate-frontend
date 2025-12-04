@@ -1,3 +1,4 @@
+import { UserRole } from "../shared/enums/user-role.enum";
 import { BaseModel } from "../shared/models/base-model";
 
 export interface User extends BaseModel {
@@ -10,8 +11,9 @@ export interface User extends BaseModel {
     indirizzo: string;
     citta: string;
     cap: string;
-    provincia: string; 
-    isActive: boolean;
-    isVerified: boolean;
+    provincia: string;
+    roles: UserRole[];
+    active: boolean;
+    verified: boolean;
 
 }

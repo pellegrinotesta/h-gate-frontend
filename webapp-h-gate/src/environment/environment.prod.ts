@@ -1,4 +1,4 @@
-export const apiUrl = 'http://localhost:8080/h-gate';
+export const apiUrl = 'http://localhost:8080';
 
 export const environment = {
   production: true,
