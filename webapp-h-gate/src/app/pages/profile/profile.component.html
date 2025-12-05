@@ -79,7 +79,6 @@
     <!--Tab Content-->
     <div class="tab-content">
         @if(activeTab() === 'general') {
-
         <mat-card class="shadow-sm">
             <mat-card-content>
                 <h5 class="mb-4">Informazioni Personali</h5>
@@ -89,12 +88,206 @@
                         <input matInput formControlName="nome" [readonly]="!editMode()">
                     </mat-form-field>
 
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Cognome</mat-label>
+                        <input matInput formControlName="cognome" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Email</mat-label>
+                        <input matInput type="email" formControlName="email" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Telefono</mat-label>
+                        <input matInput formControlName="telefono" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-md-6">
+                        <mat-label>Data di nascita</mat-label>
+
+                        <input matInput [matDatepicker]="picker" formControlName="dataNascita"
+                            [readonly]="!editMode()" />
+
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Indirizzo</mat-label>
+                        <input matInput formControlName="indirizzo" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-4" appearance="outline">
+                        <mat-label>Città</mat-label>
+                        <input matInput formControlName="citta" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-4" appearance="outline">
+                        <mat-label>Provincia</mat-label>
+                        <input matInput formControlName="provincia" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-4" appearance="outline">
+                        <mat-label>CAP</mat-label>
+                        <input matInput formControlName="cap" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    @if (editMode()) {
+                    <div class="col-12 text-end mt-3">
+                        <button mat-stroked-button color="warn" (click)="toggleEditMode()"
+                            type="button">Annulla</button>
+                        <button mat-flat-button color="primary" class="ms-2" type="submit">Salva</button>
+                    </div>
+                    }
+
+                </form>
+            </mat-card-content>
+        </mat-card>
+        }
+
+        @else if(activeTab() === 'specific' && isPaziente()) {
+        <mat-card class="shadow-sm">
+            <mat-card-content>
+                <form [formGroup]="specificForm" class="row g-3" (ngSubmit)="saveSpecificInfo()">
+
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Codice Fiscale</mat-label>
+                        <input matInput maxlength="16" formControlName="codiceFiscale" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Gruppo sanguigno</mat-label>
+                        <mat-select formControlName="gruppoSanguigno" [disabled]="!editMode()">
+                            <mat-option></mat-option>
+                            <mat-option value="A+">A+</mat-option>
+                            <mat-option value="A-">A-</mat-option>
+                            <mat-option value="B+">B+</mat-option>
+                            <mat-option value="B-">B-</mat-option>
+                            <mat-option value="AB+">AB+</mat-option>
+                            <mat-option value="AB-">AB-</mat-option>
+                            <mat-option value="0+">0+</mat-option>
+                            <mat-option value="0-">0-</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Altezza (cm)</mat-label>
+                        <input matInput type="number" formControlName="altezzaCm" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Peso (kg)</mat-label>
+                        <input matInput type="number" formControlName="pesoKg" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12" appearance="outline">
+                        <mat-label>Allergie</mat-label>
+                        <textarea matInput rows="3" formControlName="allergie" [readonly]="!editMode()"></textarea>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12" appearance="outline">
+                        <mat-label>Patologie Croniche</mat-label>
+                        <textarea matInput rows="3" formControlName="patologieCroniche"
+                            [readonly]="!editMode()"></textarea>
+                    </mat-form-field>
+
+                    @if (editMode()) {
+                    <div class="col-12 text-end mt-3">
+                        <button mat-stroked-button color="warn" (click)="toggleEditMode()"
+                            type="button">Annulla</button>
+                        <button mat-flat-button color="primary" type="submit">Salva</button>
+                    </div>
+                    }
+
                 </form>
 
             </mat-card-content>
         </mat-card>
+        }
 
+        @else if(activeTab() === 'specific' && isMedico()) {
 
+        <mat-card class="shadow-sm">
+            <mat-card-content>
+                <form [formGroup]="specificForm" class="row g-3" (ngSubmit)="saveSpecificInfo()">
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Specializzazione</mat-label>
+                        <input matInput formControlName="specializzazione" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Numero Albo</mat-label>
+                        <input matInput formControlName="numeroAlbo" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Università</mat-label>
+                        <input matInput formControlName="universita" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Anno Laurea</mat-label>
+                        <input matInput type="number" formControlName="annoLaurea" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-12" appearance="outline">
+                        <mat-label>Biografia</mat-label>
+                        <textarea matInput rows="3" formControlName="bio" [readonly]="!editMode()"></textarea>
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Durata visita (min)</mat-label>
+                        <input matInput type="number" formControlName="durataVisitaMinuti" [readonly]="!editMode()">
+                    </mat-form-field>
+
+                    <!-- <mat-checkbox class="col-md-6 mt-4" formControlName="isDisponibile" [disabled]="!editMode()">
+                        Disponibile
+                    </mat-checkbox> -->
+
+                    @if (editMode()) {
+                    <div class="col-12 text-end mt-3">
+                        <button mat-stroked-button color="warn" (click)="toggleEditMode()"
+                            type="button">Annulla</button>
+                        <button mat-flat-button color="primary" type="submit">Salva</button>
+                    </div>
+                    }
+                </form>
+            </mat-card-content>
+        </mat-card>
+        }
+
+        @else if(activeTab() === 'security') {
+        <mat-card class="shadow-sm">
+            <mat-card-content>
+                <form [formGroup]="passwordForm" class="row g-3" (ngSubmit)="changePassword()">
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Password attuale</mat-label>
+                        <input matInput type="password" formControlName="oldPassword">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Nuova password</mat-label>
+                        <input matInput type="password" formControlName="newPassword">
+                    </mat-form-field>
+
+                    <mat-form-field class="col-md-6" appearance="outline">
+                        <mat-label>Conferma password</mat-label>
+                        <input matInput type="password" formControlName="confirmPassword">
+                    </mat-form-field>
+
+                    <div class="col-12 text-end mt-3">
+                        <button mat-flat-button color="primary" type="submit" [disabled]="passwordForm.invalid">
+                            Cambia Password
+                        </button>
+                    </div>
+                </form>
+            </mat-card-content>
+
+        </mat-card>
         }
 
     </div>

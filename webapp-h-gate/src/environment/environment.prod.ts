@@ -3,13 +3,18 @@ export const apiUrl = 'http://localhost:8080';
 export const environment = {
   production: true,
   endpoints: {
-    login: `${apiUrl}/login`,
-    user: `${apiUrl}/users`,
-    verify_otp: `${apiUrl}/verify-otp`,
-    announcements: `${apiUrl}/announcements`,
-    application: `${apiUrl}/application`,
-    classification: `${apiUrl}/classification`,
-    dashboard: `${apiUrl}/dashboard`,
-    audit_log: `${apiUrl}/audit-logs`
+    auth: `${apiUrl}/authentication`,
+    password: `${apiUrl}/password/`,
+    roles: `${apiUrl}/roles/`,
+    profile: `${apiUrl}/profile`,
+    user: `${apiUrl}/user`,
+    medico: `${apiUrl}/medico`
   },
+  jwt: {
+    encryptionKey: 'Qs23RBNF330ms00n',
+    allowedDomain: [apiUrl, apiUrl.replace('http://', '')],
+    refresh: {
+      minutesBeforeTokenExpiration: 8
+    }
+  }
 };

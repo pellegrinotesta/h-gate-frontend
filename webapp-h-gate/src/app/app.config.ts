@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { registerLocaleData } from '@angular/common';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { AuthService } from './shared/services/auth/auth.service';
 import { environment } from '../environment/environment';
 import { RefreshTokenService } from './shared/services/auth/refresh-token.service';
@@ -48,6 +48,7 @@ export function appInitializerFactory(refreshTokenService: RefreshTokenService) 
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideNativeDateAdapter(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
       routes,
