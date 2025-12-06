@@ -19,6 +19,20 @@ export class FormConfigs {
             colClass: 'col-md-6'
         },
         {
+            name: 'password',
+            label: 'Password',
+            type: 'password',
+            validators: [Validators.required, Validators.minLength(8)],
+            colClass: 'col-md-6'
+          },
+          {
+            name: 'confirmPassword',
+            label: 'Conferma Password',
+            type: 'password',
+            validators: [Validators.required],
+            colClass: 'col-md-6'
+          },
+        {
             name: 'email',
             label: 'Email',
             type: 'email',

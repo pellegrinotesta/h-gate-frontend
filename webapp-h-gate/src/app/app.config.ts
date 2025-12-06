@@ -57,7 +57,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideHttpClient(
       withInterceptorsFromDi(),
-      withInterceptors([cacheInterceptorFn])
+      withInterceptors([authInterceptor, cacheInterceptorFn])
     ),
     importProvidersFrom(
       BrowserModule,

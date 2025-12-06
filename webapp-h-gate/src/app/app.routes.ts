@@ -22,6 +22,10 @@ export const routes: Routes = [
         component: LoginComponent
     },
     {
+        path: RoutesEnum.REGISTER,
+        loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent)
+    },
+    {
         path: '**',
         redirectTo: RoutesEnum.PROFILE
     }
