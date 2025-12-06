@@ -4,14 +4,12 @@ import { MatCardModule } from '@angular/material/card';
 import { BasePageComponent } from '../../shared/components/base/base-page.component';
 import { User } from '../../models/user.model';
 import { ProfileService } from '../../services/profile.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoaderComponent } from '../../components/loader/loader.component';
 import { UserRole } from '../../shared/enums/user-role.enum';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { Paziente } from '../../models/paziente.model';
-import { Medico } from '../../models/medico.model';
-import { Amministratore } from '../../models/amministratore.model';
 import { MedicoService } from '../../services/medico.service';
+import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
+import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { FormConfigs } from '../../shared/constants/form-config.constant';
 
 @Component({
   selector: 'app-profile',
@@ -19,8 +17,7 @@ import { MedicoService } from '../../services/medico.service';
     SharedModule,
     MatCardModule,
     LoaderComponent,
-    ReactiveFormsModule,
-    MatDatepickerModule
+    GenericFormComponent
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -29,16 +26,24 @@ export class ProfileComponent extends BasePageComponent {
 
   readonly profileService = inject(ProfileService);
   readonly medicoService = inject(MedicoService);
-  private fb = inject(FormBuilder);
 
   user = signal<User | null>(null);
-  medico = signal<Medico | null>(null);
   editMode = signal<boolean>(false);
-  activeTab = signal<string>('personal');
+  activeTab = signal<string>('general');
 
-  generalForm!: FormGroup;
-  specificForm!: FormGroup;
-  passwordForm!: FormGroup;
+  // Configurazioni dei form
+  readonly generalInfoFields = FormConfigs.GENERAL_INFO_FIELDS;
+  readonly patientInfoFields = FormConfigs.PATIENT_INFO_FIELDS;
+  readonly doctorInfoFields = FormConfigs.DOCTOR_INFO_FIELDS;
+  readonly passwordChangeFields = FormConfigs.PASSWORD_CHANGE_FIELDS;
+
+  // Custom validator per il form password
+  passwordMatchValidator: ValidatorFn = (control: AbstractControl) => {
+    const group = control as FormGroup;
+    const newPass = group.get('newPassword')?.value;
+    const confirmPass = group.get('confirmPassword')?.value;
+    return newPass === confirmPass ? null : { passwordMismatch: true };
+  };
 
   isPaziente = computed(() => this.user()?.roles.includes(UserRole.PAZIENTE) ?? false);
   isMedico = computed(() => this.user()?.roles.includes(UserRole.MEDICO) ?? false);
@@ -50,16 +55,16 @@ export class ProfileComponent extends BasePageComponent {
   });
 
   override ngOnInit(): void {
-    this.initForms();
     this.loadProfile();
   }
 
   loadDetailsMedico() {
     this.medicoService.findMedicoByUserId().subscribe({
       next: (res) => {
-        this.medico.set(res.data);
-        this.patchForms(this.user()!);
-
+        // Merge i dati medico con user
+        if (this.user()) {
+          this.user.set({ ...this.user()!, ...res.data });
+        }
         this.isLoading = false;
       },
       error: (err) => {
@@ -68,32 +73,6 @@ export class ProfileComponent extends BasePageComponent {
         this.isLoading = false;
       }
     });
-  }
-
-  initForms(): void {
-    this.generalForm = this.fb.group({
-      nome: ['', [Validators.required, Validators.minLength(2)]],
-      cognome: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, Validators.email]],
-      telefono: ['', [Validators.pattern(/^\+?[0-9]{10,15}$/)]],
-      dataNascita: [''],
-      indirizzo: [''],
-      citta: [''],
-      provincia: ['', [Validators.maxLength(2)]],
-      cap: ['', [Validators.pattern(/^[0-9]{5}$/)]]
-    });
-
-    this.passwordForm = this.fb.group({
-      oldPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', Validators.required]
-    }, { validators: this.passwordMatchValidator })
-  }
-
-  passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
-    const newPass = group.get('newPassword')?.value;
-    const confirmPass = group.get('confirmPassword')?.value;
-    return newPass === confirmPass ? null : { passwordMismatch: true };
   }
 
   loadProfile(): void {
@@ -105,7 +84,6 @@ export class ProfileComponent extends BasePageComponent {
         if (user.roles.includes(UserRole.MEDICO)) {
           this.loadDetailsMedico();
         } else {
-          this.patchForms(user);
           this.isLoading = false;
         }
       },
@@ -116,84 +94,55 @@ export class ProfileComponent extends BasePageComponent {
     });
   }
 
-
-  patchForms(user: User): void {
-    this.generalForm.patchValue({
-      nome: user.nome,
-      cognome: user.cognome,
-      email: user.email,
-      telefono: user.telefono,
-      dataNascita: user.dataNascita,
-      indirizzo: user.indirizzo,
-      citta: user.citta,
-      provincia: user.provincia,
-      cap: user.cap
-    });
-
-    if (this.isPaziente() && this.user()) {
-      const paziente = this.user() as Paziente;
-      this.specificForm = this.fb.group({
-        codiceFiscale: [paziente.codiceFiscale, [Validators.required, Validators.minLength(16)]],
-        gruppoSanguigno: [paziente.gruppoSanguigno],
-        altezzaCm: [paziente.altezzaCm, [Validators.min(50), Validators.max(250)]],
-        pesoKg: [paziente.pesoKg, [Validators.min(2), Validators.max(300)]],
-        allergie: [paziente.allergie],
-        patologieCroniche: [paziente.patologieCroniche]
-      });
-    } else if (this.isMedico() && this.user()) {
-      const medico = this.user() as Medico;
-      this.specificForm = this.fb.group({
-        specializzazione: [medico.specializzazione, Validators.required],
-        numeroAlbo: [medico.numeroAlbo, Validators.required],
-        universita: [medico.universita],
-        annoLaurea: [medico.annoLaurea, [Validators.min(1950), Validators.max(new Date().getFullYear())]],
-        bio: [medico.bio, Validators.maxLength(1000)],
-        durataVisitaMinuti: [medico.durataVisitaMinuti, [Validators.min(10), Validators.max(120)]],
-        isDisponibile: [medico.isDisponibile]
-      });
-    } else if (this.isAmministratore() && this.user()) {
-      const admin = this.user() as Amministratore;
-      this.specificForm = this.fb.group({
-        dipartimento: [admin.dipartimento],
-        livelloAccesso: [admin.livelloAccesso]
-      });
-    }
-  }
   toggleEditMode(): void {
     this.editMode.set(!this.editMode());
-    if (!this.editMode()) {
-      this.patchForms(this.user()!);
-    }
   }
 
-  saveGeneralInfo() {
-
-  }
-
-  saveSpecificInfo() {
-
-  }
-
-  changePassword(): void {
-    if (this.passwordForm.invalid) return;
-
-    const { oldPassword, newPassword } = this.passwordForm.value;
-    // this.loading.set(true);
-
-    // this.profileService.changePassword(oldPassword, newPassword).subscribe({
+  saveGeneralInfo(data: any): void {
+    console.log('Saving general info:', data);
+    
+    // Esempio di chiamata API
+    // this.profileService.updateGeneralInfo(data).subscribe({
     //   next: () => {
-    //     this.successMessage.set('Password cambiata con successo');
-    //     this.passwordForm.reset();
-    //     this.activeTab.set('general');
-    //     this.loading.set(false);
-    //     setTimeout(() => this.successMessage.set(null), 3000);
+    //     this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
+    //     this.editMode.set(false);
+    //     this.loadProfile();
     //   },
     //   error: (err) => {
-    //     this.errorMessage.set('Errore: verifica la password attuale');
-    //     this.loading.set(false);
-    //     setTimeout(() => this.errorMessage.set(null), 3000);
+    //     this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
     //   }
     // });
+
+    this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
+    this.editMode.set(false);
+  }
+
+  saveSpecificInfo(data: any): void {
+    console.log('Saving specific info:', data);
+    
+    if (this.isPaziente()) {
+      // this.profileService.updatePatientInfo(data).subscribe({...});
+    } else if (this.isMedico()) {
+      // this.medicoService.updateDoctorInfo(data).subscribe({...});
+    }
+
+    this.snackBar.openSnackBar('Informazioni specifiche salvate', 'Chiudi');
+    this.editMode.set(false);
+  }
+
+  changePassword(data: {oldPassword: string, newPassword: string}): void {
+    console.log('Changing password');
+    
+    // this.profileService.changePassword(data.oldPassword, data.newPassword).subscribe({
+    //   next: () => {
+    //     this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
+    //   },
+    //   error: (err) => {
+    //     this.snackBar.openSnackBar('Errore: verifica la password attuale', 'Chiudi');
+    //   }
+    // });
+
+    this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
   }
 
   getRoleLabel(ruolo: UserRole): string {
@@ -202,11 +151,10 @@ export class ProfileComponent extends BasePageComponent {
       [UserRole.MEDICO]: 'Medico',
       [UserRole.AMMINISTRATORE]: 'Amministratore'
     };
-    return labels[ruolo] || ruolo
+    return labels[ruolo] || ruolo;
   }
 
   setActiveTab(tab: string): void {
     this.activeTab.set(tab);
   }
-
 }

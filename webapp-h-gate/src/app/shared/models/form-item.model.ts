@@ -1,7 +1,9 @@
+import { ValidatorFn } from "@angular/forms";
+
 export interface FormItem {
   name: string;
   label: string;
-  type?: 'number' | 'text' | 'password' | 'email' | 'select' | 'textarea' | 'autocomplete' | 'image';
+  type?: 'number' | 'text' | 'password' | 'email' | 'select' | 'textarea' | 'autocomplete' | 'image' | 'tel' | 'date' | 'checkbox' | 'radio' | 'file' | 'array' | 'group';
   options?: { label: string, value: any }[];
   initialValue?: any;
   required?: boolean;
@@ -18,4 +20,8 @@ export interface FormItem {
   //customValidation?: any;
   controls?: FormItem[];
   array?: FormItem[];
+  validators?: ValidatorFn[];
+  colClass?: string;
+  rows?: number;
+  placeholder?: string;
 }
