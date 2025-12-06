@@ -1,4 +1,3 @@
-import { TitleCasePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { MatCardModule } from '@angular/material/card';
@@ -53,22 +52,22 @@ export class ProfileComponent extends BasePageComponent {
   override ngOnInit(): void {
     this.initForms();
     this.loadProfile();
-    this.loadDetailsMedico()
   }
 
   loadDetailsMedico() {
-    this.isLoading = true;
     this.medicoService.findMedicoByUserId().subscribe({
       next: (res) => {
         this.medico.set(res.data);
+        this.patchForms(this.user()!);
+
         this.isLoading = false;
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore nel recupero delle informazioni', 'Chiudi')
-        console.error(err)
+        this.snackBar.openSnackBar('Errore nel recupero delle informazioni medico', 'Chiudi');
+        console.error(err);
         this.isLoading = false;
       }
-    })
+    });
   }
 
   initForms(): void {
@@ -99,17 +98,22 @@ export class ProfileComponent extends BasePageComponent {
 
   loadProfile(): void {
     this.isLoading = true;
+
     this.profileService.get().subscribe({
       next: (user) => {
         this.user.set(user);
-        this.patchForms(user);
-        this.isLoading = false;
+        if (user.roles.includes(UserRole.MEDICO)) {
+          this.loadDetailsMedico();
+        } else {
+          this.patchForms(user);
+          this.isLoading = false;
+        }
       },
-      error: (err) => {
+      error: () => {
         this.snackBar.openSnackBar('Errore nel caricamento del profilo', 'Chiudi');
         this.isLoading = false;
       }
-    })
+    });
   }
 
 
