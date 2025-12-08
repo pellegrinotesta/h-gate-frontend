@@ -24,4 +24,6 @@ export interface FormItem {
   colClass?: string;
   rows?: number;
   placeholder?: string;
+  excludeFromRender?: boolean;
+
 }

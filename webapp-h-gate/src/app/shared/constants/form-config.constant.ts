@@ -19,20 +19,6 @@ export class FormConfigs {
             colClass: 'col-md-6'
         },
         {
-            name: 'password',
-            label: 'Password',
-            type: 'password',
-            validators: [Validators.required, Validators.minLength(8)],
-            colClass: 'col-md-6'
-          },
-          {
-            name: 'confirmPassword',
-            label: 'Conferma Password',
-            type: 'password',
-            validators: [Validators.required],
-            colClass: 'col-md-6'
-          },
-        {
             name: 'email',
             label: 'Email',
             type: 'email',
@@ -76,6 +62,86 @@ export class FormConfigs {
             label: 'CAP',
             type: 'text',
             validators: [Validators.pattern(/^[0-9]{5}$/)],
+            colClass: 'col-md-4'
+        }
+    ];
+
+    static readonly REGISTRATION_GENERAL_FIELDS: FormItem[] = [
+        {
+            name: 'nome',
+            label: 'Nome',
+            type: 'text',
+            validators: [Validators.required, Validators.minLength(2)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'cognome',
+            label: 'Cognome',
+            type: 'text',
+            validators: [Validators.required, Validators.minLength(2)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'email',
+            label: 'Email',
+            type: 'email',
+            validators: [Validators.required, Validators.email],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'telefono',
+            label: 'Telefono',
+            type: 'tel',
+            validators: [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'password',
+            label: 'Password',
+            type: 'password',
+            validators: [Validators.required, Validators.minLength(8)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'confirmPassword',
+            label: 'Conferma Password',
+            type: 'password',
+            validators: [Validators.required],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'dataNascita',
+            label: 'Data di nascita',
+            type: 'date',
+            validators: [Validators.required],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'indirizzo',
+            label: 'Indirizzo',
+            type: 'text',
+            validators: [Validators.required],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'citta',
+            label: 'Città',
+            type: 'text',
+            validators: [Validators.required],
+            colClass: 'col-md-4'
+        },
+        {
+            name: 'provincia',
+            label: 'Provincia',
+            type: 'text',
+            validators: [Validators.required, Validators.maxLength(2)],
+            colClass: 'col-md-4'
+        },
+        {
+            name: 'cap',
+            label: 'CAP',
+            type: 'text',
+            validators: [Validators.required, Validators.pattern(/^[0-9]{5}$/)],
             colClass: 'col-md-4'
         }
     ];
@@ -131,8 +197,8 @@ export class FormConfigs {
             colClass: 'col-12'
         },
         {
-            name: 'patologieCroniche',
-            label: 'Patologie Croniche',
+            name: 'noteMediche',
+            label: 'Note mediche (es. condizioni croniche)',
             type: 'textarea',
             rows: 3,
             colClass: 'col-12'

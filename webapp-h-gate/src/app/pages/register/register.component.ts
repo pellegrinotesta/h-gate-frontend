@@ -31,7 +31,7 @@ export class RegisterComponent {
   private registrationService = inject(RegistrationService);
   readonly UserRole = UserRole;
 
-  readonly generalInfoFields = FormConfigs.GENERAL_INFO_FIELDS;
+  readonly generalInfoFields = FormConfigs.REGISTRATION_GENERAL_FIELDS;
   readonly patientInfoFields = FormConfigs.PATIENT_INFO_FIELDS;
   readonly doctorInfoFields = FormConfigs.DOCTOR_INFO_FIELDS;
 
