@@ -2,6 +2,7 @@ import { UserRole } from "../shared/enums/user-role.enum";
 import { BaseModel } from "../shared/models/base-model";
 
 export interface User extends BaseModel {
+    id: number;
     uuid: string;
     email: string;
     nome: string;

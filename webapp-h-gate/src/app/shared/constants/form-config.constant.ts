@@ -197,6 +197,13 @@ export class FormConfigs {
             colClass: 'col-12'
         },
         {
+            name: 'patologieCroniche',
+            label: 'Patologie croniche',
+            type: 'textarea',
+            rows: 3,
+            colClass: 'col-12'
+        },
+        {
             name: 'noteMediche',
             label: 'Note mediche (es. condizioni croniche)',
             type: 'textarea',

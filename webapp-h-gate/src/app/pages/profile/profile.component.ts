@@ -33,6 +33,9 @@ export class ProfileComponent extends BasePageComponent {
   editMode = signal<boolean>(false);
   activeTab = signal<string>('general');
 
+  pazienteId!: number;
+  medicoId!: number;
+
   // Configurazioni dei form
   readonly generalInfoFields = FormConfigs.GENERAL_INFO_FIELDS;
   readonly patientInfoFields = FormConfigs.PATIENT_INFO_FIELDS;
@@ -65,6 +68,7 @@ export class ProfileComponent extends BasePageComponent {
       next: (res) => {
         if (this.user()) {
           this.user.set({ ...this.user()!, ...res.data });
+          this.medicoId = res.data.id;
         }
         this.isLoading = false;
       },
@@ -81,6 +85,7 @@ export class ProfileComponent extends BasePageComponent {
       next: (res) => {
         if (this.user()) {
           this.user.set({ ...this.user()!, ...res.data });
+          this.pazienteId = res.data.id;
         }
         this.isLoading = false;
       },
@@ -99,10 +104,6 @@ export class ProfileComponent extends BasePageComponent {
     this.profileService.get().subscribe({
       next: (user) => {
         this.user.set(user);
-        console.log('CHIAMATA loadProfile');
-        console.log('Profile ricevuto:', user.roles);
-        console.log('isMedico?', user.roles.includes(UserRole.MEDICO));
-        console.log('isPaziente?', user.roles.includes(UserRole.PAZIENTE));
 
         if (Array.isArray(user.roles)) {
           if (user.roles.includes(UserRole.MEDICO)) {
@@ -126,32 +127,62 @@ export class ProfileComponent extends BasePageComponent {
     this.editMode.set(!this.editMode());
   }
 
-  saveGeneralInfo(data: any): void {
+  saveGeneralInfo(data: User): void {
     console.log('Saving general info:', data);
 
-    // Esempio di chiamata API
-    // this.profileService.updateGeneralInfo(data).subscribe({
-    //   next: () => {
-    //     this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
-    //     this.editMode.set(false);
-    //     this.loadProfile();
-    //   },
-    //   error: (err) => {
-    //     this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
-    //   }
-    // });
+    const payload = {
+      ...data,
+      id: this.user()?.id
+    };
+
+    this.profileService.updateGeneralInfo(payload).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
+        this.editMode.set(false);
+        this.loadProfile();
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+      }
+    });
 
     this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
     this.editMode.set(false);
   }
 
   saveSpecificInfo(data: any): void {
-    console.log('Saving specific info:', data);
 
     if (this.isPaziente()) {
-      // this.profileService.updatePatientInfo(data).subscribe({...});
+      const payload = {
+        ...data,
+        id: this.pazienteId
+      };
+
+      this.pazienteService.updatePazienteInfo(payload).subscribe({
+        next: () => {
+          this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
+          this.editMode.set(false);
+          this.loadProfile();
+        },
+        error: () => {
+          this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+        }
+      });
     } else if (this.isMedico()) {
-      // this.medicoService.updateDoctorInfo(data).subscribe({...});
+      const payload = {
+        ...data,
+        id: this.medicoId
+      };
+      this.medicoService.updateDoctorInfo(payload).subscribe({
+        next: () => {
+          this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
+          this.editMode.set(false);
+          this.loadProfile();
+        },
+        error: () => {
+          this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+        }
+      });
     }
 
     this.snackBar.openSnackBar('Informazioni specifiche salvate', 'Chiudi');
@@ -161,14 +192,14 @@ export class ProfileComponent extends BasePageComponent {
   changePassword(data: { oldPassword: string, newPassword: string }): void {
     console.log('Changing password');
 
-    // this.profileService.changePassword(data.oldPassword, data.newPassword).subscribe({
-    //   next: () => {
-    //     this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
-    //   },
-    //   error: (err) => {
-    //     this.snackBar.openSnackBar('Errore: verifica la password attuale', 'Chiudi');
-    //   }
-    // });
+    this.profileService.partialUpdate(data).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
+      },
+      error: (err) => {
+        this.snackBar.openSnackBar('Errore: verifica la password attuale', 'Chiudi');
+      }
+    });
 
     this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
   }

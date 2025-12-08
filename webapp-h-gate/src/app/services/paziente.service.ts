@@ -18,4 +18,8 @@ export class PazienteService extends HttpBaseService<Paziente> {
   findByUserId(): Observable<ResponseDTO<Paziente>> {
     return this.request<ResponseDTO<Paziente>>('/user-id', METHODS.GET);
   }
+
+  updatePazienteInfo(data: Partial<Paziente>): Observable<ResponseDTO<Paziente>> {
+    return this.request<ResponseDTO<Paziente>>('/update', METHODS.PUT, data);
+  }
 }
