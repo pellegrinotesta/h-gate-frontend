@@ -66,6 +66,86 @@ export class FormConfigs {
         }
     ];
 
+    static readonly REGISTRATION_GENERAL_FIELDS: FormItem[] = [
+        {
+            name: 'nome',
+            label: 'Nome',
+            type: 'text',
+            validators: [Validators.required, Validators.minLength(2)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'cognome',
+            label: 'Cognome',
+            type: 'text',
+            validators: [Validators.required, Validators.minLength(2)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'email',
+            label: 'Email',
+            type: 'email',
+            validators: [Validators.required, Validators.email],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'telefono',
+            label: 'Telefono',
+            type: 'tel',
+            validators: [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'password',
+            label: 'Password',
+            type: 'password',
+            validators: [Validators.required, Validators.minLength(8)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'confirmPassword',
+            label: 'Conferma Password',
+            type: 'password',
+            validators: [Validators.required],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'dataNascita',
+            label: 'Data di nascita',
+            type: 'date',
+            validators: [Validators.required],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'indirizzo',
+            label: 'Indirizzo',
+            type: 'text',
+            validators: [Validators.required],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'citta',
+            label: 'Città',
+            type: 'text',
+            validators: [Validators.required],
+            colClass: 'col-md-4'
+        },
+        {
+            name: 'provincia',
+            label: 'Provincia',
+            type: 'text',
+            validators: [Validators.required, Validators.maxLength(2)],
+            colClass: 'col-md-4'
+        },
+        {
+            name: 'cap',
+            label: 'CAP',
+            type: 'text',
+            validators: [Validators.required, Validators.pattern(/^[0-9]{5}$/)],
+            colClass: 'col-md-4'
+        }
+    ];
+
     static readonly PATIENT_INFO_FIELDS: FormItem[] = [
         {
             name: 'codiceFiscale',
@@ -118,7 +198,14 @@ export class FormConfigs {
         },
         {
             name: 'patologieCroniche',
-            label: 'Patologie Croniche',
+            label: 'Patologie croniche',
+            type: 'textarea',
+            rows: 3,
+            colClass: 'col-12'
+        },
+        {
+            name: 'noteMediche',
+            label: 'Note mediche (es. condizioni croniche)',
             type: 'textarea',
             rows: 3,
             colClass: 'col-12'
@@ -176,7 +263,7 @@ export class FormConfigs {
 
     static readonly PASSWORD_CHANGE_FIELDS: FormItem[] = [
         {
-            name: 'oldPassword',
+            name: 'password',
             label: 'Password attuale',
             type: 'password',
             validators: [Validators.required],

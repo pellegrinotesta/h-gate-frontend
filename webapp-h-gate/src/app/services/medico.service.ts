@@ -18,4 +18,8 @@ export class MedicoService extends HttpBaseService<Medico> {
   findMedicoByUserId(): Observable<ResponseDTO<Medico>> {
     return this.request<ResponseDTO<Medico>>('/user-id', METHODS.GET);
   }
+
+  updateDoctorInfo(data: Partial<Medico>): Observable<ResponseDTO<Medico>> {
+    return this.request<ResponseDTO<Medico>>('/update', METHODS.PUT, data);
+  }
 }

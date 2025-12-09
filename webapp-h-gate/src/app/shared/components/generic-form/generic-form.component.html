@@ -1,5 +1,5 @@
 <form [formGroup]="form" class="row g-3" (ngSubmit)="onSubmit()">
-    @for(field of fields; track field.name) {
+    @for(field of visibleFields(); track field.name) {
     <div [class]="field.colClass || 'col-12'">
         @switch (field.type) {
         @case('textarea') {
@@ -24,8 +24,7 @@
             </mat-select>
             @if(form.get(field.name)?.invalid && form.get(field.name)?.touched) {
             <mat-error>{{getErrorMessage(field.name)}}</mat-error>
-            }\
-
+            }
         </mat-form-field>
         }
 

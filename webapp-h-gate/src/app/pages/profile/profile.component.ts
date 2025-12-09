@@ -10,6 +10,7 @@ import { MedicoService } from '../../services/medico.service';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
 import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { FormConfigs } from '../../shared/constants/form-config.constant';
+import { PazienteService } from '../../services/paziente.service';
 
 @Component({
   selector: 'app-profile',
@@ -26,10 +27,14 @@ export class ProfileComponent extends BasePageComponent {
 
   readonly profileService = inject(ProfileService);
   readonly medicoService = inject(MedicoService);
+  readonly pazienteService = inject(PazienteService);
 
   user = signal<User | null>(null);
   editMode = signal<boolean>(false);
   activeTab = signal<string>('general');
+
+  pazienteId!: number;
+  medicoId!: number;
 
   // Configurazioni dei form
   readonly generalInfoFields = FormConfigs.GENERAL_INFO_FIELDS;
@@ -61,9 +66,9 @@ export class ProfileComponent extends BasePageComponent {
   loadDetailsMedico() {
     this.medicoService.findMedicoByUserId().subscribe({
       next: (res) => {
-        // Merge i dati medico con user
         if (this.user()) {
           this.user.set({ ...this.user()!, ...res.data });
+          this.medicoId = res.data.id;
         }
         this.isLoading = false;
       },
@@ -75,17 +80,41 @@ export class ProfileComponent extends BasePageComponent {
     });
   }
 
+  loadDetailsPaziente() {
+    this.pazienteService.findByUserId().subscribe({
+      next: (res) => {
+        if (this.user()) {
+          this.user.set({ ...this.user()!, ...res.data });
+          this.pazienteId = res.data.id;
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.snackBar.openSnackBar('Errore nel recupero delle informazioni paziente', 'Chiudi');
+        console.error(err);
+        this.isLoading = false;
+      }
+    })
+  }
+
+
   loadProfile(): void {
     this.isLoading = true;
 
     this.profileService.get().subscribe({
       next: (user) => {
         this.user.set(user);
-        if (user.roles.includes(UserRole.MEDICO)) {
-          this.loadDetailsMedico();
-        } else {
-          this.isLoading = false;
+
+        if (Array.isArray(user.roles)) {
+          if (user.roles.includes(UserRole.MEDICO)) {
+            this.loadDetailsMedico();
+          } else if (user.roles.includes(UserRole.PAZIENTE)) {
+            this.loadDetailsPaziente();
+          } else {
+            this.isLoading = false;
+          }
         }
+
       },
       error: () => {
         this.snackBar.openSnackBar('Errore nel caricamento del profilo', 'Chiudi');
@@ -98,49 +127,79 @@ export class ProfileComponent extends BasePageComponent {
     this.editMode.set(!this.editMode());
   }
 
-  saveGeneralInfo(data: any): void {
+  saveGeneralInfo(data: User): void {
     console.log('Saving general info:', data);
-    
-    // Esempio di chiamata API
-    // this.profileService.updateGeneralInfo(data).subscribe({
-    //   next: () => {
-    //     this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
-    //     this.editMode.set(false);
-    //     this.loadProfile();
-    //   },
-    //   error: (err) => {
-    //     this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
-    //   }
-    // });
+
+    const payload = {
+      ...data,
+      id: this.user()?.id
+    };
+
+    this.profileService.updateGeneralInfo(payload).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
+        this.editMode.set(false);
+        this.loadProfile();
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+      }
+    });
 
     this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
     this.editMode.set(false);
   }
 
   saveSpecificInfo(data: any): void {
-    console.log('Saving specific info:', data);
-    
+
     if (this.isPaziente()) {
-      // this.profileService.updatePatientInfo(data).subscribe({...});
+      const payload = {
+        ...data,
+        id: this.pazienteId
+      };
+
+      this.pazienteService.updatePazienteInfo(payload).subscribe({
+        next: () => {
+          this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
+          this.editMode.set(false);
+          this.loadProfile();
+        },
+        error: () => {
+          this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+        }
+      });
     } else if (this.isMedico()) {
-      // this.medicoService.updateDoctorInfo(data).subscribe({...});
+      const payload = {
+        ...data,
+        id: this.medicoId
+      };
+      this.medicoService.updateDoctorInfo(payload).subscribe({
+        next: () => {
+          this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
+          this.editMode.set(false);
+          this.loadProfile();
+        },
+        error: () => {
+          this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+        }
+      });
     }
 
     this.snackBar.openSnackBar('Informazioni specifiche salvate', 'Chiudi');
     this.editMode.set(false);
   }
 
-  changePassword(data: {oldPassword: string, newPassword: string}): void {
+  changePassword(data: { password: string, newPassword: string }): void {
     console.log('Changing password');
-    
-    // this.profileService.changePassword(data.oldPassword, data.newPassword).subscribe({
-    //   next: () => {
-    //     this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
-    //   },
-    //   error: (err) => {
-    //     this.snackBar.openSnackBar('Errore: verifica la password attuale', 'Chiudi');
-    //   }
-    // });
+
+    this.profileService.partialUpdate(data).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
+      },
+      error: (err) => {
+        this.snackBar.openSnackBar('Errore: verifica la password attuale', 'Chiudi');
+      }
+    });
 
     this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
   }

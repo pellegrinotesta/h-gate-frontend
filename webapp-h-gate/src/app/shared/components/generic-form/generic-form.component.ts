@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { SharedModule } from '../../shared.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { FormItem } from '../../models/form-item.model';
@@ -21,6 +21,7 @@ export class GenericFormComponent implements OnInit {
   @Input() submitButtonText = 'Salva';
   @Input() cancelButtonText = 'Annulla';
   @Input() formValidator?: ValidatorFn | ValidatorFn[];
+  @Input() excludeFields?: string[]; 
 
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
@@ -28,12 +29,33 @@ export class GenericFormComponent implements OnInit {
 
   form!: FormGroup;
 
+  visibleFields = computed(() => {
+    return this.fields.filter(field => {
+      // Escludi se il campo ha hidden=true
+      if (field.hidden || field.excludeFromRender) {
+        return false;
+      }
+      // Escludi se il campo è nella lista excludeFields
+      if (this.excludeFields && this.excludeFields.includes(field.name)) {
+        return false;
+      }
+      return true;
+    });
+  });
+
   ngOnInit(): void {
     this.initForm();
     if (this.initialData) {
       this.patchForm(this.initialData);
     }
   }
+
+  ngOnChanges(): void {
+    if (this.form && this.initialData) {
+      this.patchForm(this.initialData);
+    }
+  }
+
 
   private initForm(): void {
     const formConfig: { [key: string]: any } = {};

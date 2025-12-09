@@ -8,7 +8,9 @@ export const environment = {
     roles: `${apiUrl}/roles/`,
     profile: `${apiUrl}/profile`,
     user: `${apiUrl}/user`,
-    medico: `${apiUrl}/medico`
+    medico: `${apiUrl}/medico`,
+    registration: `${apiUrl}/registration`,
+    paziente: `${apiUrl}/paziente`,
   },
   jwt: {
     encryptionKey: 'Qs23RBNF330ms00n',
