@@ -9,26 +9,21 @@ import { AuthService } from "../services/auth/auth.service";
 })
 export class RoleGuard implements CanActivate {
 
-   private authService;
-    private authFacade;
+    private authService = inject(AuthService);
+    private authFacade = inject(AuthFacadeService)
 
-    constructor(authService: AuthService, authFacade: AuthFacadeService) {
-        this.authService = authService;
-        this.authFacade = authFacade;
-    }
-    
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         const roles = this.getRolesFromRoute(route);
         const logicalOp = this.getLogicalOperatorFromRoute(route);
-        console.log('[RoleGuard] roles:', roles, 'logicalOp:', logicalOp);
+        // console.log('[RoleGuard] roles:', roles, 'logicalOp:', logicalOp);
         return this.authFacade.getUser().pipe(concatMap((user) => {
-            console.log('[RoleGuard] user:', user);
+            // console.log('[RoleGuard] user:', user);
             const hasRole = roles?.length > 0 && !!user && this.authService.hasRole(roles, user, logicalOp);
-            console.log('[RoleGuard] access granted?', hasRole);
+            // console.log('[RoleGuard] access granted?', hasRole);
             return of(hasRole);
         }));
     }
-    
+
 
     getRolesFromRoute(route: ActivatedRouteSnapshot) {
         const rolesAttributeName = this.getRolesAttributeName();
@@ -43,7 +38,7 @@ export class RoleGuard implements CanActivate {
     getRolesAttributeName(): string {
         return 'roles';
     }
-    
+
     getLogicalOperatorAttributeName(): string {
         return 'logicalOperator';
     }

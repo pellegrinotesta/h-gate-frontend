@@ -5,12 +5,12 @@
             <app-menu></app-menu>
 
             <div class="ms-auto d-flex align-items-center">
-                <!-- @if(me) {
+                @if(me) {
                 <div class="me-3 text-start small" style="color: #fff;">
-                    <div>{{me.}} {{me.last_name}}</div>
+                    <div>{{me.nome}} {{me.cognome}}</div>
                     <div>{{me.email}}</div>
                 </div>
-                } -->
+                }
 
                 <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="profile icon" class="btn btn-link p-0">
                     <mat-icon style="color: #fff;">account_circle</mat-icon>

@@ -9,6 +9,8 @@ import { AuthService } from '../../shared/services/auth/auth.service';
 import { AuthenticatedUser } from '../../models/authenticated-user.model';
 import { AuthFacadeService } from '../../shared/services/auth/auth-facade.service';
 import { take } from 'rxjs';
+import { User } from '../../models/user.model';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-homepage',
@@ -19,16 +21,18 @@ import { take } from 'rxjs';
 })
 export class HomepageComponent extends BasePageComponent {
 
-  me: AuthenticatedUser | undefined;
+  me: User | undefined;
 
-  constructor(private authService: AuthService, private readonly authFacadeService: AuthFacadeService,) {
+  constructor(private userService: UserService, private authService: AuthService) {
     super();
-    this.authFacadeService
-      .getUser()
-      .pipe(take(1))
-      .subscribe((user) => {
-        this.me = user;
-      });
+    this.userService.getById().subscribe({
+      next: (res) => {
+        this.me = res.data
+      },
+      error: (err) => {
+        console.error('Errore nel recupero dei dati: ', err);
+      }
+    })
   }
 
   onLogout() {

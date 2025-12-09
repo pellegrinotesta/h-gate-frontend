@@ -5,34 +5,20 @@ import { ROLE_VISIBILITY } from "./role-visibility.constants";
 export const ITEMS_MENU: MenuSection[] = [
     {
         items: [
-            // {
-            //     title: 'Dashboard',
-            //     icon: 'speed',
-            //     link: RoutesEnum.STUDENT_DASHBOARD,
-            //     permission: ROLE_VISIBILITY.DASHBOARD_STUDENT,
-            //     tooltip: 'Dashboard studente'
-            // },
-            // {
-            //     title: 'Graduatorie',
-            //     icon: 'file_list',
-            //     link: RoutesEnum.CLASSIFICATIONS_LIST,
-            //     permission: ROLE_VISIBILITY.DASHBOARD_STUDENT,
-            //     tooltip: 'Graduatorie'
-            // },
-            // {
-            //     title: 'Pagamenti',
-            //     icon: 'file_list',
-            //     link: RoutesEnum.PAYMENTS,
-            //     permission: ROLE_VISIBILITY.DASHBOARD_STUDENT,
-            //     tooltip: 'Gestione pagamenti studente'
-            // },
-            // {
-            //     title: 'Dashboard',
-            //     icon: 'speed',
-            //     link: RoutesEnum.OPERATOR_DASHBOARD,
-            //     permission: ROLE_VISIBILITY.DASHBOARD_OPERATOR,
-            //     tooltip: 'Dashboard operatore'
-            // },
+            {
+                title: 'Dashboard',
+                icon: 'speed',
+                link: RoutesEnum.DASHBOARD_PAZIENTE,
+                permission: ROLE_VISIBILITY.DASHBOARD_PAZIENTE,
+                tooltip: 'Dashboard Paziente'
+            },
+            {
+                title: 'Dashboard',
+                icon: 'speed',
+                link: RoutesEnum.DASHBOARD_MEDICO,
+                permission: ROLE_VISIBILITY.DASHBOARD_MEDICO,
+                tooltip: 'Dashboard medico'
+            },
             // {
             //     title: 'Gestione domande',
             //     link: RoutesEnum.APPLICATION_MANAGEMENT,

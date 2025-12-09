@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import { registerLocaleData } from '@angular/common';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { AuthService } from './shared/services/auth/auth.service';
 import { environment } from '../environment/environment';
 import { RefreshTokenService } from './shared/services/auth/refresh-token.service';
@@ -78,14 +78,14 @@ export const appConfig: ApplicationConfig = {
       })
     ),
     provideAnimationsAsync(),
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: LOCALE_ID, useValue: 'it-IT' },
+    { provide: MAT_DATE_FORMATS, useValue: IT_DATE_FORMATS },
     { provide: HTTP_INTERCEPTORS, useClass: TokenExpiredInterceptor, multi: true },
     {
       provide: APP_INITIALIZER,
       useFactory: (refreshTokenService: RefreshTokenService) => () => refreshTokenService.scheduleSilentRefresh(),
       multi: true,
       deps: [RefreshTokenService]
-    },
-    provideRouter(routes) // opzionale se usi standalone routing
+    }
   ]
 };
