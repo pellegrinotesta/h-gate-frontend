@@ -263,7 +263,7 @@ export class FormConfigs {
 
     static readonly PASSWORD_CHANGE_FIELDS: FormItem[] = [
         {
-            name: 'oldPassword',
+            name: 'password',
             label: 'Password attuale',
             type: 'password',
             validators: [Validators.required],

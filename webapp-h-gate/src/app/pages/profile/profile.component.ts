@@ -189,7 +189,7 @@ export class ProfileComponent extends BasePageComponent {
     this.editMode.set(false);
   }
 
-  changePassword(data: { oldPassword: string, newPassword: string }): void {
+  changePassword(data: { password: string, newPassword: string }): void {
     console.log('Changing password');
 
     this.profileService.partialUpdate(data).subscribe({
