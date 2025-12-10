@@ -12,6 +12,7 @@ import { DashboardService } from '../../services/dashboard.service';
 import { StatCard } from '../../models/stat-card.model';
 import { Prenotazione } from '../../models/prenotazione.model';
 import { Referto } from '../../models/referto.model';
+import { PrenotazioneDettagliata } from '../../models/prenotazione-dettagliata.model';
 
 @Component({
   selector: 'app-dashboard-paziente',
@@ -32,45 +33,58 @@ export class DashboardPazienteComponent extends BasePageComponent {
 
   private dashboardService = inject(DashboardService)
   stats = signal<StatCard[]>([]);
-  prossimiAppuntamenti = signal<Prenotazione[]>([]);
+  prossimiAppuntamenti = signal<PrenotazioneDettagliata[]>([]);
   ultimiReferti = signal<Referto[]>([]);
 
   override ngOnInit(): void {
     this.loadDashboard();
   }
+
   loadDashboard() {
-    this.stats.set([
-      {
-        title: 'Prossime Visite',
-        value: 0,
-        icon: 'event',
-        color: 'primary',
-        change: '+1 questa settimana',
-        trend: 'up'
-      },
-      {
-        title: 'Referti Disponibili',
-        value: 0,
-        icon: 'description',
-        color: 'success',
-        change: '+2 nuovi',
-        trend: 'up'
-      },
-      {
-        title: 'Medici Seguiti',
-        value: 0,
-        icon: 'local_hospital',
-        color: 'warning',
-        change: 'Attivi'
-      },
-      {
-        title: 'Visite Totali',
-        value: 0,
-        icon: 'bar_chart',
-        color: 'info',
-        change: "Quest'anno"
+    this.dashboardService.dashboardPaziente().subscribe({
+      next: (res) => {
+
+        this.prossimiAppuntamenti.set(res.data.prenotazioni);
+
+        this.stats.set([
+          {
+            title: 'Prossime Visite',
+            value: this.prossimiAppuntamenti().length || 0,
+            icon: 'event',
+            color: 'primary',
+            change: '+1 questa settimana',
+            trend: 'up'
+          },
+          {
+            title: 'Referti Disponibili',
+            value: 0,
+            icon: 'description',
+            color: 'success',
+            change: '+2 nuovi',
+            trend: 'up'
+          },
+          {
+            title: 'Medici Seguiti',
+            value: 0,
+            icon: 'local_hospital',
+            color: 'warning',
+            change: 'Attivi'
+          },
+          {
+            title: 'Visite Totali',
+            value: 0,
+            icon: 'bar_chart',
+            color: 'info',
+            change: "Quest'anno"
+          }
+        ]);
+
+      }, error: (err) => {
+        this.snackBar.openSnackBar('Errore nel recupero dei dati', 'Chiudi')
+        console.error(err)
       }
-    ]);
+    })
+
   }
 
   getStatoClass(stato: string): string {
