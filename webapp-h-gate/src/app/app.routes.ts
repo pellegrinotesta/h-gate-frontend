@@ -23,6 +23,12 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/dashboard-paziente/dashboard-paziente.component').then(m => m.DashboardPazienteComponent)
 
             },
+            {
+                path: RoutesEnum.DASHBOARD_MEDICO,
+                canActivate: [roleGuard],
+                data: {roles: ROLE_VISIBILITY.DASHBOARD_MEDICO },
+                loadComponent: () => import('./pages/dashboard-medico/dashboard-medico.component').then(m => m.DashboardMedicoComponent)
+            }
 
         ]
     },

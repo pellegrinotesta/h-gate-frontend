@@ -10,7 +10,6 @@ import { BasePageComponent } from '../../shared/components/base/base-page.compon
 import { LoaderComponent } from '../../components/loader/loader.component';
 import { DashboardService } from '../../services/dashboard.service';
 import { StatCard } from '../../models/stat-card.model';
-import { Prenotazione } from '../../models/prenotazione.model';
 import { Referto } from '../../models/referto.model';
 import { PrenotazioneDettagliata } from '../../models/prenotazione-dettagliata.model';
 
@@ -45,11 +44,12 @@ export class DashboardPazienteComponent extends BasePageComponent {
       next: (res) => {
 
         this.prossimiAppuntamenti.set(res.data.prenotazioni);
+        this.ultimiReferti.set(res.data.referti);
 
         this.stats.set([
           {
             title: 'Prossime Visite',
-            value: this.prossimiAppuntamenti().length || 0,
+            value: res.data.prossimiAppuntamenti,
             icon: 'event',
             color: 'primary',
             change: '+1 questa settimana',
@@ -57,7 +57,7 @@ export class DashboardPazienteComponent extends BasePageComponent {
           },
           {
             title: 'Referti Disponibili',
-            value: 0,
+            value: this.ultimiReferti().length || 0,
             icon: 'description',
             color: 'success',
             change: '+2 nuovi',
@@ -72,7 +72,7 @@ export class DashboardPazienteComponent extends BasePageComponent {
           },
           {
             title: 'Visite Totali',
-            value: 0,
+            value: res.data.visiteTotali,
             icon: 'bar_chart',
             color: 'info',
             change: "Quest'anno"

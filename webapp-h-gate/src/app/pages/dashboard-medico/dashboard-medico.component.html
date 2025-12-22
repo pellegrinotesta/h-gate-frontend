@@ -1,0 +1,196 @@
+@if(isLoading) {
+<app-loader></app-loader>
+}
+@else {
+<div class="dashboard-container">
+    <!-- Welcome Card -->
+    <div class="welcome-card-medico mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-2">Benvenuto, Dr. {{ userName }}</h1>
+                <p class="mb-0">La tua agenda e i pazienti di oggi</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <button mat-raised-button color="accent">
+                    <mat-icon>event_available</mat-icon>
+                    Gestisci Disponibilità
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        @for(stat of stats(); track stat.title) {
+        <div class="col-md-3 mb-3">
+            <mat-card class="stat-card stat-{{stat.color}}">
+                <mat-card-content>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="stat-title mb-2">{{ stat.title }}</p>
+                            <h2 class="stat-value mb-1"> {{ stat.value }}</h2>
+                            @if(stat.change) {
+                            <p class="stat-change mb-0">{{ stat.change }}</p>
+                            }
+                        </div>
+                        <div class="stat-icon">
+                            <mat-icon>{{ stat.icon }}</mat-icon>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        }
+    </div>
+
+    <!-- Main Content-->
+    <div class="row">
+        <!-- Appointments Today -->
+        <div class="col-lg-8 mb-4">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon class="me-2">today</mat-icon>
+                        Agenda di oggi - {{ oggi | date: 'EEEE, dd MMMM yyyy' }}
+                    </mat-card-title>
+                    <div class="spacer"></div>
+                    <button mat-button routerLink="/agenda">Vedi Settimana</button>
+                </mat-card-header>
+                <mat-card-content>
+                    @if(appuntamentiOggi().length === 0) {
+                    <div class="empty-state text-center py-5">
+                        <mat-icon class="empty-icon">event_available</mat-icon>
+                        <p class="mt-2">Nessuna visita programmata per oggi</p>
+                    </div>
+                    } @else {
+                    @for(app of appuntamentiOggi(); track app.id) {
+                    <div class="appointment-card-medico mb-3" [class.prossima]="isProssimaVisita(app)">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center mb-2">
+                                    <mat-icon class="me-2 time-icon">schedule</mat-icon>
+                                    <strong class="time-slot">{{app.dataOra | date: 'HH:mm'}}</strong>
+                                    @if(isProssimaVisita(app)) {
+                                    <mat-chip class="ms-2 chip-next">Prossima</mat-chip>
+                                    }
+                                </div>
+
+                                <h5 class="mb-1">{{app.paziente?.nome}} {{app.paziente?.cognome}}</h5>
+                                <p class="text-muted mb-2">
+                                    <mat-icon class="tiny-icon">badge</mat-icon>
+                                    CF: {{ app.paziente?.codiceFiscale }}
+                                </p>
+                                <p class="mb-2"><strong>{{ app.tipoVisita }}</strong> </p>
+                                @if(app.note) {
+                                <p class="text-muted small mb-0">
+                                    <mat-icon class="tiny-icon">note</mat-icon>
+                                    {{ app.note }}
+                                </p>
+                                }
+                            </div>
+                            <div class="btn-group-vertical" role="group">
+                                <button mat-raised-button color="primary"
+                                    (click)="apriCartellaClinica(app.paziente?.id!)">
+                                    <mat-icon>person</mat-icon>
+                                    Cartella
+                                </button>
+                                <button mat-raised-button color="accent" (click)="iniziaVisita(app.id)">
+                                    <mat-icon>play_arrow</mat-icon>
+                                    Iniza
+                                </button>
+                                <button mat-button (click)="creaReferto(app.id)">
+                                    Referto
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                    }
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- Sidebar-->
+        <div class="col-lg-4">
+            <!-- Azioni rapide-->
+            <mat-card class="mb-4">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon class="me-2">flash_on</mat-icon>
+                        Azioni rapide
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="d-grid gap-2">
+                        <button mat-raised-button color="primary" routerLink="/referti/nuovo">
+                            <mat-icon>note_add</mat-icon>
+                            Nuovo referto
+                        </button>
+                        <button mat-raised-button routerLink="/pazienti">
+                            <mat-icon>people</mat-icon>
+                            I miei pazienti
+                        </button>
+                        <button mat-raised-button routerLink="/disponibilita">
+                            <mat-icon>event_available</mat-icon>
+                            Disponibilità
+                        </button>
+                        <button mat-raised-button routerLink="/statistiche">
+                            <mat-icon>analytics</mat-icon>
+                            Statistiche
+                        </button>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <!-- Alert Referti-->
+            @if(refertiDaCompletare() > 0) {
+            <mat-card class="alert-card mb-4">
+                <mat-card-content>
+                    <div class="d-flex align-items-start">
+                        <mat-icon class="text-warning me-2">warning</mat-icon>
+                        <div>
+                            <h6 class="mb-1">Referti da completare</h6>
+                            <p class="mn-2"> Hai <strong>{{ refertiDaCompletare() }}</strong> referti in sospeso</p>
+                            <button mat-stroked-button color="warn" size="small" routerLink="/referti/pending">
+                                Completa ora
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            }
+
+            <!-- Profilo professionale-->
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon class="me-2">badge</mat-icon>
+                        Profilo professionale
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="profile-stat mb-3">
+                        <mat-icon class="text-warning">star</mat-icon>
+                        <div>
+                            <strong>{{ rating }}</strong> / 5.0
+                            <p class="text-muted small mb-0">{{ numeroRecensioni() }} recensioni</p>
+                        </div>
+                    </div>
+                    <div class="profile-stat mb-3">
+                        <mat-icon class="text-primary">people</mat-icon>
+                        <div>
+                            <strong>{{ numeroPazienti()}}</strong> pazienti
+                            <p class="text-muted small mb-0">Totali</p>
+                        </div>
+                    </div>
+                    <button mat-stroked-button class="w-100" routerLink="/profile">
+                        <mat-icon>edit</mat-icon>
+                        Modifica Profilo
+                    </button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+}

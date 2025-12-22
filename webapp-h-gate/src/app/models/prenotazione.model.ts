@@ -5,6 +5,7 @@ export interface Prenotazione {
     tipoVisita: string;
     stato: 'IN_ATTESA' | 'CONFERMATA' | 'COMPLETATA' | 'ANNULLATA';
     paziente?: {
+        id: number;
         nome: string;
         cognome: string;
         codiceFiscale: string;

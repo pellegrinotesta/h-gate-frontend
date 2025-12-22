@@ -4,7 +4,9 @@ import { HttpRequestBaseService } from '../shared/services/base/http-request-bas
 import { Observable } from 'rxjs';
 import { ResponseDTO } from '../shared/models/response.model';
 import { METHODS } from '../shared/enums/methods.enum';
-import { DashboardResponse } from '../models/dashboard-response.model';
+import { DashboardPazienteResponse } from '../models/dashboard-paziente-response.model';
+import { DashboardMedicoResponse } from '../models/dashboard-medico-response.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,11 @@ export class DashboardService extends HttpRequestBaseService {
     super(injector, environment.endpoints.dashboard);
   }
 
-  dashboardPaziente(): Observable<ResponseDTO<DashboardResponse>> {
-    return this.request<ResponseDTO<DashboardResponse>>('/paziente', METHODS.GET);
+  dashboardPaziente(): Observable<ResponseDTO<DashboardPazienteResponse>> {
+    return this.request<ResponseDTO<DashboardPazienteResponse>>('/paziente', METHODS.GET);
+  }
+
+  dashboardMedico(): Observable<ResponseDTO<DashboardMedicoResponse>> {
+    return this.request<ResponseDTO<DashboardMedicoResponse>>('/medico', METHODS.GET);
   }
 }

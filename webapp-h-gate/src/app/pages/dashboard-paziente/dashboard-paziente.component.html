@@ -71,7 +71,7 @@
                             <div class="flex-grow-1">
                                 <h5 class="mb-1">{{app.tipoVisita}}</h5>
                                 <p class="text-muted mb-2">
-                                    Dr. {{ app.medicoNome }}  - {{
+                                    Dr. {{ app.medicoNome }} - {{
                                     app.medicoSpecializzazione}}
                                 </p>
                                 <div class="d-flex gap-3 mb-2">
@@ -119,26 +119,26 @@
                 </mat-card-header>
                 <mat-card-content>
                     @if(ultimiReferti().length === 0) {
-                        <p class="text-muted text-center py-3">Nessun referto disponibile</p>
+                    <p class="text-muted text-center py-3">Nessun referto disponibile</p>
                     } @else {
-                        @for(referto of ultimiReferti(); track referto.id) {
-                            <div class="referto-item mb-3" [routerLink]="['/referti', referto.id]">
-                                <div class="d-flex align-items-start">
-                                    <mat-icon class="me-2 text-primary">description</mat-icon>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-1">{{referto.titolo}}</h6>
-                                        <p class="text-muted small mb-1">{{ referto.medico.specializzazione }}</p>
-                                        <p class="text-muted small mb-0">
-                                            <mat-icon class="tiny-icon">calendar_today</mat-icon>
-                                            {{ referto.dataEmissione | date: 'dd/MM/yyyy' }}
-                                        </p>
-                                    </div>
-                                    @if(referto.hasAllegati) {
-                                        <mat-icon class="text-success">attach_file</mat-icon>
-                                    }
-                                </div>
+                    @for(referto of ultimiReferti(); track referto.id) {
+                    <div class="referto-item mb-3" [routerLink]="['/referti', referto.id]">
+                        <div class="d-flex align-items-start">
+                            <mat-icon class="me-2 text-primary">description</mat-icon>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">{{referto.titolo}}</h6>
+                                <p class="text-muted small mb-1">{{ referto.tipoReferto }}</p>
+                                <p class="text-muted small mb-0">
+                                    <mat-icon class="tiny-icon">calendar_today</mat-icon>
+                                    {{ referto.dataEmissione | date: 'dd/MM/yyyy' }}
+                                </p>
                             </div>
-                        }
+                            @if(referto.hasAllegati) {
+                            <mat-icon class="text-success">attach_file</mat-icon>
+                            }
+                        </div>
+                    </div>
+                    }
                     }
                     <button mat-stroked-button class="w-100 mt-2" routerLink="/referti">
                         Vedi tutti i referti
@@ -163,7 +163,7 @@
                             <mat-icon>description</mat-icon>
                             I miei referti
                         </button>
-                        <button mat-raised-button routerLink="/profile"> 
+                        <button mat-raised-button routerLink="/profile">
                             <mat-icon>person</mat-icon>
                             Modifica profilo
                         </button>
