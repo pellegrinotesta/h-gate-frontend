@@ -24,4 +24,8 @@ export class DashboardService extends HttpRequestBaseService {
   dashboardMedico(): Observable<ResponseDTO<DashboardMedicoResponse>> {
     return this.request<ResponseDTO<DashboardMedicoResponse>>('/medico', METHODS.GET);
   }
+
+  dashboardAdmin(): Observable<ResponseDTO<DashboardMedicoResponse>> {
+    return this.request<ResponseDTO<DashboardMedicoResponse>>('/admin', METHODS.GET);
+  }
 }

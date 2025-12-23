@@ -28,6 +28,12 @@ export const routes: Routes = [
                 canActivate: [roleGuard],
                 data: {roles: ROLE_VISIBILITY.DASHBOARD_MEDICO },
                 loadComponent: () => import('./pages/dashboard-medico/dashboard-medico.component').then(m => m.DashboardMedicoComponent)
+            },
+            {
+                path: RoutesEnum.DASHBOARD_AMMINISTRATORE,
+                canActivate: [roleGuard],
+                data: { roles: ROLE_VISIBILITY.DASHBOARD_AMMINISTRATORE },
+                loadComponent: () => import('./pages/dashboard-admin/dashboard-admin.component').then(m => m.DashboardAdminComponent)
             }
 
         ]

@@ -19,6 +19,13 @@ export const ITEMS_MENU: MenuSection[] = [
                 permission: ROLE_VISIBILITY.DASHBOARD_MEDICO,
                 tooltip: 'Dashboard medico'
             },
+            {
+                title: 'Dashboard',
+                icon: 'speed',
+                link: RoutesEnum.DASHBOARD_AMMINISTRATORE,
+                permission: ROLE_VISIBILITY.DASHBOARD_AMMINISTRATORE,
+                tooltip: 'Dashboard amministratore'
+            }
             // {
             //     title: 'Gestione domande',
             //     link: RoutesEnum.APPLICATION_MANAGEMENT,
