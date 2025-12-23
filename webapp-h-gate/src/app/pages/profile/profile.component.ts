@@ -52,7 +52,7 @@ export class ProfileComponent extends BasePageComponent {
 
   isPaziente = computed(() => this.user()?.roles.includes(UserRole.PAZIENTE) ?? false);
   isMedico = computed(() => this.user()?.roles.includes(UserRole.MEDICO) ?? false);
-  isAmministratore = computed(() => this.user()?.roles.includes(UserRole.AMMINISTRATORE) ?? false);
+  isAmministratore = computed(() => this.user()?.roles.includes(UserRole.ADMIN) ?? false);
 
   fullName = computed(() => {
     const u = this.user();
@@ -208,7 +208,7 @@ export class ProfileComponent extends BasePageComponent {
     const labels = {
       [UserRole.PAZIENTE]: 'Paziente',
       [UserRole.MEDICO]: 'Medico',
-      [UserRole.AMMINISTRATORE]: 'Amministratore'
+      [UserRole.ADMIN]: 'Amministratore'
     };
     return labels[ruolo] || ruolo;
   }

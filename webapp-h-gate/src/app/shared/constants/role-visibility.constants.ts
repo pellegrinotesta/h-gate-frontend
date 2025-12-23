@@ -6,5 +6,8 @@ export const ROLE_VISIBILITY = {
   ],
   DASHBOARD_MEDICO: [
     Group.MEDICO
+  ],
+  DASHBOARD_AMMINISTRATORE: [
+    Group.ADMIN
   ]
 }

@@ -4,7 +4,7 @@ export interface MenuItem {
   content?: string;
   link?: string;
   url?: string;
-  permission?: string[];
+  permission?: string | string[];
   tooltip?: string;
 }
 

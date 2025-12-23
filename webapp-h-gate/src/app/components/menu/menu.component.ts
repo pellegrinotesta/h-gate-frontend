@@ -6,13 +6,14 @@ import { MenuItem } from '../../shared/models/menu-item.model';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthFacadeService } from '../../shared/services/auth/auth-facade.service';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
   imports: [
     SharedModule,
-    RouterLink,        
+    RouterLink,
     MatToolbarModule,
     MatButtonModule,
     MatTooltipModule
@@ -24,26 +25,34 @@ export class MenuComponent {
 
   menuItems: MenuItem[] = [];
 
-  ngOnInit() {
-    this.menuItems = ITEMS_MENU.flatMap(section => {
-      // Sezione con titolo
-      if (section.title) {
-        return section.items.map(item => ({
-          title: item.title,
-          link: item.link,
-          tooltip: item.tooltip,
-          permission: item.permission
-        }));
-      }
+  constructor(private authFacade: AuthFacadeService) { }
 
-      // Sezione senza titolo
-      return section.items.map(item => ({
-        title: item.title,
-        link: item.link,
-        tooltip: item.tooltip,
-        permission: item.permission
-      }));
+  ngOnInit() {
+    this.authFacade.getUser().subscribe(user => {
+      const authorities = user?.authorities ?? [];
+
+      this.menuItems = ITEMS_MENU
+        .flatMap(section => section.items)
+        .filter(item => this.canShow(item.permission, authorities));
     });
+  }
+
+  private canShow(
+    permission: string | string[] | undefined,
+    authorities: string[]
+  ): boolean {
+
+    if (!permission) return true;
+
+    if (typeof permission === 'string') {
+      return authorities.includes(permission);
+    }
+
+    if (Array.isArray(permission)) {
+      return permission.some(p => authorities.includes(p));
+    }
+
+    return false;
   }
 
 
