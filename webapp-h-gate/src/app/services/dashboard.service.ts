@@ -6,6 +6,7 @@ import { ResponseDTO } from '../shared/models/response.model';
 import { METHODS } from '../shared/enums/methods.enum';
 import { DashboardPazienteResponse } from '../models/dashboard-paziente-response.model';
 import { DashboardMedicoResponse } from '../models/dashboard-medico-response.model';
+import { DashboardAdminResponse } from '../models/dashboard-admin-response.model';
 
 
 @Injectable({
@@ -25,7 +26,7 @@ export class DashboardService extends HttpRequestBaseService {
     return this.request<ResponseDTO<DashboardMedicoResponse>>('/medico', METHODS.GET);
   }
 
-  dashboardAdmin(): Observable<ResponseDTO<DashboardMedicoResponse>> {
-    return this.request<ResponseDTO<DashboardMedicoResponse>>('/admin', METHODS.GET);
+  dashboardAdmin(): Observable<ResponseDTO<DashboardAdminResponse>> {
+    return this.request<ResponseDTO<DashboardAdminResponse>>('/admin', METHODS.GET);
   }
 }

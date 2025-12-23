@@ -1,8 +1,11 @@
+import { StatisticheGenerali } from "./statistiche-generali.model";
+
 export interface DashboardAdminResponse {
-    // Define the properties of the admin dashboard response here
-    totalMedici: number;
-    totalPazienti: number;
-    visiteOggi: number;
+    pazientiAttivi: number;
+    mediciAttivi: number;
+    prenotazioniOggi: number;
+    fatturatoMensile: number;
+    mediciDaVerificare: number;
     refertiInSospeso: number;
-    // Add other relevant fields as needed
+    statistiche: StatisticheGenerali
 }
