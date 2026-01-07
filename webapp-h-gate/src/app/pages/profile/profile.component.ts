@@ -50,7 +50,7 @@ export class ProfileComponent extends BasePageComponent {
     return newPass === confirmPass ? null : { passwordMismatch: true };
   };
 
-  isPaziente = computed(() => this.user()?.roles.includes(UserRole.PAZIENTE) ?? false);
+  isPaziente = computed(() => this.user()?.roles.includes(UserRole.TUTORE) ?? false);
   isMedico = computed(() => this.user()?.roles.includes(UserRole.MEDICO) ?? false);
   isAmministratore = computed(() => this.user()?.roles.includes(UserRole.ADMIN) ?? false);
 
@@ -208,7 +208,8 @@ export class ProfileComponent extends BasePageComponent {
     const labels = {
       [UserRole.PAZIENTE]: 'Paziente',
       [UserRole.MEDICO]: 'Medico',
-      [UserRole.ADMIN]: 'Amministratore'
+      [UserRole.ADMIN]: 'Amministratore',
+      [UserRole.TUTORE]: 'Tutore'
     };
     return labels[ruolo] || ruolo;
   }
