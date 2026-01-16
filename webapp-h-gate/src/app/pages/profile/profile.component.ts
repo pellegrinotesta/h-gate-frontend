@@ -61,6 +61,7 @@ export class ProfileComponent extends BasePageComponent {
 
   override ngOnInit(): void {
     this.loadProfile();
+    this.loadDetailsPaziente();
   }
 
   loadDetailsMedico() {

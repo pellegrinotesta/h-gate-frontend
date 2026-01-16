@@ -89,6 +89,15 @@
                 </app-generic-form>
             </mat-card-content>
         </mat-card>
+
+        <mat-card class="shadow-sm mt-3" >
+            <mat-card-content>
+                <h5>Informazioni personali del minore</h5>
+                <app-generic-form>
+                </app-generic-form>
+            </mat-card-content>
+            
+        </mat-card>
         }
 
         <!--   -->
@@ -97,7 +106,7 @@
         @else if(activeTab() === 'specific' && isPaziente()) {
         <mat-card class="shadow-sm">
             <mat-card-content>
-                <h5 class="mb-4">Dati Sanitari</h5>
+                <h5 class="mb-4">Dati Sanitari Minore</h5>
                 <app-generic-form [fields]="patientInfoFields" [initialData]="user()" [editMode]="editMode()"
                     [showButtons]="true" submitButtonText="Salva" cancelButtonText="Annulla"
                     (save)="saveSpecificInfo($event)" (cancel)="toggleEditMode()">
