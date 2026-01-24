@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { BasePageComponent } from '../../shared/components/base/base-page.component';
 import { User } from '../../models/user.model';
 import { ProfileService } from '../../services/profile.service';
@@ -11,6 +12,9 @@ import { GenericFormComponent } from '../../shared/components/generic-form/gener
 import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { FormConfigs } from '../../shared/constants/form-config.constant';
 import { PazienteService } from '../../services/paziente.service';
+import { Paziente } from '../../models/paziente.model';
+import { AddPatientDialogComponent } from '../../components/add-patient-dialog/add-patient-dialog.component';
+
 
 @Component({
   selector: 'app-profile',
@@ -28,21 +32,31 @@ export class ProfileComponent extends BasePageComponent {
   readonly profileService = inject(ProfileService);
   readonly medicoService = inject(MedicoService);
   readonly pazienteService = inject(PazienteService);
+  readonly dialog = inject(MatDialog);
 
+  // ====== DATI TUTORE (genitore loggato) ======
   user = signal<User | null>(null);
-  editMode = signal<boolean>(false);
+  editModeTutore = signal<boolean>(false);
+
+  // ====== DATI PAZIENTI (bambini del tutore) ======
+  pazienti = signal<Paziente[]>([]);
+  selectedPaziente = signal<Paziente | null>(null);
+  editModePaziente = signal<boolean>(false);
+
+  // ====== DATI MEDICO (se ruolo medico) ======
+  medicoId?: number;
+  editModeMedico = signal<boolean>(false);
+
+  // Tab attivo
   activeTab = signal<string>('general');
 
-  pazienteId!: number;
-  medicoId!: number;
-
-  // Configurazioni dei form
+  // ====== FORM CONFIGS ======
   readonly generalInfoFields = FormConfigs.GENERAL_INFO_FIELDS;
   readonly patientInfoFields = FormConfigs.PATIENT_INFO_FIELDS;
   readonly doctorInfoFields = FormConfigs.DOCTOR_INFO_FIELDS;
   readonly passwordChangeFields = FormConfigs.PASSWORD_CHANGE_FIELDS;
 
-  // Custom validator per il form password
+  // Custom validator password
   passwordMatchValidator: ValidatorFn = (control: AbstractControl) => {
     const group = control as FormGroup;
     const newPass = group.get('newPassword')?.value;
@@ -50,7 +64,8 @@ export class ProfileComponent extends BasePageComponent {
     return newPass === confirmPass ? null : { passwordMismatch: true };
   };
 
-  isPaziente = computed(() => this.user()?.roles.includes(UserRole.TUTORE) ?? false);
+  // Computed properties
+  isTutore = computed(() => this.user()?.roles.includes(UserRole.TUTORE) ?? false);
   isMedico = computed(() => this.user()?.roles.includes(UserRole.MEDICO) ?? false);
   isAmministratore = computed(() => this.user()?.roles.includes(UserRole.ADMIN) ?? false);
 
@@ -59,12 +74,38 @@ export class ProfileComponent extends BasePageComponent {
     return u ? `${u.nome} ${u.cognome}` : '';
   });
 
+  // ====== LIFECYCLE ======
   override ngOnInit(): void {
     this.loadProfile();
-    this.loadDetailsPaziente();
   }
 
-  loadDetailsMedico() {
+  // ====== CARICAMENTO DATI ======
+
+  loadProfile(): void {
+    this.isLoading = true;
+
+    this.profileService.get().subscribe({
+      next: (user) => {
+        this.user.set(user);
+
+        if (Array.isArray(user.roles)) {
+          if (user.roles.includes(UserRole.MEDICO)) {
+            this.loadDetailsMedico();
+          } else if (user.roles.includes(UserRole.TUTORE)) {
+            this.loadPazienti();
+          } else {
+            this.isLoading = false;
+          }
+        }
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Errore nel caricamento del profilo', 'Chiudi');
+        this.isLoading = false;
+      }
+    });
+  }
+
+  loadDetailsMedico(): void {
     this.medicoService.findMedicoByUserId().subscribe({
       next: (res) => {
         if (this.user()) {
@@ -81,56 +122,32 @@ export class ProfileComponent extends BasePageComponent {
     });
   }
 
-  loadDetailsPaziente() {
-    this.pazienteService.findByUserId().subscribe({
+  loadPazienti(): void {
+    this.pazienteService.getPazientiByTutore().subscribe({
       next: (res) => {
-        if (this.user()) {
-          this.user.set({ ...this.user()!, ...res.data });
-          this.pazienteId = res.data.id;
+        this.pazienti.set(res.data || []);
+        
+        if (this.pazienti().length > 0) {
+          this.selectedPaziente.set(this.pazienti()[0]);
         }
+        
         this.isLoading = false;
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore nel recupero delle informazioni paziente', 'Chiudi');
+        this.snackBar.openSnackBar('Errore nel recupero dei pazienti', 'Chiudi');
         console.error(err);
-        this.isLoading = false;
-      }
-    })
-  }
-
-
-  loadProfile(): void {
-    this.isLoading = true;
-
-    this.profileService.get().subscribe({
-      next: (user) => {
-        this.user.set(user);
-
-        if (Array.isArray(user.roles)) {
-          if (user.roles.includes(UserRole.MEDICO)) {
-            this.loadDetailsMedico();
-          } else if (user.roles.includes(UserRole.PAZIENTE)) {
-            this.loadDetailsPaziente();
-          } else {
-            this.isLoading = false;
-          }
-        }
-
-      },
-      error: () => {
-        this.snackBar.openSnackBar('Errore nel caricamento del profilo', 'Chiudi');
         this.isLoading = false;
       }
     });
   }
 
-  toggleEditMode(): void {
-    this.editMode.set(!this.editMode());
+  // ====== AZIONI TUTORE ======
+
+  toggleEditModeTutore(): void {
+    this.editModeTutore.update(v => !v);
   }
 
-  saveGeneralInfo(data: User): void {
-    console.log('Saving general info:', data);
-
+  saveGeneralInfoTutore(data: User): void {
     const payload = {
       ...data,
       id: this.user()?.id
@@ -138,71 +155,120 @@ export class ProfileComponent extends BasePageComponent {
 
     this.profileService.updateGeneralInfo(payload).subscribe({
       next: () => {
-        this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
-        this.editMode.set(false);
+        this.snackBar.openSnackBar('Informazioni tutore salvate', 'Chiudi');
+        this.editModeTutore.set(false);
         this.loadProfile();
       },
       error: () => {
         this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
       }
     });
-
-    this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
-    this.editMode.set(false);
   }
 
-  saveSpecificInfo(data: any): void {
+  // ====== AZIONI PAZIENTE (bambino) ======
 
-    if (this.isPaziente()) {
-      const payload = {
-        ...data,
-        id: this.pazienteId
-      };
+  selectPaziente(paziente: Paziente): void {
+    this.selectedPaziente.set(paziente);
+    this.editModePaziente.set(false);
+  }
 
-      this.pazienteService.updatePazienteInfo(payload).subscribe({
-        next: () => {
-          this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
-          this.editMode.set(false);
-          this.loadProfile();
-        },
-        error: () => {
-          this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
-        }
-      });
-    } else if (this.isMedico()) {
-      const payload = {
-        ...data,
-        id: this.medicoId
-      };
-      this.medicoService.updateDoctorInfo(payload).subscribe({
-        next: () => {
-          this.snackBar.openSnackBar('Informazioni generali salvate', 'Chiudi');
-          this.editMode.set(false);
-          this.loadProfile();
-        },
-        error: () => {
-          this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
-        }
-      });
+  toggleEditModePaziente(): void {
+    this.editModePaziente.update(v => !v);
+  }
+
+  saveInfoPaziente(data: any): void {
+    const pazienteId = this.selectedPaziente()?.id;
+    
+    if (!pazienteId) {
+      this.snackBar.openSnackBar('Nessun paziente selezionato', 'Chiudi');
+      return;
     }
 
-    this.snackBar.openSnackBar('Informazioni specifiche salvate', 'Chiudi');
-    this.editMode.set(false);
+    const payload = {
+      ...data,
+      id: pazienteId
+    };
+
+    this.pazienteService.updatePazienteInfo(payload).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Dati paziente salvati', 'Chiudi');
+        this.editModePaziente.set(false);
+        this.loadPazienti();
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+      }
+    });
   }
 
-  changePassword(data: { password: string, newPassword: string }): void {
-    console.log('Changing password');
+  openAddPazienteDialog(): void {
+    const dialogRef = this.dialog.open(AddPatientDialogComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      disableClose: false,
+      autoFocus: true
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        // Ricarica la lista dei pazienti dopo l'aggiunta
+        this.loadPazienti();
+      }
+    });
+  }
+
+  deletePaziente(pazienteId: number): void {
+    if (!confirm('Sei sicuro di voler eliminare questo paziente?')) {
+      return;
+    }
+
+    this.pazienteService.deletePaziente(pazienteId).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Paziente eliminato', 'Chiudi');
+        this.selectedPaziente.set(null);
+        this.loadPazienti();
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Errore nell\'eliminazione', 'Chiudi');
+      }
+    });
+  }
+
+  // ====== AZIONI MEDICO ======
+
+  toggleEditModeMedico(): void {
+    this.editModeMedico.update(v => !v);
+  }
+
+  saveInfoMedico(data: any): void {
+    const payload = {
+      ...data,
+      id: this.medicoId
+    };
+
+    this.medicoService.updateDoctorInfo(payload).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Informazioni medico salvate', 'Chiudi');
+        this.editModeMedico.set(false);
+        this.loadProfile();
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+      }
+    });
+  }
+
+  // ====== ALTRE AZIONI ======
+
+  changePassword(data: { password: string; newPassword: string }): void {
     this.profileService.partialUpdate(data).subscribe({
       next: () => {
         this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
       },
-      error: (err) => {
+      error: () => {
         this.snackBar.openSnackBar('Errore: verifica la password attuale', 'Chiudi');
       }
     });
-
-    this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
   }
 
   getRoleLabel(ruolo: UserRole): string {
@@ -217,5 +283,23 @@ export class ProfileComponent extends BasePageComponent {
 
   setActiveTab(tab: string): void {
     this.activeTab.set(tab);
+  }
+
+  calculateAge(dataNascita: string | Date): number {
+    if (!dataNascita) return 0;
+    
+    const today = new Date();
+    const birthDate = typeof dataNascita === 'string' 
+      ? new Date(dataNascita) 
+      : dataNascita;
+    
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
   }
 }

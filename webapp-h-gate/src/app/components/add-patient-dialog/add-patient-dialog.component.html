@@ -1,0 +1,140 @@
+<div class="dialog-header">
+    <h5 class="dialog-title">
+        <i class="bi bi-person-plus me-2"></i>
+        Aggiungi Nuovo Bambino
+    </h5>
+    <button type="button" class="btn-close" (click)="onCancel()" aria-label="Chiudi">
+    </button>
+</div>
+
+<div class="dialog-content">
+    <mat-stepper #stepper linear>
+
+        <!-- STEP 1: Dati Anagrafici -->
+        <mat-step [completed]="step1Completed()">
+            <ng-template matStepLabel>
+                <i class="bi bi-person-vcard me-2"></i>
+                Dati Anagrafici
+            </ng-template>
+
+            <div class="step-content">
+                <p class="text-muted mb-3">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Inserisci i dati anagrafici del minore. Il codice fiscale verrà calcolato automaticamente.
+                </p>
+
+                <!-- Info sul codice fiscale -->
+                @if(codiceFiscaleCalcolato()) {
+                <div class="alert alert-success d-flex align-items-center mb-3">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <div class="flex-grow-1">
+                        <strong>Codice Fiscale:</strong>
+                        <span class="ms-2 font-monospace fs-6">{{ codiceFiscaleCalcolato() }}</span>
+                        @if(isComuneNonTrovato()) {
+                        <div class="mt-2">
+                            <small class="text-warning">
+                                <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                Il comune inserito non è stato trovato nel database.
+                                Verrà utilizzato un codice placeholder (Z999).
+                                Verifica manualmente il codice fiscale dopo il salvataggio.
+                            </small>
+                        </div>
+                        }
+                    </div>
+                </div>
+                } @else {
+                <div class="alert alert-info d-flex align-items-center mb-3">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <div class="flex-grow-1">
+                        <small>Compila tutti i campi per calcolare automaticamente il codice fiscale</small>
+                    </div>
+                </div>
+                }
+
+                <app-generic-form [fields]="anagraficiFields" [editMode]="true" [showButtons]="false"
+                    (formChanged)="onFormChange($event)">
+                </app-generic-form>
+
+                <!-- Campo Relazione -->
+                <div class="mt-3">
+                    <app-generic-form [fields]="relazioneField" [editMode]="true" [showButtons]="false"
+                        (formChanged)="onRelazioneChange($event)">
+                    </app-generic-form>
+                </div>
+
+                <div class="stepper-actions mt-4">
+                    <button mat-button (click)="onCancel()">
+                        <i class="bi bi-x-lg me-1"></i> Annulla
+                    </button>
+                    <button mat-raised-button color="primary" (click)="onNextStep()" [disabled]="!step1Completed()">
+                        Avanti <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </mat-step>
+
+        <!-- STEP 2: Dati Sanitari -->
+        <mat-step>
+            <ng-template matStepLabel>
+                <i class="bi bi-heart-pulse me-2"></i>
+                Dati Sanitari
+            </ng-template>
+
+            <div class="step-content">
+                <p class="text-muted mb-3">
+                    <i class="bi bi-clipboard2-pulse me-1"></i>
+                    Inserisci le informazioni sanitarie e cliniche del bambino.
+                </p>
+
+                <!-- Riepilogo dati anagrafici -->
+                <div class="summary-card mb-4">
+                    <div class="summary-header">
+                        <i class="bi bi-person-check-fill me-2"></i>
+                        <strong>Dati Anagrafici Confermati</strong>
+                    </div>
+                    <div class="summary-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <small class="text-muted d-block">Nome Completo</small>
+                                <strong>{{ formDataStep1().nome }} {{ formDataStep1().cognome }}</strong>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <small class="text-muted d-block">Codice Fiscale</small>
+                                <strong class="font-monospace">{{ codiceFiscaleCalcolato() }}</strong>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <small class="text-muted d-block">Data di Nascita</small>
+                                <strong>{{ formDataStep1().dataNascita | date:'dd/MM/yyyy' }}</strong>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <small class="text-muted d-block">Sesso</small>
+                                <strong>{{ formDataStep1().sesso === 'M' ? 'Maschio' : 'Femmina' }}</strong>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <small class="text-muted d-block">Comune di Nascita</small>
+                                <strong>{{ formDataStep1().comuneNascita || formDataStep1().citta }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <app-generic-form [fields]="sanitariFields" [editMode]="true" [showButtons]="false"
+                    (formChanged)="onFormChangeStep2($event)">
+                </app-generic-form>
+
+                <div class="stepper-actions mt-4">
+                    <button mat-button (click)="stepper.previous()">
+                        <i class="bi bi-arrow-left me-1"></i> Indietro
+                    </button>
+                    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="isSaving()">
+                        @if(isSaving()) {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        }
+                        <i class="bi bi-check-lg me-1"></i> Salva Bambino
+                    </button>
+                </div>
+            </div>
+        </mat-step>
+
+    </mat-stepper>
+</div>

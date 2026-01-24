@@ -146,7 +146,28 @@ export class FormConfigs {
         }
     ];
 
-    static readonly PATIENT_INFO_FIELDS: FormItem[] = [
+    static readonly MINOR_INFO_FIELDS : FormItem[] = [
+        {
+            name: 'nome',
+            label: 'Nome',
+            type: 'text',
+            validators: [Validators.required, Validators.minLength(2)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'cognome',
+            label: 'Cognome',
+            type: 'text',
+            validators: [Validators.required, Validators.minLength(2)],
+            colClass: 'col-md-6'
+        },
+        {
+            name: 'dataNascita',
+            label: 'Data di nascita',
+            type: 'date',
+            validators: [Validators.required],
+            colClass: 'col-md-6'
+        },
         {
             name: 'codiceFiscale',
             label: 'Codice Fiscale',
@@ -155,6 +176,28 @@ export class FormConfigs {
             maxLength: 16,
             colClass: 'col-md-6'
         },
+        {
+            name: 'citta',
+            label: 'Città',
+            type: 'text',
+            validators: [Validators.required],
+            colClass: 'col-md-4'
+        },
+        {
+            name: 'sesso',
+            label: 'Sesso',
+            type: 'select',
+            options: [
+                { value: 'M', label: 'Maschio' },
+                { value: 'F', label: 'Femmina' }
+            ],
+            colClass: 'col-md-6'
+        },
+
+    ]
+
+    static readonly PATIENT_INFO_FIELDS: FormItem[] = [
+      
         {
             name: 'gruppoSanguigno',
             label: 'Gruppo sanguigno',

@@ -5,7 +5,7 @@
         @case('textarea') {
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>{{field.label}}</mat-label>
-            <textarea matInput [formControlName]="field.name" [rows]="field.rows || 3" [readonly]="!editMode"
+            <textarea matInput [formControlName]="field.name" [rows]="field.rows || 3"
                 [placeholder]="field.placeholder || ''">
                             </textarea>
             @if(form.get(field.name)?.invalid && form.get(field.name)?.touched) {
@@ -17,7 +17,7 @@
         @case ('select') {
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>{{field.label}}</mat-label>
-            <mat-select [formControlName]="field.name" [disabled]="!editMode" [placeholder]="field.placeholder || ''">
+            <mat-select [formControlName]="field.name" [placeholder]="field.placeholder || ''">
                 @for(option of field.options; track option.value) {
                 <mat-option [value]="option.value">{{option.label}}</mat-option>
                 }
@@ -31,7 +31,7 @@
         @case ('date') {
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>{{ field.label }}</mat-label>
-            <input matInput [matDatepicker]="picker" [formControlName]="field.name" [readonly]="!editMode" />
+            <input matInput [matDatepicker]="picker" [formControlName]="field.name"/>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
@@ -43,7 +43,7 @@
         @default {
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>{{ field.label }}</mat-label>
-            <input matInput [type]="field.type || 'text'" [formControlName]="field.name" [readonly]="!editMode"
+            <input matInput [type]="field.type || 'text'" [formControlName]="field.name"
                 [maxlength]="field.maxLength ?? null" [placeholder]="field.placeholder || ''" />
             @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
             <mat-error>{{ getErrorMessage(field.name) }}</mat-error>

@@ -15,11 +15,19 @@ export class PazienteService extends HttpBaseService<Paziente> {
     super(injector, environment.endpoints.paziente);
   }
 
-  findByUserId(): Observable<ResponseDTO<Paziente>> {
-    return this.request<ResponseDTO<Paziente>>('/user-id', METHODS.GET);
+  getPazientiByTutore(): Observable<ResponseDTO<Paziente[]>> {
+    return this.request<ResponseDTO<Paziente[]>>('/user-id', METHODS.GET);
   }
 
   updatePazienteInfo(data: Partial<Paziente>): Observable<ResponseDTO<Paziente>> {
     return this.request<ResponseDTO<Paziente>>('/update', METHODS.PUT, data);
+  }
+
+  createPaziente(data: Paziente): Observable<ResponseDTO<Paziente>> {
+    return this.request<ResponseDTO<Paziente>>(`/add`, METHODS.POST, data);
+  }
+
+  deletePaziente(id: number) {
+    return this.request(`/delete/${id}`, METHODS.DELETE);
   }
 }

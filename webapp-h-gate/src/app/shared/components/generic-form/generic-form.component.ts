@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { SharedModule } from '../../shared.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { FormItem } from '../../models/form-item.model';
@@ -21,7 +21,7 @@ export class GenericFormComponent implements OnInit {
   @Input() submitButtonText = 'Salva';
   @Input() cancelButtonText = 'Annulla';
   @Input() formValidator?: ValidatorFn | ValidatorFn[];
-  @Input() excludeFields?: string[]; 
+  @Input() excludeFields?: string[];
 
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
@@ -50,12 +50,25 @@ export class GenericFormComponent implements OnInit {
     }
   }
 
-  ngOnChanges(): void {
-    if (this.form && this.initialData) {
+  ngOnChanges(changes: SimpleChanges): void {
+    // Se cambia l'initialData, aggiorna i valori
+    if (changes['initialData'] && this.form && this.initialData) {
       this.patchForm(this.initialData);
+    }
+
+    // Se cambia editMode, abilita o disabilita il form
+    if (changes['editMode'] && this.form) {
+      this.updateFormState();
     }
   }
 
+  private updateFormState(): void {
+    if (this.editMode) {
+      this.form.enable({ emitEvent: false });
+    } else {
+      this.form.disable({ emitEvent: false });
+    }
+  }
 
   private initForm(): void {
     const formConfig: { [key: string]: any } = {};
@@ -68,7 +81,9 @@ export class GenericFormComponent implements OnInit {
       validators: this.formValidator || []
     });
 
-    // Emetti i cambiamenti del form
+    // Imposta lo stato iniziale (disabled se editMode è false)
+    this.updateFormState();
+
     this.form.valueChanges.subscribe(value => {
       this.formChanged.emit(value);
     });
