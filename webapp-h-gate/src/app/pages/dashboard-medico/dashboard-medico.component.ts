@@ -32,49 +32,8 @@ export class DashboardMedicoComponent extends BasePageComponent {
   }
 
   loadDashboardData() {
-    this.isLoading = true;
-    this.dashboasrdService.dashboardMedico().subscribe({
-      next: (res) => {
-        this.stats.set([
-          {
-            title: 'Visite Oggi',
-            value: res.data.visiteOggi || 0,
-            icon: 'today',
-            color: 'primary',
-            change: '8 programmate'
-          },
-          {
-            title: 'Pazienti Totali',
-            value: res.data.pazientiTotali || 0,
-            icon: 'people',
-            color: 'success',
-            change: '+12 questo mese'
-          },
-          {
-            title: 'Referti da Firmare',
-            value: res.data.refertiDaFirmare || 0,
-            icon: 'pending_actions',
-            color: 'warning',
-            change: 'In sospeso'
-          },
-          {
-            title: 'Rating Medio',
-            value: res.data.ratingMedio || '4.9',
-            icon: 'star',
-            color: 'info',
-            change: `${res.data.numeroRecensioni || 0} recensioni`
-          }
-        ]);
-        this.appuntamentiOggi.set(res.data.appuntamentiOggi || []);
-        this.refertiDaCompletare.set(res.data.refertiDaFirmare || 0);
-        this.rating = res.data.ratingMedio || 0;
-
-        this.isLoading = false;
-      }, error: (err) => {
-        this.isLoading = false;
-        this.snackBar.openSnackBar(err, 'error');
-      }
-    });
+    this.isLoading = false;
+   
   }
 
   isProssimaVisita(app: Prenotazione): boolean {

@@ -69,27 +69,23 @@ export class AddPatientDialogComponent {
     }
   });
 
-  // Computed signal per verificare se il comune è nella lista
   isComuneNonTrovato = computed(() => {
     const cf = this.codiceFiscaleCalcolato();
     return cf.length > 0 && cf.includes('Z999');
   });
 
-  // Computed signal per verificare se lo step 1 è completato
   step1Completed = computed(() => {
     const cf = this.codiceFiscaleCalcolato();
     const relazione = this.formDataRaw().relazione;
     return cf.length > 0 && relazione && relazione.trim().length > 0;
   });
 
-  // Campi anagrafici - RIMUOVI il campo codiceFiscale dalla visualizzazione
   readonly anagraficiFields = FormConfigs.MINOR_INFO_FIELDS.filter(
     field => field.name !== 'codiceFiscale'
   );
 
   readonly sanitariFields = FormConfigs.PATIENT_INFO_FIELDS;
 
-  // NUOVO: Aggiungi campo relazione
   readonly relazioneField: FormItem[] = [
     {
       name: 'relazione',
@@ -111,12 +107,10 @@ export class AddPatientDialogComponent {
     this.formDataRaw.update(() => ({...data}));
   }
   
-  // Metodo per gestire il cambio della relazione
   onRelazioneChange(data: any): void {
     this.formDataRaw.update(current => ({...current, relazione: data.relazione}));
   }
-  
-  // Metodo per ricevere anche i dati dello step 2
+
   onFormChangeStep2(data: any): void {
     this.formDataStep2.set(data);
   }
@@ -138,7 +132,6 @@ export class AddPatientDialogComponent {
   }
 
   onSave(): void {
-    // Apri il dialog per il consenso privacy
     const consentDialog = this.dialog.open(PrivacyContentDialogComponent, {
       width: '550px',
       disableClose: true,

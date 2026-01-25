@@ -1,153 +1,227 @@
 <div class="register-container min-vh-100 d-flex align-items-center justify-content-center py-5">
-    <div class="container">
-      
-      <!-- Step 0: Selezione Ruolo -->
-      @if (currentStep() === 0) {
-        <div class="row justify-content-center">
-          <div class="col-12 text-center mb-5">
-            <h1 class="display-4 fw-bold mb-3">Benvenuto</h1>
-            <p class="lead text-muted">Scegli come vuoi registrarti alla piattaforma</p>
-          </div>
-  
-          <!-- Card Paziente -->
-          <div class="col-lg-5 col-md-6 mb-4">
-            <mat-card class="role-card h-100 text-center cursor-pointer" (click)="selectRole(UserRole.PAZIENTE)">
-              <mat-card-content class="p-5">
-                <div class="role-icon mb-4">
-                  <mat-icon class="display-1 text-primary">person</mat-icon>
-                </div>
-                <h3 class="mb-3">Paziente</h3>
-                <p class="text-muted mb-4">
-                  {{ getRoleDescription(UserRole.PAZIENTE) }}
-                </p>
-                <button mat-raised-button color="primary" class="w-100">
-                  Registrati come Paziente
-                </button>
-              </mat-card-content>
-            </mat-card>
-          </div>
-  
-          <!-- Card Medico -->
-          <div class="col-lg-5 col-md-6 mb-4">
-            <mat-card class="role-card h-100 text-center cursor-pointer" (click)="selectRole(UserRole.MEDICO)">
-              <mat-card-content class="p-5">
-                <div class="role-icon mb-4">
-                  <mat-icon class="display-1 text-success">local_hospital</mat-icon>
-                </div>
-                <h3 class="mb-3">Medico</h3>
-                <p class="text-muted mb-4">
-                  {{ getRoleDescription(UserRole.MEDICO) }}
-                </p>
-                <button mat-raised-button color="accent" class="w-100">
-                  Registrati come Medico
-                </button>
-              </mat-card-content>
-            </mat-card>
-          </div>
-  
-          <div class="col-12 text-center mt-4">
-            <p class="text-muted">
-              Hai già un account? 
-              <a class="text-primary cursor-pointer fw-bold" (click)="goToLogin()">Accedi qui</a>
-            </p>
-          </div>
-        </div>
-      }
-  
-      <!-- Step 1: Dati Generali -->
-      @if (currentStep() === 1) {
-        <div class="row justify-content-center">
-          <div class="col-lg-8 col-xl-7">
-            <mat-card>
-              <mat-card-header class="p-4 border-bottom">
-                <div class="d-flex align-items-center w-100">
-                  <button mat-icon-button (click)="goBack()" class="me-3">
-                    <mat-icon>arrow_back</mat-icon>
-                  </button>
-                  <div>
-                    <mat-card-title class="mb-1">
-                      {{ getRoleTitle(selectedRole()!) }}
-                    </mat-card-title>
-                    <mat-card-subtitle>Passo 1 di 2 - Dati Personali</mat-card-subtitle>
-                  </div>
-                </div>
-              </mat-card-header>
-  
-              <mat-card-content class="p-4">
-                <!-- Progress Bar -->
-                <div class="progress mb-4" style="height: 4px;">
-                  <div class="progress-bar bg-primary" role="progressbar" style="width: 50%"></div>
-                </div>
-  
-                <app-generic-form
-                  [fields]="generalInfoFields"
-                  [editMode]="true"
-                  [showButtons]="true"
-                  submitButtonText="Continua"
-                  cancelButtonText="Indietro"
-                  [formValidator]="passwordMatchValidator"
-                  (save)="saveGeneralData($event)"
-                  (cancel)="goBack()">
-                </app-generic-form>
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </div>
-      }
-  
-      <!-- Step 2: Dati Specifici -->
-      @if (currentStep() === 2) {
-        <div class="row justify-content-center">
-          <div class="col-lg-8 col-xl-7">
-            <mat-card>
-              <mat-card-header class="p-4 border-bottom">
-                <div class="d-flex align-items-center w-100">
-                  <button mat-icon-button (click)="goBack()" class="me-3">
-                    <mat-icon>arrow_back</mat-icon>
-                  </button>
-                  <div>
-                    <mat-card-title class="mb-1">
-                      {{ getRoleTitle(selectedRole()!) }}
-                    </mat-card-title>
-                    <mat-card-subtitle>
-                      Passo 2 di 2 - 
-                      @if (selectedRole() === UserRole.PAZIENTE) {
-                        Dati Sanitari
-                      } @else {
-                        Dati Professionali
-                      }
-                    </mat-card-subtitle>
-                  </div>
-                </div>
-              </mat-card-header>
-  
-              <mat-card-content class="p-4">
-                <!-- Progress Bar -->
-                <div class="progress mb-4" style="height: 4px;">
-                  <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
-                </div>
-  
-                @if (isLoading()) {
-                  <div class="text-center py-5">
-                    <mat-spinner class="mx-auto mb-3"></mat-spinner>
-                    <p class="text-muted">Stiamo creando il tuo account...</p>
-                  </div>
-                } @else {
-                  <app-generic-form
-                    [fields]="specificFields()"
-                    [editMode]="true"
-                    [showButtons]="true"
-                    submitButtonText="Completa Registrazione"
-                    cancelButtonText="Indietro"
-                    (save)="saveSpecificData($event)"
-                    (cancel)="goBack()">
-                  </app-generic-form>
-                }
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </div>
-      }
-  
+  <div class="container">
+
+    <!-- STEP 0: Selezione Ruolo -->
+    @if (currentStep() === 0) {
+    <div class="row justify-content-center">
+      <div class="col-12 text-center mb-5">
+        <h1 class="display-4 fw-bold mb-3">Benvenuto</h1>
+        <p class="lead text-muted">Scegli come vuoi registrarti</p>
+      </div>
+
+      <div class="col-lg-5 col-md-6 mb-4">
+        <mat-card class="role-card h-100 text-center cursor-pointer" (click)="selectRole(UserRole.TUTORE)">
+          <mat-card-content class="p-5">
+            <div class="role-icon mb-4">
+              <mat-icon class="display-1 text-primary">person</mat-icon>
+            </div>
+            <h3 class="mb-3">Tutore</h3>
+            <p class="text-muted mb-4">{{ getRoleDescription(UserRole.TUTORE) }}</p>
+            <button mat-raised-button color="primary" class="w-100">
+              Registrati come Tutore
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-lg-5 col-md-6 mb-4">
+        <mat-card class="role-card h-100 text-center cursor-pointer" (click)="selectRole(UserRole.MEDICO)">
+          <mat-card-content class="p-5">
+            <div class="role-icon mb-4">
+              <mat-icon class="display-1 text-success">local_hospital</mat-icon>
+            </div>
+            <h3 class="mb-3">Medico</h3>
+            <p class="text-muted mb-4">{{ getRoleDescription(UserRole.MEDICO) }}</p>
+            <button mat-raised-button color="accent" class="w-100">
+              Registrati come Medico
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-12 text-center mt-4">
+        <p class="text-muted">
+          Hai già un account?
+          <a class="text-primary cursor-pointer fw-bold" (click)="goToLogin()">Accedi qui</a>
+        </p>
+      </div>
     </div>
+    }
+
+    <!-- TUTORE - STEP 1: Dati Generali -->
+    @if (currentStep() === 1 && selectedRole() === UserRole.TUTORE) {
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <mat-card>
+          <mat-card-header class="p-4 border-bottom">
+            <div class="d-flex align-items-center w-100">
+              <button mat-icon-button (click)="goBack()" class="me-3">
+                <mat-icon>arrow_back</mat-icon>
+              </button>
+              <div>
+                <mat-card-title>Registrazione Tutore</mat-card-title>
+                <mat-card-subtitle>Step 1 di 3 - Dati Generali</mat-card-subtitle>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content class="p-4">
+            <div class="progress mb-4" style="height: 4px;">
+              <div class="progress-bar bg-primary" style="width: 33%"></div>
+            </div>
+
+            <app-generic-form [fields]="tutoreGeneralFields" [editMode]="true" [showButtons]="true"
+              submitButtonText="Continua" cancelButtonText="Indietro" [formValidator]="passwordMatchValidator"
+              (save)="onSaveTutoreGeneral($event)" (cancel)="goBack()">
+            </app-generic-form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    }
+
+    <!-- TUTORE - STEP 2: Dati Anagrafici Minore -->
+    @if (currentStep() === 2 && selectedRole() === UserRole.TUTORE) {
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <mat-card>
+          <mat-card-header class="p-4 border-bottom">
+            <div class="d-flex align-items-center w-100">
+              <button mat-icon-button (click)="goBack()" class="me-3">
+                <mat-icon>arrow_back</mat-icon>
+              </button>
+              <div>
+                <mat-card-title>Dati Anagrafici del Minore</mat-card-title>
+                <mat-card-subtitle>Step 2 di 3 - Informazioni del bambino</mat-card-subtitle>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content class="p-4">
+            <div class="progress mb-4" style="height: 4px;">
+              <div class="progress-bar bg-primary" style="width: 66%"></div>
+            </div>
+
+            @if(codiceFiscaleMinore()) {
+            <div class="alert alert-success mb-3">
+              <strong>Codice Fiscale:</strong>
+              <span class="font-monospace ms-2">{{ codiceFiscaleMinore() }}</span>
+            </div>
+            }
+
+            <app-generic-form [fields]="minoreAnagraficiFields" [editMode]="true" [showButtons]="true"
+              submitButtonText="Continua" cancelButtonText="Indietro" (formChanged)="onMinoreAnagraficaChange($event)"
+              (save)="onSaveMinoreAnagrafica($event)" (cancel)="goBack()">
+            </app-generic-form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    }
+
+    <!-- TUTORE - STEP 3: Dati Clinici Minore -->
+    @if (currentStep() === 3 && selectedRole() === UserRole.TUTORE) {
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <mat-card>
+          <mat-card-header class="p-4 border-bottom">
+            <div class="d-flex align-items-center w-100">
+              <button mat-icon-button (click)="goBack()" class="me-3">
+                <mat-icon>arrow_back</mat-icon>
+              </button>
+              <div>
+                <mat-card-title>Dati Clinici del Minore</mat-card-title>
+                <mat-card-subtitle>Step 3 di 3 - Informazioni sanitarie</mat-card-subtitle>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content class="p-4">
+            <div class="progress mb-4" style="height: 4px;">
+              <div class="progress-bar bg-primary" style="width: 100%"></div>
+            </div>
+
+            <app-generic-form [fields]="minoreClinicFields" [editMode]="true" [showButtons]="true"
+              submitButtonText="Completa Registrazione" cancelButtonText="Indietro" (save)="onSaveMinoreClinici($event)"
+              (cancel)="goBack()">
+            </app-generic-form>
+
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    }
+
+    <!-- MEDICO - STEP 1: Dati Generali -->
+    @if (currentStep() === 1 && selectedRole() === UserRole.MEDICO) {
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <mat-card>
+          <mat-card-header class="p-4 border-bottom">
+            <div class="d-flex align-items-center w-100">
+              <button mat-icon-button (click)="goBack()" class="me-3">
+                <mat-icon>arrow_back</mat-icon>
+              </button>
+              <div>
+                <mat-card-title>Registrazione Medico</mat-card-title>
+                <mat-card-subtitle>Step 1 di 2 - Dati Generali</mat-card-subtitle>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content class="p-4">
+            <div class="progress mb-4" style="height: 4px;">
+              <div class="progress-bar bg-primary" style="width: 50%"></div>
+            </div>
+
+            <app-generic-form [fields]="tutoreGeneralFields" [editMode]="true" [showButtons]="true"
+              submitButtonText="Continua" cancelButtonText="Indietro" [formValidator]="passwordMatchValidator"
+              (save)="onSaveMedicoGeneral($event)" (cancel)="goBack()">
+            </app-generic-form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    }
+
+    <!-- MEDICO - STEP 2: Dati Professionali -->
+    @if (currentStep() === 2 && selectedRole() === UserRole.MEDICO) {
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <mat-card>
+          <mat-card-header class="p-4 border-bottom">
+            <div class="d-flex align-items-center w-100">
+              <button mat-icon-button (click)="goBack()" class="me-3">
+                <mat-icon>arrow_back</mat-icon>
+              </button>
+              <div>
+                <mat-card-title>Registrazione Medico</mat-card-title>
+                <mat-card-subtitle>Step 2 di 2 - Dati Professionali</mat-card-subtitle>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content class="p-4">
+            <div class="progress mb-4" style="height: 4px;">
+              <div class="progress-bar bg-primary" style="width: 100%"></div>
+            </div>
+
+            @if (isLoading()) {
+            <div class="text-center py-5">
+              <mat-spinner class="mx-auto mb-3"></mat-spinner>
+              <p class="text-muted">Stiamo creando il tuo account...</p>
+            </div>
+            } @else {
+            <app-generic-form [fields]="medicoFields" [editMode]="true" [showButtons]="true"
+              submitButtonText="Completa Registrazione" cancelButtonText="Indietro" (save)="onSaveMedico($event)"
+              (cancel)="goBack()">
+            </app-generic-form>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    }
+
   </div>
+</div>
