@@ -9,5 +9,9 @@ export const ROLE_VISIBILITY = {
   ],
   DASHBOARD_AMMINISTRATORE: [
     Group.ADMIN
+  ],
+  PRENOTAZIONI_LIST: [
+    Group.TUTORE
+ 
   ]
 }

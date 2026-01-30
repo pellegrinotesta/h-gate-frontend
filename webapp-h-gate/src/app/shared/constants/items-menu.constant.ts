@@ -25,13 +25,13 @@ export const ITEMS_MENU: MenuSection[] = [
                 link: RoutesEnum.DASHBOARD_AMMINISTRATORE,
                 permission: ROLE_VISIBILITY.DASHBOARD_AMMINISTRATORE,
                 tooltip: 'Dashboard amministratore'
-            }
-            // {
-            //     title: 'Gestione domande',
-            //     link: RoutesEnum.APPLICATION_MANAGEMENT,
-            //     permission: ROLE_VISIBILITY.DASHBOARD_OPERATOR,
-            //     tooltip: 'Gestione domande'
-            // },
+            },
+            {
+                title: 'Prenotazioni',
+                link: RoutesEnum.PRENOTAZIONI,
+                permission: ROLE_VISIBILITY.PRENOTAZIONI_LIST,
+                tooltip: 'Prenotazioni'
+            },
             // {
             //     title: 'Calcolo graduatorie',
             //     link: RoutesEnum.CLASSIFICATIONS_MANAGEMENT,
