@@ -17,9 +17,9 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
             },
             {
-                path: RoutesEnum.DASHBOARD_PAZIENTE,
+                path: RoutesEnum.DASHBOARD_TUTORE,
                 canActivate: [roleGuard],
-                data: { roles: ROLE_VISIBILITY.DASHBOARD_PAZIENTE },
+                data: { roles: ROLE_VISIBILITY.DASHBOARD_TUTORE },
                 loadComponent: () => import('./pages/dashboard-paziente/dashboard-paziente.component').then(m => m.DashboardPazienteComponent)
 
             },
@@ -37,9 +37,24 @@ export const routes: Routes = [
             },
             {
                 path: RoutesEnum.PRENOTAZIONI,
-                canActivate: [roleGuard],
-                data: { roles: ROLE_VISIBILITY.PRENOTAZIONI_LIST },
-                loadComponent: () => import('./pages/prenotazioni-list/prenotazioni-list.component').then(m => m.PrenotazioniListComponent),
+                children: [
+                    {
+                        path: '',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.PRENOTAZIONI_LIST },
+                        loadComponent: () => import('./pages/prenotazioni-list/prenotazioni-list.component').then(m => m.PrenotazioniListComponent)
+                    },
+                    {
+
+                        path: 'nuova',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.PRENOTAZIONI_LIST },
+                        loadComponent: () => import('./components/nuova-prenotazione/nuova-prenotazione.component').then(m => m.NuovaPrenotazioneComponent)
+
+
+                    }
+                ]
+
             }
 
         ]

@@ -3,21 +3,101 @@
 }
 @else {
 <div class="dashboard-container">
+
+    <!-- Header con selezione minore -->
     <div class="welcome-card mb-4">
         <div class="row align-items-center">
-            <div class="col-md-8">
-                <h1 class="mb-2">Benvenuto</h1>
-                <p class="mb-0">Ecco una panoramica della tua salute e delle tue prossime visite</p>
+            <div class="col-md-5">
+                <h1 class="mb-2">Benvenuto </h1>
+                <p class="mb-0">Gestisci la salute dei tuoi bambini</p>
             </div>
-            <div class="col-md-4 text-end">
-                <button mat-raised-button color="primary" routerLink="/prenotazioni/nuova">
+
+            <!-- Selezione Minore -->
+            @if(minori().length > 0) {
+            <div class="col-md-4">
+                <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Seleziona minore</mat-label>
+                    <mat-select [value]="minoreSelezionato()" (selectionChange)="onMinoreChange($event.value)">
+                        @for(minore of minori(); track minore.id) {
+                        <mat-option [value]="minore">
+                            {{ minore.nome }} {{ minore.cognome }} ({{ getEta(minore.dataNascita) }} anni)
+                        </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            }
+
+            <div class="col-md-3 text-end">
+                <button mat-raised-button color="accent" (click)="aggiungiMinore()" class="mb-2">
+                    <mat-icon>person_add</mat-icon>
+                    Aggiungi Minore
+                </button>
+                @if(minoreSelezionato()) {
+                <button mat-raised-button color="primary" [routerLink]="['/prenotazioni/nuova']"
+                    [queryParams]="{pazienteId: minoreSelezionato()!.id}">
                     <mat-icon>add</mat-icon>
                     Prenota Visita
                 </button>
+                }
             </div>
         </div>
     </div>
 
+    <!-- Caso: Nessun minore registrato -->
+    @if(minori().length === 0) {
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="empty-minori-card">
+                <mat-card-content class="text-center py-5">
+                    <mat-icon class="empty-icon-large">child_care</mat-icon>
+                    <h3 class="mt-4 mb-3">Nessun minore registrato</h3>
+                    <p class="text-muted mb-4">
+                        Aggiungi il tuo primo bambino per iniziare a gestire le sue visite e referti medici
+                    </p>
+                    <button mat-raised-button color="primary" (click)="aggiungiMinore()">
+                        <mat-icon>person_add</mat-icon>
+                        Aggiungi il primo minore
+                    </button>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+    }
+
+    <!-- Dashboard del minore selezionato -->
+    @if(minoreSelezionato()) {
+
+    <!-- Info Minore Selezionato -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <mat-card class="minore-info-card">
+                <mat-card-content>
+                    <div class="d-flex align-items-center">
+                        <div class="minore-avatar me-3">
+                            <mat-icon>child_care</mat-icon>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="mb-1">{{ minoreSelezionato()!.nome }} {{ minoreSelezionato()!.cognome }}</h4>
+                            <p class="text-muted mb-0">
+                                {{ getEta(minoreSelezionato()!.dataNascita) }} anni •
+                                {{ minoreSelezionato()!.sesso === 'M' ? 'Maschio' : 'Femmina' }} •
+                                CF: {{ minoreSelezionato()!.codiceFiscale }}
+                            </p>
+                        </div>
+                        <div>
+                            <button mat-stroked-button [routerLink]="['/pazienti', minoreSelezionato()!.id]">
+                                <mat-icon>edit</mat-icon>
+                                Modifica Profilo
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <!-- Statistiche -->
     <div class="row mb-4">
         @for(stat of stats(); track stat.title) {
         <div class="col-md-3 mb-3">
@@ -30,6 +110,7 @@
                             @if(stat.change) {
                             <span class="stat-change" [class.positive]="stat.trend === 'up'">
                                 <mat-icon>{{stat.trend === 'up' ? 'trending_up' : 'trending_down' }}</mat-icon>
+                                {{stat.change}}
                             </span>
                             }
                         </div>
@@ -43,6 +124,7 @@
         }
     </div>
 
+    <!-- Prossime Visite e Referti -->
     <div class="row">
         <div class="col-lg-8 mb-4">
             <mat-card>
@@ -52,17 +134,20 @@
                         Prossime visite
                     </mat-card-title>
                     <div class="spacer"></div>
-                    <button mat-button routerLink="/prenotazioni">Vedi tutte</button>
+                    <button mat-button [routerLink]="['/prenotazioni']"
+                        [queryParams]="{pazienteId: minoreSelezionato()!.id}">
+                        Vedi tutte
+                    </button>
                 </mat-card-header>
                 <mat-card-content>
                     @if(prossimiAppuntamenti().length === 0) {
                     <div class="empty-state text-center py-5">
                         <mat-icon class="empty-icon">event_busy</mat-icon>
-                        <p class="mt-3">Nessuna visita programmata</p>
-                        <button mat-raised-button color="primary" routerLink="/prenotazioni/nuova">
+                        <p class="mt-3">Nessuna visita programmata per {{ minoreSelezionato()!.nome }}</p>
+                        <button mat-raised-button color="primary" [routerLink]="['/prenotazioni/nuova']"
+                            [queryParams]="{pazienteId: minoreSelezionato()!.id}">
                             Prenota Ora
                         </button>
-
                     </div>
                     } @else {
                     @for(app of prossimiAppuntamenti(); track app.id) {
@@ -71,13 +156,12 @@
                             <div class="flex-grow-1">
                                 <h5 class="mb-1">{{app.tipoVisita}}</h5>
                                 <p class="text-muted mb-2">
-                                    Dr. {{ app.medicoNome }} - {{
-                                    app.medicoSpecializzazione}}
+                                    Dr. {{ app.medicoNome }} - {{ app.medicoSpecializzazione }}
                                 </p>
                                 <div class="d-flex gap-3 mb-2">
                                     <span class="detail-item">
                                         <mat-icon class="small-icon">calendar_today</mat-icon>
-                                        {{ app.dataOra | date: 'EEEE, dd MM yyyy'}}
+                                        {{ app.dataOra | date: 'EEEE, dd MMMM yyyy'}}
                                     </span>
                                     <span class="detail-item">
                                         <mat-icon class="small-icon">schedule</mat-icon>
@@ -110,6 +194,7 @@
         </div>
 
         <div class="col-lg-4">
+            <!-- Referti -->
             <mat-card class="mb-4">
                 <mat-card-header>
                     <mat-card-title>
@@ -140,12 +225,14 @@
                     </div>
                     }
                     }
-                    <button mat-stroked-button class="w-100 mt-2" routerLink="/referti">
+                    <button mat-stroked-button class="w-100 mt-2" [routerLink]="['/referti']"
+                        [queryParams]="{pazienteId: minoreSelezionato()!.id}">
                         Vedi tutti i referti
                     </button>
                 </mat-card-content>
             </mat-card>
 
+            <!-- Azioni Rapide -->
             <mat-card>
                 <mat-card-header>
                     <mat-card-title>
@@ -159,15 +246,17 @@
                             <mat-icon>search</mat-icon>
                             Cerca medico
                         </button>
-                        <button mat-raised-button routerLink="/referti">
+                        <button mat-raised-button [routerLink]="['/referti']"
+                            [queryParams]="{pazienteId: minoreSelezionato()!.id}">
                             <mat-icon>description</mat-icon>
-                            I miei referti
+                            Referti di {{ minoreSelezionato()!.nome }}
                         </button>
-                        <button mat-raised-button routerLink="/profile">
-                            <mat-icon>person</mat-icon>
-                            Modifica profilo
+                        <button mat-raised-button [routerLink]="['/pazienti', minoreSelezionato()!.id]">
+                            <mat-icon>edit</mat-icon>
+                            Modifica profilo minore
                         </button>
-                        <button mat-raised-button routerLink="/storico">
+                        <button mat-raised-button [routerLink]="['/storico']"
+                            [queryParams]="{pazienteId: minoreSelezionato()!.id}">
                             <mat-icon>history</mat-icon>
                             Storico visite
                         </button>
@@ -176,5 +265,6 @@
             </mat-card>
         </div>
     </div>
+    }
 </div>
 }
