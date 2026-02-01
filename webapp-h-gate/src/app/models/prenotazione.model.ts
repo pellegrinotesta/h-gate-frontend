@@ -17,3 +17,30 @@ export interface Prenotazione {
     };
     note?: string;
 }
+
+
+export interface PrenotazioneCreate {
+    pazienteId: number;
+    medicoId: number;
+    dataOra: string;
+    tipoVisita: string;
+    note?: string;
+    costo?: number;
+    isPrimaVisita?: boolean;
+}
+
+export interface SlotDisponibile {
+    dataOra: string;
+    disponibile: boolean;
+    motivoNonDisponibilita?: string;
+}
+
+export interface SlotDisponibili {
+    medicoId: number;
+    medicoNome: string;
+    data: string;
+    slots: SlotDisponibile[];
+}
+
+
+    

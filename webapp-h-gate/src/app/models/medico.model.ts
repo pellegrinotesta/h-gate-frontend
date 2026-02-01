@@ -2,6 +2,7 @@ import { User } from "./user.model";
 
 export interface Medico extends User {
   specializzazione: string;
+  user: User;
   numeroAlbo: string;
   universita?: string;
   annoLaurea?: number;

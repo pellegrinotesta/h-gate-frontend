@@ -15,6 +15,10 @@ export class MedicoService extends HttpBaseService<Medico> {
     super(injector, environment.endpoints.medico);
   }
 
+  getAllMedici(): Observable<ResponseDTO<Medico[]>> {
+    return this.request<ResponseDTO<Medico[]>>('/all', METHODS.GET);
+  }
+
   findMedicoByUserId(): Observable<ResponseDTO<Medico>> {
     return this.request<ResponseDTO<Medico>>('/user-id', METHODS.GET);
   }
