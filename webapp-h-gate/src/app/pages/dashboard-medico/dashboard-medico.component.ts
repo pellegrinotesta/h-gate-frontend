@@ -33,7 +33,20 @@ export class DashboardMedicoComponent extends BasePageComponent {
 
   loadDashboardData() {
     this.isLoading = false;
-   
+    this.dashboasrdService.dashboardMedico().subscribe({
+      next: (res) => {
+        this.appuntamentiOggi.set(res.data.appuntamentiOggi);
+        this.refertiDaCompletare.set(res.data.refertiDaCOmpletare);
+        this.rating = res.data.ratingMedio;
+        this.numeroRecensioni.set(res.data.numeroRecensioni);
+        this.numeroPazienti.set(res.data.pazientiTotali);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.snackBar.openSnackBar('Errore caricamento dashboard', err);
+      }
+    });
+
   }
 
   isProssimaVisita(app: Prenotazione): boolean {
