@@ -99,7 +99,7 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
 
     this.dettagliForm = this.fb.group({
       tipoVisita: ['', Validators.required],
-      note: [''],
+      note: [null],
       isPrimaVisita: [false]
     });
   }

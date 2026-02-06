@@ -51,7 +51,6 @@ export const routes: Routes = [
                         data: { roles: ROLE_VISIBILITY.PRENOTAZIONI_LIST },
                         loadComponent: () => import('./components/nuova-prenotazione/nuova-prenotazione.component').then(m => m.NuovaPrenotazioneComponent)
 
-
                     }
                 ]
 

@@ -237,39 +237,6 @@
                     </mat-card-content>
                 </mat-card>
 
-                <!-- Quick Stats (se non in edit mode) -->
-                @if(!editModePaziente()) {
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <div class="card bg-light h-100">
-                            <div class="card-body text-center">
-                                <i class="bi bi-calendar-check display-6 text-primary"></i>
-                                <h6 class="mt-2 mb-1">Prossimo Appuntamento</h6>
-                                <small class="text-muted">15 Gen 2025</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card bg-light h-100">
-                            <div class="card-body text-center">
-                                <i class="bi bi-file-medical display-6 text-success"></i>
-                                <h6 class="mt-2 mb-1">Referti</h6>
-                                <small class="text-muted">3 disponibili</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="card bg-light h-100">
-                            <div class="card-body text-center">
-                                <i class="bi bi-graph-up display-6 text-info"></i>
-                                <h6 class="mt-2 mb-1">Percorso</h6>
-                                <small class="text-muted">In corso</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                }
-
                 } @else {
                 <!-- Nessun paziente selezionato -->
                 <mat-card class="shadow-sm">
