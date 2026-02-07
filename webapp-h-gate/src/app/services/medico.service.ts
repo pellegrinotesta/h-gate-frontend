@@ -5,6 +5,7 @@ import { environment } from '../../environment/environment';
 import { Observable } from 'rxjs';
 import { ResponseDTO } from '../shared/models/response.model';
 import { METHODS } from '../shared/enums/methods.enum';
+import { TariffeMedico } from '../models/tariffe-medico.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,4 +27,9 @@ export class MedicoService extends HttpBaseService<Medico> {
   updateDoctorInfo(data: Partial<Medico>): Observable<ResponseDTO<Medico>> {
     return this.request<ResponseDTO<Medico>>('/update', METHODS.PUT, data);
   }
+
+  listaTariffe(id: number): Observable<ResponseDTO<TariffeMedico[]>> {
+    return this.request<ResponseDTO<TariffeMedico[]>>(`/tariffe/${id}`, METHODS.GET);
+  }
+
 }

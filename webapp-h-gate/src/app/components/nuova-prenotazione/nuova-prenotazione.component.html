@@ -192,8 +192,10 @@
                     <mat-form-field class="w-100" appearance="outline">
                       <mat-label>Tipo di visita</mat-label>
                       <mat-select formControlName="tipoVisita">
-                        @for(tipo of tipoVisita; track tipo) {
-                        <mat-option [value]="tipo">{{ tipo }}</mat-option>
+                        @for(tariffa of tipoVisita(); track tariffa.id) {
+                          <mat-option [value]="tariffa.tipoVisita">
+                            {{ tariffa.tipoVisita }} - {{ tariffa.costo | currency:'EUR' }}
+                          </mat-option>
                         }
                       </mat-select>
                       <mat-error>Seleziona il tipo di visita</mat-error>

@@ -19,6 +19,7 @@ import { Paziente } from '../../models/paziente.model';
 import { Medico } from '../../models/medico.model';
 import { PrenotazioneCreate, SlotDisponibile } from '../../models/prenotazione.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TariffeMedico } from '../../models/tariffe-medico.model';
 
 @Component({
   selector: 'app-nuova-prenotazione',
@@ -61,15 +62,7 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
 
   isSaving = signal<boolean>(false);
 
-  tipoVisita = [
-    'Prima Visita',
-    'Controllo',
-    'Visita di Routine',
-    'Consulenza',
-    'Valutazione Psicologica',
-    'Terapia',
-    'Altra'
-  ];
+  tipoVisita = signal<TariffeMedico[]>([]);
 
   override ngOnInit(): void {
     this.initForms();
@@ -129,6 +122,17 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
     })
   }
 
+  loadTariffeMedico(medicoId: number): void {
+    this.medicoService.listaTariffe(medicoId).subscribe({
+      next: (response) => {
+        this.tipoVisita.set(response.data || []);
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Errore nel caricamento delle prestazioni', 'Chiudi');
+      }
+    });
+  }
+
   onPazienteSelected(): void {
     const pazienteId = this.pazienteForm.value.pazienteId;
     const paziente = this.minori().find(p => p.id === pazienteId) || null;
@@ -139,6 +143,12 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
     const medicoId = this.medicoForm.get('medicoId')?.value;
     const medico = this.medici().find(m => m.id === medicoId) || null;
     this.medicoSelezionato.set(medico);
+
+    if (medicoId) {
+      this.loadTariffeMedico(medicoId);
+      this.dataOraForm.get('slot')?.reset();
+      this.dettagliForm.get('tipoVisita')?.reset();
+    }
   }
 
   onDataSelected(): void {
@@ -166,7 +176,6 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
     });
   }
 
-
   confermaPrenotazione(): void {
     if (!this.isFormValid()) {
       this.snackBar.openSnackBar('Compila tutti i campi obbligatori', 'Chiudi');
@@ -180,12 +189,13 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
     const data: PrenotazioneCreate = {
       pazienteId: this.pazienteForm.get('pazienteId')?.value,
       medicoId: this.medicoForm.get('medicoId')?.value,
-      dataOra: this.dataOraForm.get('slot')?.value, // ✅ STRINGA ISO
+      dataOra: this.dataOraForm.get('slot')?.value,
+      // Supponendo che il backend si aspetti la descrizione della prestazione
       tipoVisita: this.dettagliForm.get('tipoVisita')?.value,
       note: this.dettagliForm.get('note')?.value,
       isPrimaVisita: this.dettagliForm.get('isPrimaVisita')?.value
     };
-
+    
     this.prenotazioneService.creaPrenotazione(data).subscribe({
       next: (res) => {
         if (res.ok === false) {
