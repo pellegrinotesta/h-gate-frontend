@@ -21,39 +21,160 @@ export class DashboardMedicoComponent extends BasePageComponent {
   userName = '';
   oggi = new Date();
   stats = signal<StatCard[]>([]);
+
+  // Tutti gli appuntamenti ricevuti dal backend
+  tuttiAppuntamenti = signal<Prenotazione[]>([]);
+
+  // Appuntamenti filtrati per oggi
   appuntamentiOggi = signal<Prenotazione[]>([]);
+
+  // Appuntamenti futuri (da domani in poi)
+  appuntamentiFuturi = signal<Prenotazione[]>([]);
+
   refertiDaCompletare = signal(0);
   rating = 0;
   numeroRecensioni = signal(0);
   numeroPazienti = signal(0);
+
+  // Controllo per mostrare/nascondere appuntamenti futuri
+  mostraAppuntamentiFuturi = signal(false);
+
+  // Paginazione appuntamenti futuri
+  appuntamentiFuturiPaginati = signal<Prenotazione[]>([]);
+  giorniMostrati = signal(7); // Mostra i prossimi 7 giorni
+  limiteMassimo = 20; // Limite massimo appuntamenti da mostrare
 
   override ngOnInit(): void {
     this.loadDashboardData();
   }
 
   loadDashboardData() {
-    this.isLoading = false;
+    this.isLoading = true;
     this.dashboasrdService.dashboardMedico().subscribe({
       next: (res) => {
-        this.appuntamentiOggi.set(res.data.appuntamentiOggi);
+        this.userName = res.data.nomeMedico;
+        this.tuttiAppuntamenti.set(res.data.appuntamentiOggi);
+        this.filtraAppuntamenti();
         this.refertiDaCompletare.set(res.data.refertiDaCOmpletare);
         this.rating = res.data.ratingMedio;
         this.numeroRecensioni.set(res.data.numeroRecensioni);
         this.numeroPazienti.set(res.data.pazientiTotali);
+        this.isLoading = false;
       },
       error: (err) => {
         this.isLoading = false;
         this.snackBar.openSnackBar('Errore caricamento dashboard', err);
       }
     });
-
   }
 
+  /**
+   * Filtra gli appuntamenti dividendoli tra oggi e futuri
+   */
+  filtraAppuntamenti(): void {
+    const oggi = new Date();
+    oggi.setHours(0, 0, 0, 0);
+
+    const domani = new Date(oggi);
+    domani.setDate(domani.getDate() + 1);
+
+    const appOggi: Prenotazione[] = [];
+    const appFuturi: Prenotazione[] = [];
+
+    this.tuttiAppuntamenti().forEach(app => {
+      const dataApp = new Date(app.dataOra);
+      dataApp.setHours(0, 0, 0, 0);
+
+      if (dataApp.getTime() === oggi.getTime()) {
+        appOggi.push(app);
+      } else if (dataApp >= domani) {
+        appFuturi.push(app);
+      }
+    });
+
+    // Ordina per data/ora
+    appOggi.sort((a, b) => new Date(a.dataOra).getTime() - new Date(b.dataOra).getTime());
+    appFuturi.sort((a, b) => new Date(a.dataOra).getTime() - new Date(b.dataOra).getTime());
+
+    this.appuntamentiOggi.set(appOggi);
+    this.appuntamentiFuturi.set(appFuturi);
+    this.applicaPaginazione();
+  }
+
+  /**
+   * Applica la paginazione agli appuntamenti futuri
+   */
+  applicaPaginazione(): void {
+    const dataLimite = new Date();
+    dataLimite.setDate(dataLimite.getDate() + this.giorniMostrati());
+
+    const paginati = this.appuntamentiFuturi()
+      .filter(app => {
+        const dataApp = new Date(app.dataOra);
+        return dataApp <= dataLimite;
+      })
+      .slice(0, this.limiteMassimo);
+
+    this.appuntamentiFuturiPaginati.set(paginati);
+  }
+
+  /**
+   * Determina se un appuntamento è la prossima visita (entro un'ora)
+   */
   isProssimaVisita(app: Prenotazione): boolean {
     const now = new Date();
     const appTime = new Date(app.dataOra);
     const diff = appTime.getTime() - now.getTime();
     return diff > 0 && diff < 60 * 60 * 1000; // Prossima ora
+  }
+
+  /**
+   * Toggle visualizzazione appuntamenti futuri
+   */
+  toggleAppuntamentiFuturi(): void {
+    this.mostraAppuntamentiFuturi.set(!this.mostraAppuntamentiFuturi());
+  }
+
+  /**
+   * Raggruppa appuntamenti futuri per giorno
+   */
+  raggruppaPerGiorno(): Map<string, Prenotazione[]> {
+    const grouped = new Map<string, Prenotazione[]>();
+
+    this.appuntamentiFuturiPaginati().forEach(app => {
+      const data = new Date(app.dataOra);
+      const chiave = data.toISOString().split('T')[0]; // YYYY-MM-DD
+
+      if (!grouped.has(chiave)) {
+        grouped.set(chiave, []);
+      }
+      grouped.get(chiave)!.push(app);
+    });
+
+    return grouped;
+  }
+
+  /**
+   * Carica più appuntamenti futuri
+   */
+  caricaPiuAppuntamenti(): void {
+    this.giorniMostrati.set(this.giorniMostrati() + 7);
+    this.applicaPaginazione();
+  }
+
+  /**
+   * Mostra meno appuntamenti futuri
+   */
+  mostraMenoAppuntamenti(): void {
+    this.giorniMostrati.set(7);
+    this.applicaPaginazione();
+  }
+
+  /**
+   * Controlla se ci sono altri appuntamenti da mostrare
+   */
+  ciSonoAltriAppuntamenti(): boolean {
+    return this.appuntamentiFuturi().length > this.appuntamentiFuturiPaginati().length;
   }
 
   iniziaVisita(id: number): void {
@@ -68,4 +189,7 @@ export class DashboardMedicoComponent extends BasePageComponent {
     // Navigare a cartella clinica paziente
   }
 
+  mostraCalendarioCompleto() {
+    this.router.navigate(['/agenda']);
+  }
 }

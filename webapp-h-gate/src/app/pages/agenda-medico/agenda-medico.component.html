@@ -1,0 +1,303 @@
+@if(isLoading) {
+<app-loader></app-loader>
+}
+@else {
+<div class="container-fluid p-3 p-md-4" style="max-width: 1600px;">
+    <!-- Header -->
+    <div class="mb-3 mb-md-4">
+        <div class="row align-items-center g-3">
+            <div class="col-12 col-md-6">
+                <h1 class="d-flex align-items-center mb-2 fs-3 fs-md-2">
+                    <mat-icon class="me-2 text-success d-none d-md-inline-block"
+                        style="font-size: 2.5rem; width: 2.5rem; height: 2.5rem;">calendar_month</mat-icon>
+                    <mat-icon class="me-2 text-success d-md-none">calendar_month</mat-icon>
+                    <span class="fw-bold">Agenda Completa</span>
+                </h1>
+                <p class="text-muted mb-0 small">Visualizza e gestisci tutti i tuoi appuntamenti</p>
+            </div>
+            <div class="col-12 col-md-6 text-md-end">
+                <button mat-raised-button color="primary" routerLink="/dashboard" class="w-100 w-md-auto">
+                    <mat-icon>dashboard</mat-icon>
+                    Torna alla Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats rapide -->
+    <div class="row g-2 g-md-3 mb-3 mb-md-4">
+        <div class="col-12 col-sm-6 col-md-4">
+            <mat-card class="stat-card-agenda">
+                <mat-card-content>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="text-secondary small fw-semibold mb-1">Oggi</p>
+                            <h3 class="fw-bold text-success mb-0 fs-1 fs-md-2">{{ appuntamentiOggi() }}</h3>
+                        </div>
+                        <mat-icon class="stat-icon-large text-success">today</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <mat-card class="stat-card-agenda">
+                <mat-card-content>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="text-secondary small fw-semibold mb-1">Questa settimana</p>
+                            <h3 class="fw-bold text-success mb-0 fs-1 fs-md-2">{{ appuntamentiSettimana() }}</h3>
+                        </div>
+                        <mat-icon class="stat-icon-large text-success">date_range</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <mat-card class="stat-card-agenda">
+                <mat-card-content>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="text-secondary small fw-semibold mb-1">Totali</p>
+                            <h3 class="fw-bold text-success mb-0 fs-1 fs-md-2">{{ totaleAppuntamenti() }}</h3>
+                        </div>
+                        <mat-icon class="stat-icon-large text-success">event</mat-icon>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+    <!-- Controlli -->
+    <mat-card class="mb-3 mb-md-4">
+        <mat-card-content class="p-2 p-md-3">
+            <div class="row g-2 g-md-3 align-items-center">
+                <!-- Navigazione temporale -->
+                <div class="col-12 col-lg-5 order-1">
+                    <div class="d-flex align-items-center gap-1 gap-md-2">
+                        <button mat-icon-button (click)="precedente()">
+                            <mat-icon>chevron_left</mat-icon>
+                        </button>
+                        <h5 class="mb-0 flex-grow-1 text-center fw-semibold small">{{ getTitoloPeriodo() }}</h5>
+                        <button mat-icon-button (click)="successivo()">
+                            <mat-icon>chevron_right</mat-icon>
+                        </button>
+                        <button mat-stroked-button (click)="vaiOggi()" class="d-none d-md-inline-block">Oggi</button>
+                        <button mat-icon-button (click)="vaiOggi()" class="d-md-none">
+                            <mat-icon>today</mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Toggle vista -->
+                <div class="col-12 col-lg-4 text-center order-3 order-lg-2">
+                    <mat-button-toggle-group [value]="vistaCorrente()" (change)="cambiaVista($event.value)"
+                        class="w-100 d-flex">
+                        <mat-button-toggle value="giorno" class="flex-fill">
+                            <mat-icon class="d-md-none">view_day</mat-icon>
+                            <span class="d-none d-md-inline">Giorno</span>
+                        </mat-button-toggle>
+                        <mat-button-toggle value="settimana" class="flex-fill">
+                            <mat-icon class="d-md-none">view_week</mat-icon>
+                            <span class="d-none d-md-inline">Settimana</span>
+                        </mat-button-toggle>
+                        <mat-button-toggle value="mese" class="flex-fill">
+                            <mat-icon class="d-md-none">calendar_view_month</mat-icon>
+                            <span class="d-none d-md-inline">Mese</span>
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                </div>
+
+                <!-- Filtro tipo visita -->
+                <div class="col-12 col-lg-3 order-2 order-lg-3">
+                    <mat-form-field class="w-100" appearance="outline" subscriptSizing="dynamic">
+                        <mat-label>Filtra</mat-label>
+                        <mat-select [value]="filtroTipoVisita()"
+                            (selectionChange)="applicaFiltroTipoVisita($event.value)">
+                            <mat-option value="tutte">Tutte</mat-option>
+                            @for(tipo of tipiVisita(); track tipo) {
+                            <mat-option [value]="tipo">{{ tipo }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Vista Settimana -->
+    @if(vistaCorrente() === 'settimana') {
+    <div class="row g-2 g-md-3">
+        @for(giorno of giorniSettimana(); track giorno.data) {
+        <div class="col-12 col-sm-6 col-lg">
+            <mat-card class="giorno-card h-100" [class.oggi]="giorno.isOggi">
+                <mat-card-header class="text-center border-bottom pb-2 pb-md-3">
+                    <mat-card-title class="w-100">
+                        <div class="text-secondary small text-uppercase fw-semibold">{{ giorno.data | date: 'EEE' }}
+                        </div>
+                        <div class="fs-4 fw-bold mt-1" [class.oggi-numero]="giorno.isOggi">
+                            {{ giorno.data | date: 'd' }}
+                        </div>
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="p-2">
+                    @if(giorno.appuntamenti.length === 0) {
+                    <div class="text-center py-4 text-muted">
+                        <mat-icon
+                            style="font-size: 2rem; width: 2rem; height: 2rem; opacity: 0.3;">event_available</mat-icon>
+                        <p class="small mt-2 mb-0">Nessuno</p>
+                    </div>
+                    } @else {
+                    @for(app of giorno.appuntamenti; track app.id) {
+                    <div class="appuntamento-mini bg-light rounded mb-2 p-2" (click)="apriDettaglioAppuntamento(app)">
+                        <div class="small fw-bold text-success">{{ app.inizio | date: 'HH:mm' }}</div>
+                        <div class="small fw-semibold text-truncate">{{ app.pazienteNome }}</div>
+                        <div class="small text-secondary text-truncate">{{ app.tipoVisita }}</div>
+                        @if(app.isPrimaVisita) {
+                        <mat-icon class="tiny-icon text-info">new_releases</mat-icon>
+                        }
+                    </div>
+                    }
+                    }
+                </mat-card-content>
+            </mat-card>
+        </div>
+        }
+    </div>
+    }
+
+    <!-- Vista Mese -->
+    @if(vistaCorrente() === 'mese') {
+    <mat-card>
+        <mat-card-content class="p-1 p-md-3">
+            <!-- Header giorni settimana -->
+            <div class="row g-0 fw-bold text-secondary text-uppercase small text-center border-bottom pb-2 mb-1">
+                <div class="col">L</div>
+                <div class="col">M</div>
+                <div class="col">M</div>
+                <div class="col">G</div>
+                <div class="col">V</div>
+                <div class="col">S</div>
+                <div class="col">D</div>
+            </div>
+
+            <!-- Giorni del mese -->
+            @for(settimana of [0, 1, 2, 3, 4, 5]; track settimana) {
+            <div class="row g-0">
+                @for(i of [0, 1, 2, 3, 4, 5, 6]; track i) {
+                @let giorno = giorniMese()[settimana * 7 + i];
+                <div class="col giorno-mese-cell p-1 position-relative" [class.oggi]="giorno.isOggi"
+                    [class.altro-mese]="!giorno.isMeseCorrente"
+                    (click)="dataSelezionata.set(giorno.data); cambiaVista('giorno')">
+                    <div class="giorno-mese-numero fw-bold small">{{ giorno.data | date: 'd' }}</div>
+                    @if(giorno.appuntamenti.length > 0) {
+                    <div class="appuntamenti-badge small fw-semibold">
+                        {{ giorno.appuntamenti.length }}
+                    </div>
+                    <!-- Solo su desktop mostra i primi 2 -->
+                    <div class="d-none d-md-block">
+                        @for(app of giorno.appuntamenti.slice(0, 2); track app.id) {
+                        <div class="appuntamento-mese-mini bg-info bg-opacity-10 rounded mt-1 small text-truncate">
+                            <span class="fw-semibold text-info">{{ app.inizio | date: 'HH:mm' }}</span>
+                            <span class="text-secondary ms-1">{{ app.pazienteNome }}</span>
+                        </div>
+                        }
+                        @if(giorno.appuntamenti.length > 2) {
+                        <div class="small text-secondary fw-semibold mt-1">
+                            +{{ giorno.appuntamenti.length - 2 }}
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+            }
+        </mat-card-content>
+    </mat-card>
+    }
+
+    <!-- Vista Giorno -->
+    @if(vistaCorrente() === 'giorno') {
+    <mat-card>
+        <mat-card-content class="p-2 p-md-3">
+            @let giornoSelezionato = giorniSettimana()[0];
+            @if(giornoSelezionato && giornoSelezionato.appuntamenti.length === 0) {
+            <div class="text-center py-5 text-muted">
+                <mat-icon class="empty-icon">event_available</mat-icon>
+                <h4 class="mt-3">Nessun appuntamento</h4>
+                <p class="d-none d-md-block">Non ci sono visite per questo giorno</p>
+            </div>
+            } @else if(giornoSelezionato) {
+            @for(app of giornoSelezionato.appuntamenti; track app.id) {
+            <div class="mb-3">
+                <div class="row g-2">
+                    <div class="col-12 col-md-2 text-center text-md-start">
+                        <div class="orario-grande fw-bold p-2 p-md-3">
+                            {{ app.inizio | date: 'HH:mm' }}
+                            <div class="small text-muted fw-normal">{{ app.fine | date: 'HH:mm' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <div class="appuntamento-card-dettaglio p-3">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+                                <div class="flex-grow-1 w-100">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <h5 class="mb-0">{{ app.pazienteNome }}</h5>
+                                        @if(app.isPrimaVisita) {
+                                        <mat-chip class="small">Prima visita</mat-chip>
+                                        }
+                                    </div>
+
+                                    @if(app.tutoreNome) {
+                                    <p class="text-muted mb-2 small">
+                                        <mat-icon class="tiny-icon align-middle">supervisor_account</mat-icon>
+                                        Tutore: {{ app.tutoreNome }}
+                                        @if(app.tutoreTelefono) {
+                                        - Tel: {{ app.tutoreTelefono }}
+                                        }
+                                    </p>
+                                    }
+
+                                    <mat-chip-set>
+                                        <mat-chip class="small">{{ app.tipoVisita }}</mat-chip>
+                                        <mat-chip [class]="getStatoClass(app.stato)" class="small">{{ app.stato
+                                            }}</mat-chip>
+                                        @if(app.promemoriaInviato) {
+                                        <mat-chip class="small bg-info bg-opacity-10 text-info">
+                                            <mat-icon class="tiny-icon">notifications</mat-icon>
+                                            Promemoria
+                                        </mat-chip>
+                                        }
+                                    </mat-chip-set>
+
+                                    @if(app.notePaziente) {
+                                    <p class="mt-2 mb-0 small">
+                                        <mat-icon class="tiny-icon align-middle">note</mat-icon>
+                                        {{ app.notePaziente }}
+                                    </p>
+                                    }
+                                </div>
+                                <div class="d-flex flex-row flex-md-column gap-2 w-100 w-md-auto">
+                                    <button mat-raised-button color="primary"
+                                        (click)="apriCartellaClinica(app.pazienteId)" class="flex-fill flex-md-grow-0">
+                                        <mat-icon>person</mat-icon>
+                                        <span class="d-none d-md-inline ms-1">Cartella</span>
+                                    </button>
+                                    <button mat-raised-button (click)="creaReferto(app.id!)"
+                                        class="flex-fill flex-md-grow-0">
+                                        <mat-icon>note_add</mat-icon>
+                                        <span class="d-none d-md-inline ms-1">Referto</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+            }
+        </mat-card-content>
+    </mat-card>
+    }
+</div>
+}

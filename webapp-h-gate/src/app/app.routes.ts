@@ -54,6 +54,12 @@ export const routes: Routes = [
                     }
                 ]
 
+            },
+            {
+                path: RoutesEnum.AGENDA,
+                canActivate: [roleGuard],
+                data: { roles: ROLE_VISIBILITY.AGENDA },
+                loadComponent: () => import('./pages/agenda-medico/agenda-medico.component').then(m => m.AgendaMedicoComponent)
             }
 
         ]

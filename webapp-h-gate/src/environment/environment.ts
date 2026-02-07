@@ -13,6 +13,7 @@ export const environment = {
         paziente: `${apiUrl}/paziente`,
         dashboard: `${apiUrl}/dashboard`,
         prenotazione: `${apiUrl}/prenotazione`,
+        agenda: `${apiUrl}/agenda`,
     },
     jwt: {
         encryptionKey: 'Qs23RBNF330ms00n',

@@ -6,5 +6,6 @@ export enum RoutesEnum {
   DASHBOARD_AMMINISTRATORE = 'dashboard-amministratore',
   REGISTER = 'register',
   PRENOTAZIONI = 'prenotazioni',
+  AGENDA = 'agenda',
 
 }

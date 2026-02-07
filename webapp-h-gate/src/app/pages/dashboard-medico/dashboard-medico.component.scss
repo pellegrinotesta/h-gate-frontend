@@ -155,3 +155,90 @@ mat-card-title {
     height: 4rem;
     opacity: 0.3;
 }
+
+/* Styles per appuntamenti futuri */
+.day-group {
+    border-left: 3px solid #e2e8f0;
+    padding-left: 16px;
+}
+
+.day-header {
+    color: #64748b;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    margin-bottom: 12px;
+}
+
+.day-header mat-icon {
+    color: #3b82f6;
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Badges e contatori */
+.badge-count {
+    background: #3b82f6;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.badge-day {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Info paginazione */
+.pagination-info {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.pagination-info mat-chip-set {
+    display: flex;
+    gap: 8px;
+}
+
+.pagination-info mat-chip {
+    background: white;
+    border: 1px solid #e2e8f0;
+}
+
+.pagination-info mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 4px;
+}
+
+/* Controlli paginazione */
+.pagination-controls {
+    padding-top: 16px;
+    border-top: 2px solid #e2e8f0;
+}
+
+.pagination-controls .text-center {
+    padding: 12px;
+    background: #f0fdf4;
+    border-radius: 8px;
+}
+
+.pagination-controls .text-center mat-icon {
+    color: #10b981;
+    vertical-align: middle;
+    margin-right: 4px;
+}

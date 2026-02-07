@@ -45,9 +45,10 @@
 
     <!-- Main Content-->
     <div class="row">
-        <!-- Appointments Today -->
+        <!-- Appointments Today & Future -->
         <div class="col-lg-8 mb-4">
-            <mat-card>
+            <!-- Appuntamenti di Oggi -->
+            <mat-card class="mb-4">
                 <mat-card-header>
                     <mat-card-title>
                         <mat-icon class="me-2">today</mat-icon>
@@ -94,10 +95,6 @@
                                     <mat-icon>person</mat-icon>
                                     Cartella
                                 </button>
-                                <!-- <button mat-raised-button color="accent" (click)="iniziaVisita(app.id)">
-                                    <mat-icon>play_arrow</mat-icon>
-                                    Iniza
-                                </button> -->
                                 <button mat-button (click)="creaReferto(app.id)">
                                     Referto
                                 </button>
@@ -108,6 +105,114 @@
                     }
                 </mat-card-content>
             </mat-card>
+
+            <!-- Appuntamenti Futuri -->
+            @if(appuntamentiFuturi().length > 0) {
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon class="me-2">event</mat-icon>
+                        Prossimi Appuntamenti
+                        <span class="badge-count ms-2">{{ appuntamentiFuturi().length }}</span>
+                    </mat-card-title>
+                    <div class="spacer"></div>
+                    <button mat-icon-button (click)="toggleAppuntamentiFuturi()">
+                        <mat-icon>{{ mostraAppuntamentiFuturi() ? 'expand_less' : 'expand_more' }}</mat-icon>
+                    </button>
+                </mat-card-header>
+
+                @if(mostraAppuntamentiFuturi()) {
+                <mat-card-content>
+                    <!-- Info paginazione -->
+                    <div class="pagination-info mb-3">
+                        <mat-chip-set>
+                            <mat-chip>
+                                <mat-icon>visibility</mat-icon>
+                                Mostrati: {{ appuntamentiFuturiPaginati().length }} / {{ appuntamentiFuturi().length }}
+                            </mat-chip>
+                            <mat-chip>
+                                <mat-icon>date_range</mat-icon>
+                                Prossimi {{ giorniMostrati() }} giorni
+                            </mat-chip>
+                        </mat-chip-set>
+                    </div>
+
+                    @for(gruppo of raggruppaPerGiorno() | keyvalue; track gruppo.key) {
+                    <div class="day-group mb-4">
+                        <h6 class="day-header mb-3">
+                            <mat-icon class="me-2">calendar_today</mat-icon>
+                            {{ gruppo.value[0].dataOra | date: 'EEEE, dd MMMM yyyy' }}
+                            <span class="badge-day ms-2">{{ gruppo.value.length }}</span>
+                        </h6>
+
+                        @for(app of gruppo.value; track app.id) {
+                        <div class="appointment-card-medico mb-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <mat-icon class="me-2 time-icon">schedule</mat-icon>
+                                        <strong class="time-slot">{{app.dataOra | date: 'HH:mm'}}</strong>
+                                    </div>
+
+                                    <h5 class="mb-1">{{app.paziente?.nome}} {{app.paziente?.cognome}}</h5>
+                                    <p class="text-muted mb-2">
+                                        <mat-icon class="tiny-icon">badge</mat-icon>
+                                        CF: {{ app.paziente?.codiceFiscale }}
+                                    </p>
+                                    <p class="mb-2"><strong>{{ app.tipoVisita }}</strong> </p>
+                                    @if(app.note) {
+                                    <p class="text-muted small mb-0">
+                                        <mat-icon class="tiny-icon">note</mat-icon>
+                                        {{ app.note }}
+                                    </p>
+                                    }
+                                </div>
+                                <div class="btn-group-vertical" role="group">
+                                    <button mat-raised-button color="primary"
+                                        (click)="apriCartellaClinica(app.paziente?.id!)">
+                                        <mat-icon>person</mat-icon>
+                                        Cartella
+                                    </button>
+                                    <button mat-button (click)="creaReferto(app.id)">
+                                        Referto
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+
+                    <!-- Controlli paginazione -->
+                    <div class="pagination-controls mt-4">
+                        @if(ciSonoAltriAppuntamenti()) {
+                        <button mat-raised-button color="accent" (click)="caricaPiuAppuntamenti()" class="w-100 mb-2">
+                            <mat-icon>expand_more</mat-icon>
+                            Mostra prossimi 7 giorni
+                        </button>
+                        } @else {
+                        <div class="text-center text-muted mb-2">
+                            <mat-icon>check_circle</mat-icon>
+                            Tutti gli appuntamenti visualizzati
+                        </div>
+                        }
+
+                        @if(giorniMostrati() > 7) {
+                        <button mat-stroked-button (click)="mostraMenoAppuntamenti()" class="w-100">
+                            <mat-icon>expand_less</mat-icon>
+                            Mostra meno
+                        </button>
+                        }
+
+                        <button mat-button routerLink="/agenda" class="w-100 mt-2" (click)="mostraCalendarioCompleto()">
+                            <mat-icon>calendar_month</mat-icon>
+                            Vedi calendario completo
+                        </button>
+                    </div>
+                </mat-card-content>
+                }
+            </mat-card>
+            }
         </div>
 
         <!-- Sidebar-->
@@ -192,5 +297,4 @@
         </div>
     </div>
 </div>
-
 }
