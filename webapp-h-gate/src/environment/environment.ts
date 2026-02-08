@@ -14,6 +14,7 @@ export const environment = {
         dashboard: `${apiUrl}/dashboard`,
         prenotazione: `${apiUrl}/prenotazione`,
         agenda: `${apiUrl}/agenda`,
+        notifiche: `${apiUrl}/notifiche`,
     },
     jwt: {
         encryptionKey: 'Qs23RBNF330ms00n',

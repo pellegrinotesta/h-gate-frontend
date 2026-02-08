@@ -4,15 +4,24 @@
             <img src="/assets/logo.png" alt="Logo H-GATE" width="60" class="me-3">
             <app-menu></app-menu>
 
-            <div class="ms-auto d-flex align-items-center">
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <!-- NOTIFICHE -->
+                <button mat-icon-button [matMenuTriggerFor]="notificheMenu" [matBadge]="conteggioNonLette || 0"
+                    [matBadgeHidden]="!conteggioNonLette || conteggioNonLette === 0" matBadgeColor="warn"
+                    matBadgeSize="small" aria-label="Notifiche">
+                    <mat-icon style="color: #fff;">notifications</mat-icon>
+                </button>
+
+                <!-- USER INFO -->
                 @if(me) {
-                <div class="me-3 text-start small" style="color: #fff;">
-                    <div>{{me.nome}} {{me.cognome}}</div>
-                    <div>{{me.email}}</div>
+                <div class="me-2 text-start small d-none d-md-block" style="color: #fff;">
+                    <div class="fw-semibold">{{me.nome}} {{me.cognome}}</div>
+                    <div class="opacity-75">{{me.email}}</div>
                 </div>
                 }
 
-                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="profile icon" class="btn btn-link p-0">
+                <!-- USER MENU -->
+                <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menu utente">
                     <mat-icon style="color: #fff;">account_circle</mat-icon>
                 </button>
             </div>
@@ -24,10 +33,71 @@
     </main>
 </div>
 
-<mat-menu #menu="matMenu">
+<!-- MENU NOTIFICHE -->
+<mat-menu #notificheMenu="matMenu" class="notifiche-menu" xPosition="before">
+    <div class="notifiche-header p-3 border-bottom d-flex justify-content-between align-items-center">
+        <h6 class="mb-0 fw-bold">Notifiche</h6>
+        @if(conteggioNonLette && conteggioNonLette > 0) {
+        <button mat-button (click)="marcaTutteComeLette(); $event.stopPropagation()" class="small">
+            Segna tutte come lette
+        </button>
+        }
+    </div>
+
+    @if(notificheNonLette?.length === 0) {
+    <div class="p-4 text-center text-muted">
+        <mat-icon class="mb-2" style="font-size: 3rem; width: 3rem; height: 3rem; opacity: 0.3;">
+            notifications_none
+        </mat-icon>
+        <p class="mb-0">Nessuna nuova notifica</p>
+    </div>
+    } @else {
+    <div class="notifiche-list" style="max-height: 400px; overflow-y: auto;">
+        @for(notifica of notificheNonLette; track notifica.id) {
+        <button mat-menu-item class="notifica-item" [class.non-letta]="!notifica.isLetta"
+            (click)="onNotificaClick(notifica, $event)">
+            <div class="d-flex gap-3 w-100">
+                <div class="notifica-icon">
+                    <mat-icon [color]="notifica.isLetta ? '' : 'primary'">
+                        {{ getNotificaIcon(notifica.tipo) }}
+                    </mat-icon>
+                </div>
+                <div class="flex-grow-1" style="min-width: 0;">
+                    <div class="fw-semibold mb-1 text-truncate">{{ notifica.titolo }}</div>
+                    <div class="small text-muted notifica-messaggio">
+                        {{ notifica.messaggio }}
+                    </div>
+                    <div class="small text-secondary mt-1">
+                        {{ getTempoRelativo(notifica.createdAt) }}
+                    </div>
+                </div>
+                @if(!notifica.isLetta) {
+                <div class="notifica-badge">
+                    <span class="badge bg-primary rounded-circle" style="width: 8px; height: 8px;"></span>
+                </div>
+                }
+            </div>
+        </button>
+        }
+    </div>
+
+    <div class="notifiche-footer p-2 border-top text-center">
+        <button mat-button routerLink="/notifiche" class="w-100">
+            Vedi tutte le notifiche
+        </button>
+    </div>
+    }
+</mat-menu>
+
+<!-- MENU UTENTE -->
+<mat-menu #userMenu="matMenu">
     <button mat-menu-item routerLink="/profile">
-        <mat-icon>engineering</mat-icon>
-        Profile
+        <mat-icon>person</mat-icon>
+        Profilo
+    </button>
+    <button mat-menu-item routerLink="/impostazioni">
+        <mat-icon>settings</mat-icon>
+        Impostazioni
     </button>
     <button mat-menu-item (click)="onLogout()">
         <mat-icon>logout</mat-icon>
