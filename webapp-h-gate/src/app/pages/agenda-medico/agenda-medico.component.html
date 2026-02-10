@@ -150,6 +150,7 @@
                     @for(app of giorno.appuntamenti; track app.id) {
                     <div class="appuntamento-mini bg-light rounded mb-2 p-2" (click)="apriDettaglioAppuntamento(app)">
                         <div class="small fw-bold text-success">{{ app.inizio | date: 'HH:mm' }}</div>
+                        <div class="small fw-bold text-success">{{ app.stato}}</div>
                         <div class="small fw-semibold text-truncate">{{ app.pazienteNome }}</div>
                         <div class="small text-secondary text-truncate">{{ app.tipoVisita }}</div>
                         @if(app.isPrimaVisita) {

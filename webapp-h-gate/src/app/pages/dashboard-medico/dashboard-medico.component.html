@@ -11,7 +11,7 @@
                 <p class="mb-0">La tua agenda e i pazienti di oggi</p>
             </div>
             <div class="col-md-4 text-end">
-                <button mat-raised-button color="accent">
+                <button mat-raised-button color="accent" (click)="gestisciDisponibilita()">
                     <mat-icon>event_available</mat-icon>
                     Gestisci Disponibilità
                 </button>
@@ -153,7 +153,6 @@
                                         <mat-icon class="me-2 time-icon">schedule</mat-icon>
                                         <strong class="time-slot">{{app.dataOra | date: 'HH:mm'}}</strong>
                                     </div>
-
                                     <h5 class="mb-1">{{app.paziente?.nome}} {{app.paziente?.cognome}}</h5>
                                     <p class="text-muted mb-2">
                                         <mat-icon class="tiny-icon">badge</mat-icon>
@@ -176,6 +175,12 @@
                                     <button mat-button (click)="creaReferto(app.id)">
                                         Referto
                                     </button>
+                                    @if(app.stato === 'IN_ATTESA') {
+                                        <button mat-button color="warn" (click)="confermaAppuntamento(app.id)">
+                                            <mat-icon>check_circle</mat-icon>
+                                            Conferma 
+                                        </button>
+                                    }
                                 </div>
                             </div>
                         </div>

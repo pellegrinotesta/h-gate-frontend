@@ -8,6 +8,9 @@ import { LoaderComponent } from '../../components/loader/loader.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { RouterModule } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { DisponibilitaMedicoComponent } from '../../components/disponibilita-medico/disponibilita-medico.component';
+import { PrenotazioneService } from '../../services/prenotazione.service';
 
 @Component({
   selector: 'app-dashboard-medico',
@@ -18,31 +21,24 @@ import { RouterModule } from '@angular/router';
 export class DashboardMedicoComponent extends BasePageComponent {
 
   readonly dashboasrdService = inject(DashboardService);
+  readonly prenotazioneService = inject(PrenotazioneService);
+  readonly dialog = inject(MatDialog);
+
   userName = '';
   oggi = new Date();
   stats = signal<StatCard[]>([]);
-
-  // Tutti gli appuntamenti ricevuti dal backend
   tuttiAppuntamenti = signal<Prenotazione[]>([]);
-
-  // Appuntamenti filtrati per oggi
   appuntamentiOggi = signal<Prenotazione[]>([]);
-
-  // Appuntamenti futuri (da domani in poi)
   appuntamentiFuturi = signal<Prenotazione[]>([]);
 
   refertiDaCompletare = signal(0);
   rating = 0;
   numeroRecensioni = signal(0);
   numeroPazienti = signal(0);
-
-  // Controllo per mostrare/nascondere appuntamenti futuri
   mostraAppuntamentiFuturi = signal(false);
-
-  // Paginazione appuntamenti futuri
   appuntamentiFuturiPaginati = signal<Prenotazione[]>([]);
-  giorniMostrati = signal(7); // Mostra i prossimi 7 giorni
-  limiteMassimo = 20; // Limite massimo appuntamenti da mostrare
+  giorniMostrati = signal(7);
+  limiteMassimo = 20;
 
   override ngOnInit(): void {
     this.loadDashboardData();
@@ -151,6 +147,8 @@ export class DashboardMedicoComponent extends BasePageComponent {
       grouped.get(chiave)!.push(app);
     });
 
+    console.log('Appuntamenti futuri raggruppati per giorno:', grouped);
+
     return grouped;
   }
 
@@ -175,6 +173,39 @@ export class DashboardMedicoComponent extends BasePageComponent {
    */
   ciSonoAltriAppuntamenti(): boolean {
     return this.appuntamentiFuturi().length > this.appuntamentiFuturiPaginati().length;
+  }
+
+  gestisciDisponibilita() {
+    const dialogRef = this.dialog.open(DisponibilitaMedicoComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      disableClose: false,
+      autoFocus: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        // Ricarica la lista dei pazienti dopo l'aggiunta
+        //this.loadPazienti();
+      }
+    });
+  }
+
+  confermaAppuntamento(id: number): void {
+    console.log('Conferma appuntamento ID:', id);
+    this.prenotazioneService.confermaPrenotazione(id).subscribe({
+      next: (res) => {
+        if (res.ok) {
+          this.snackBar.openSnackBar('Appuntamento confermato', 'Chiudi');
+          this.loadDashboardData()
+        } else {
+          this.snackBar.openSnackBar('Errore conferma appuntamento', res.message);
+        }
+      },
+      error: (err) => {
+        this.snackBar.openSnackBar('Errore conferma appuntamento', err);
+      }
+    });
   }
 
   iniziaVisita(id: number): void {
