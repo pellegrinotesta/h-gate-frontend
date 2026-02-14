@@ -6,7 +6,8 @@ import { ResponseDTO } from '../shared/models/response.model';
 import { METHODS } from '../shared/enums/methods.enum';
 import { DashboardPazienteResponse } from '../models/dashboard-paziente-response.model';
 import { DashboardMedicoResponse } from '../models/dashboard-medico-response.model';
-import { DashboardAdminResponse } from '../models/dashboard-admin-response.model';
+import { DashboardAdminResponse, MedicoDaVerificare } from '../models/dashboard-admin-response.model';
+import { KpiData } from '../models/kpi-data.model';
 
 
 @Injectable({
@@ -28,5 +29,37 @@ export class DashboardService extends HttpRequestBaseService {
 
   dashboardAdmin(): Observable<ResponseDTO<DashboardAdminResponse>> {
     return this.request<ResponseDTO<DashboardAdminResponse>>('/admin', METHODS.GET);
+  }
+
+  getKpiData(): Observable<ResponseDTO<KpiData>> {
+    return this.request<ResponseDTO<KpiData>>(`/kpi`, METHODS.GET);
+  }
+
+  /**
+   * Recupera dashboard completa
+   */
+  getDashboardCompleta(): Observable<ResponseDTO<DashboardAdminResponse>> {
+    return this.request<ResponseDTO<DashboardAdminResponse>>('', METHODS.GET)
+  }
+
+  /**
+   * Recupera medici da verificare
+   */
+  getMediciDaVerificare(): Observable<ResponseDTO<MedicoDaVerificare[]>> {
+    return this.request<ResponseDTO<MedicoDaVerificare[]>>(`/medici-da-verificare`, METHODS.GET);
+  }
+
+  /**
+   * Approva un medico
+   */
+  approvaMedico(medicoId: number): void{
+      this.request<ResponseDTO<void>>(`/medici/${medicoId}/approva`,METHODS.POST)
+  }
+
+  /**
+   * Rifiuta un medico
+   */
+  async rifiutaMedico(medicoId: number, motivo: string) {
+    this.request<ResponseDTO<void>>(`/medici/${medicoId}/rifiuta`, METHODS.POST, { motivo });
   }
 }
