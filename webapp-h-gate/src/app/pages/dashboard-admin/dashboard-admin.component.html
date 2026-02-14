@@ -8,7 +8,7 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <h1 class="mb-2">Dashboard Amministratore 🛡️</h1>
-                <p class="mb-0">Panoramica completa del sistema H-Gate</p>
+                <p class="mb-0">Panoramica completa con grafici interattivi</p>
                 @if(kpiData()) {
                 <p class="mb-0 small mt-2 opacity-75">
                     Ultimo aggiornamento: {{kpiData()!.ultimoAggiornamento | date: 'dd/MM/yyyy HH:mm'}}
@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <!-- Statistics Cards Principali -->
+    <!-- Statistics Cards -->
     <div class="row mb-4">
         @for(stat of stats(); track stat.title) {
         <div class="col-md-3 mb-3">
@@ -51,403 +51,183 @@
         }
     </div>
 
-    <!-- ========================================
-             SEZIONE PAZIENTI - DETTAGLIO COMPLETO
-             ======================================== -->
-    @if(kpiData()) {
+    <!-- ==================== SEZIONE GRAFICI PRINCIPALI ==================== -->
     <div class="row mb-4">
-        <div class="col-12">
-            <mat-card>
+        <!-- GRAFICO 1: Prenotazioni per Giorno (Line Chart) -->
+        <div class="col-lg-8 mb-4">
+            <mat-card class="chart-card">
                 <mat-card-header>
                     <mat-card-title>
-                        <mat-icon class="me-2">people</mat-icon>
-                        Pazienti - Dettaglio Completo
+                        <mat-icon class="me-2">show_chart</mat-icon>
+                        Andamento Prenotazioni Settimanali
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div class="row">
-                        <!-- Totali Pazienti -->
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Totale Pazienti</div>
-                                <div class="info-value text-primary">{{kpiData()!.totalePazienti}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Con Consenso Privacy</div>
-                                <div class="info-value text-success">{{kpiData()!.pazientiConsensoAttivo}}</div>
-                                <div class="info-percentage">
-                                    {{(kpiData()!.pazientiConsensoAttivo / kpiData()!.totalePazienti * 100) |
-                                    number:'1.0-1'}}%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">In Terapia Attiva</div>
-                                <div class="info-value text-info">{{kpiData()!.pazientiInTerapia}}</div>
-                                <div class="info-percentage">
-                                    {{(kpiData()!.pazientiInTerapia / kpiData()!.totalePazienti * 100) |
-                                    number:'1.0-1'}}%
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Tutori Registrati</div>
-                                <div class="info-value">{{kpiData()!.totaleTutori}}</div>
-                            </div>
-                        </div>
+                    <div class="chart-container">
+                        <canvas baseChart [data]="prenotazioniLineChartData()" [options]="prenotazioniLineChartOptions"
+                            type="line">
+                        </canvas>
                     </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
 
-                    <!-- Fasce d'età -->
-                    <div class="mt-3">
-                        <h6 class="mb-3"><mat-icon class="me-2">child_care</mat-icon>Distribuzione per Fascia d'Età</h6>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <div class="age-group-card">
-                                    <div class="age-label">0-5 anni</div>
-                                    <div class="age-value">{{kpiData()!.pazienti0_5Anni}}</div>
-                                    <div class="progress mt-2">
-                                        <div class="progress-bar bg-info"
-                                            [style.width.%]="(kpiData()!.pazienti0_5Anni / kpiData()!.totalePazienti * 100)">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="age-group-card">
-                                    <div class="age-label">6-12 anni</div>
-                                    <div class="age-value">{{kpiData()!.pazienti6_12Anni}}</div>
-                                    <div class="progress mt-2">
-                                        <div class="progress-bar bg-primary"
-                                            [style.width.%]="(kpiData()!.pazienti6_12Anni / kpiData()!.totalePazienti * 100)">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <div class="age-group-card">
-                                    <div class="age-label">13-18 anni</div>
-                                    <div class="age-value">{{kpiData()!.pazienti13_18Anni}}</div>
-                                    <div class="progress mt-2">
-                                        <div class="progress-bar bg-success"
-                                            [style.width.%]="(kpiData()!.pazienti13_18Anni / kpiData()!.totalePazienti * 100)">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <!-- GRAFICO 2: Distribuzione Pazienti per Età (Doughnut) -->
+        <div class="col-lg-4 mb-4">
+            <mat-card class="chart-card">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon class="me-2">pie_chart</mat-icon>
+                        Pazienti per Fascia d'Età
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-container-square">
+                        <canvas baseChart [data]="pazientiDoughnutChartData()" [options]="pazientiDoughnutChartOptions"
+                            type="doughnut">
+                        </canvas>
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
     </div>
 
-    <!-- ========================================
-             SEZIONE MEDICI - DETTAGLIO COMPLETO
-             ======================================== -->
     <div class="row mb-4">
-        <div class="col-12">
-            <mat-card>
+        <!-- GRAFICO 3: Specializzazioni Medici (Bar Horizontale) -->
+        <div class="col-lg-6 mb-4">
+            <mat-card class="chart-card">
                 <mat-card-header>
                     <mat-card-title>
-                        <mat-icon class="me-2">local_hospital</mat-icon>
-                        Medici - Dettaglio Completo
+                        <mat-icon class="me-2">bar_chart</mat-icon>
+                        Medici per Specializzazione
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div class="row">
-                        <div class="col-md-2 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Medici Attivi</div>
-                                <div class="info-value text-success">{{kpiData()!.mediciAttivi}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Verificati</div>
-                                <div class="info-value text-primary">{{kpiData()!.mediciVerificati}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Disponibili</div>
-                                <div class="info-value text-info">{{kpiData()!.mediciDisponibili}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Neuropsichiatri</div>
-                                <div class="info-value">{{kpiData()!.neuropsichiatri}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Psicologi</div>
-                                <div class="info-value">{{kpiData()!.psicologi}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Logopedisti</div>
-                                <div class="info-value">{{kpiData()!.logopedisti}}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Metriche Qualità -->
-                    <div class="mt-3">
-                        <h6 class="mb-3"><mat-icon class="me-2">star</mat-icon>Metriche Qualità</h6>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <div class="metric-card">
-                                    <div class="metric-label">Rating Medio Medici</div>
-                                    <div class="metric-value">
-                                        <mat-icon class="text-warning">star</mat-icon>
-                                        {{kpiData()!.ratingMedioMedici | number:'1.1-1'}} / 5.0
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="metric-card">
-                                    <div class="metric-label">Media Sedute per Percorso</div>
-                                    <div class="metric-value">
-                                        {{kpiData()!.mediaSedutePerPercorso | number:'1.1-1'}} sedute
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="chart-container-medium">
+                        <canvas baseChart [data]="specializzazioniBarChartData()"
+                            [options]="specializzazioniBarChartOptions" type="bar">
+                        </canvas>
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
-    </div>
 
-    <!-- ========================================
-             SEZIONE PRENOTAZIONI - DETTAGLIO COMPLETO
-             ======================================== -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <mat-card>
+        <!-- GRAFICO 4: Percorsi Terapeutici (Pie Chart) -->
+        <div class="col-lg-3 mb-4">
+            <mat-card class="chart-card">
                 <mat-card-header>
                     <mat-card-title>
-                        <mat-icon class="me-2">event</mat-icon>
-                        Prenotazioni - Dettaglio Completo
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <!-- Oggi -->
-                    <h6 class="mb-3"><mat-icon class="me-2">today</mat-icon>Oggi</h6>
-                    <div class="row mb-4">
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Totale Oggi</div>
-                                <div class="info-value text-primary">{{kpiData()!.prenotazioniOggi}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Confermate</div>
-                                <div class="info-value text-success">{{kpiData()!.prenotazioniOggiConfermate}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Completate</div>
-                                <div class="info-value text-info">{{kpiData()!.prenotazioniOggiCompletate}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Da Confermare</div>
-                                <div class="info-value text-warning">{{kpiData()!.prenotazioniDaConfermare}}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Periodo -->
-                    <h6 class="mb-3"><mat-icon class="me-2">date_range</mat-icon>Per Periodo</h6>
-                    <div class="row mb-4">
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Prossimi 7 Giorni</div>
-                                <div class="info-value">{{kpiData()!.prenotazioniProssimi7Giorni}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Questa Settimana</div>
-                                <div class="info-value">{{kpiData()!.prenotazioniQuestaSettimana}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Questo Mese</div>
-                                <div class="info-value">{{kpiData()!.prenotazioniQuestoMese}}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="info-box">
-                                <div class="info-label">Completate Mese</div>
-                                <div class="info-value text-success">{{kpiData()!.prenotazioniCompletateMese}}</div>
-                                <div class="info-percentage">
-                                    {{(kpiData()!.prenotazioniCompletateMese / kpiData()!.prenotazioniQuestoMese * 100)
-                                    | number:'1.0-1'}}%
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Annullamenti e Trend -->
-                    <h6 class="mb-3"><mat-icon class="me-2">trending_up</mat-icon>Trend e Analisi</h6>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="trend-card">
-                                <div class="trend-label">Prenotazioni Annullate (Mese)</div>
-                                <div class="trend-value text-danger">
-                                    <mat-icon>cancel</mat-icon>
-                                    {{kpiData()!.prenotazioniAnnullateMese}}
-                                </div>
-                                <div class="trend-percentage">
-                                    {{(kpiData()!.prenotazioniAnnullateMese / kpiData()!.prenotazioniQuestoMese * 100) |
-                                    number:'1.0-1'}}%
-                                    del totale
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="trend-card" [class.positive]="kpiData()!.trendPrenotazioniMese >= 0">
-                                <div class="trend-label">Trend Mensile</div>
-                                <div class="trend-value" [class.text-success]="kpiData()!.trendPrenotazioniMese >= 0"
-                                    [class.text-danger]="kpiData()!.trendPrenotazioniMese < 0">
-                                    <mat-icon>{{kpiData()!.trendPrenotazioniMese >= 0 ? 'trending_up' :
-                                        'trending_down'}}</mat-icon>
-                                    {{kpiData()!.trendPrenotazioniMese > 0 ? '+' :
-                                    ''}}{{kpiData()!.trendPrenotazioniMese}}
-                                </div>
-                                <div class="trend-percentage">
-                                    {{kpiData()!.trendPrenotazioniMese >= 0 ? 'In crescita' : 'In diminuzione'}}
-                                    rispetto al mese scorso
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Grafico Prenotazioni per Giorno -->
-                    <h6 class="mb-3 mt-4"><mat-icon class="me-2">bar_chart</mat-icon>Distribuzione Settimanale</h6>
-                    <div class="progress-bars">
-                        @for (day of prenotazioniPerGiorno(); track day.nome) {
-                        <div class="progress-item mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="fw-semibold">{{ day.nome }}</span>
-                                <strong>{{ day.valore }}</strong>
-                            </div>
-                            <div class="progress" style="height: 25px;">
-                                <div class="progress-bar bg-primary"
-                                    [style.width.%]="(day.valore / maxPrenotazioni()) * 100">
-                                    {{(day.valore / maxPrenotazioni() * 100) | number:'1.0-0'}}%
-                                </div>
-                            </div>
-                        </div>
-                        }
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-
-    <!-- ========================================
-             SEZIONE PERCORSI TERAPEUTICI
-             ======================================== -->
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <mat-card class="stat-card-full">
-                <mat-card-header>
-                    <mat-card-title>
-                        <mat-icon class="me-2">timeline</mat-icon>
+                        <mat-icon class="me-2">donut_large</mat-icon>
                         Percorsi Terapeutici
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div class="info-box-large mb-3">
-                        <div class="info-label">Percorsi Attivi</div>
-                        <div class="info-value text-success">{{kpiData()!.percorsiAttivi}}</div>
-                    </div>
-                    <div class="info-box-large mb-3">
-                        <div class="info-label">In Valutazione</div>
-                        <div class="info-value text-warning">{{kpiData()!.percorsiInValutazione}}</div>
-                    </div>
-                    <div class="info-box-large">
-                        <div class="info-label">Sospesi</div>
-                        <div class="info-value text-danger">{{kpiData()!.percorsiSospesi}}</div>
+                    <div class="chart-container-square">
+                        <canvas baseChart [data]="percorsiPieChartData()" [options]="percorsiPieChartOptions" type="pie">
+                        </canvas>
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
 
-        <!-- ========================================
-                 SEZIONE REFERTI
-                 ======================================== -->
-        <div class="col-md-4 mb-3">
-            <mat-card class="stat-card-full">
+        <!-- GRAFICO 5: Status Prenotazioni (Doughnut) -->
+        <div class="col-lg-3 mb-4">
+            <mat-card class="chart-card">
                 <mat-card-header>
                     <mat-card-title>
-                        <mat-icon class="me-2">description</mat-icon>
-                        Referti
+                        <mat-icon class="me-2">assignment</mat-icon>
+                        Status Prenotazioni
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div class="info-box-large mb-3">
-                        <div class="info-label">Emessi Questo Mese</div>
-                        <div class="info-value text-primary">{{kpiData()!.refertiEmessiMese}}</div>
+                    <div class="chart-container-square">
+                        <canvas baseChart [data]="statusPrenotazioniDoughnutData()" [options]="pazientiDoughnutChartOptions"
+                            type="doughnut">
+                        </canvas>
                     </div>
-                    <div class="info-box-large mb-3">
-                        <div class="info-label">Da Firmare</div>
-                        <div class="info-value text-warning">{{kpiData()!.refertiDaFirmare}}</div>
-                    </div>
-                    <div class="info-box-large">
-                        <div class="info-label">Da Inviare ai Pazienti</div>
-                        <div class="info-value text-info">{{kpiData()!.refertiDaInviare}}</div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-
-        <!-- ========================================
-                 SEZIONE NOTIFICHE
-                 ======================================== -->
-        <div class="col-md-4 mb-3">
-            <mat-card class="stat-card-full">
-                <mat-card-header>
-                    <mat-card-title>
-                        <mat-icon class="me-2">notifications</mat-icon>
-                        Notifiche
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="info-box-large mb-3">
-                        <div class="info-label">Non Lette</div>
-                        <div class="info-value text-danger">{{kpiData()!.notificheNonLette}}</div>
-                    </div>
-                    <div class="info-box-large">
-                        <div class="info-label">Inviate Oggi</div>
-                        <div class="info-value text-primary">{{kpiData()!.notificheOggi}}</div>
-                    </div>
-                    <button mat-raised-button color="primary" class="mt-3 w-100" routerLink="/notifiche">
-                        <mat-icon>mark_email_read</mat-icon>
-                        Visualizza Tutte
-                    </button>
                 </mat-card-content>
             </mat-card>
         </div>
     </div>
-    }
 
-    <!-- ========================================
-             SEZIONE MEDICI DA VERIFICARE
-             ======================================== -->
+    <!-- GRAFICO 6: Medici Radar Chart -->
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <mat-card class="chart-card">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon class="me-2">radar</mat-icon>
+                        Panoramica Medici (Multi-dimensionale)
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="chart-container-medium">
+                        <canvas baseChart [data]="mediciRadarChartData()" [options]="mediciRadarChartOptions" type="radar">
+                        </canvas>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <!-- KPI Cards Dettagliate -->
+        <div class="col-lg-6 mb-4">
+            @if(kpiData()) {
+            <mat-card class="stat-detail-card">
+                <mat-card-header>
+                    <mat-card-title>
+                        <mat-icon class="me-2">insights</mat-icon>
+                        Metriche Chiave
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="kpi-box">
+                                <div class="kpi-icon text-primary">
+                                    <mat-icon>star</mat-icon>
+                                </div>
+                                <div class="kpi-value">{{kpiData()!.ratingMedioMedici | number:'1.1-1'}}</div>
+                                <div class="kpi-label">Rating Medio Medici</div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="kpi-box">
+                                <div class="kpi-icon text-success">
+                                    <mat-icon>trending_up</mat-icon>
+                                </div>
+                                <div class="kpi-value">{{kpiData()!.mediaSedutePerPercorso | number:'1.1-1'}}</div>
+                                <div class="kpi-label">Media Sedute/Percorso</div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="kpi-box">
+                                <div class="kpi-icon text-warning">
+                                    <mat-icon>notifications</mat-icon>
+                                </div>
+                                <div class="kpi-value">{{kpiData()!.notificheNonLette}}</div>
+                                <div class="kpi-label">Notifiche Non Lette</div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="kpi-box">
+                                <div class="kpi-icon" [class.text-success]="kpiData()!.trendPrenotazioniMese >= 0"
+                                    [class.text-danger]="kpiData()!.trendPrenotazioniMese < 0">
+                                    <mat-icon>{{kpiData()!.trendPrenotazioniMese >= 0 ? 'arrow_upward' :
+                                        'arrow_downward'}}</mat-icon>
+                                </div>
+                                <div class="kpi-value">{{kpiData()!.trendPrenotazioniMese > 0 ? '+' :
+                                    ''}}{{kpiData()!.trendPrenotazioniMese}}</div>
+                                <div class="kpi-label">Trend Mensile</div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            }
+        </div>
+    </div>
+
+    <!-- ==================== MEDICI DA VERIFICARE ==================== -->
     <div class="row mb-4">
         <div class="col-12">
             <mat-card>
@@ -533,9 +313,7 @@
         </div>
     </div>
 
-    <!-- ========================================
-             SEZIONE ATTIVITÀ RECENTI
-             ======================================== -->
+    <!-- ==================== ATTIVITÀ RECENTI ==================== -->
     <div class="row mb-4">
         <div class="col-12">
             <mat-card>
@@ -567,84 +345,6 @@
                     </div>
                     }
                     }
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-
-    <!-- ========================================
-             SEZIONE SPECIALIZZAZIONI
-             ======================================== -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <mat-card>
-                <mat-card-header>
-                    <mat-card-title>
-                        <mat-icon class="me-2">category</mat-icon>
-                        Specializzazioni - Distribuzione
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="progress-bars">
-                        @for (spec of specializzazioniTop(); track spec.nome) {
-                        <div class="progress-item mb-3">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="fw-semibold">{{ spec.nome }}</span>
-                                <strong>{{ spec.valore }} medici</strong>
-                            </div>
-                            <div class="progress" style="height: 25px;">
-                                <div class="progress-bar bg-success"
-                                    [style.width.%]="(spec.valore / maxSpecializzazioni()) * 100">
-                                    {{(spec.valore / maxSpecializzazioni() * 100) | number:'1.0-0'}}%
-                                </div>
-                            </div>
-                        </div>
-                        }
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </div>
-
-    <!-- ========================================
-             AZIONI RAPIDE
-             ======================================== -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <mat-card>
-                <mat-card-header>
-                    <mat-card-title>
-                        <mat-icon class="me-2">flash_on</mat-icon>
-                        Azioni Rapide Sistema
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="row">
-                        <div class="col-md-3 mb-2">
-                            <button mat-raised-button color="primary" class="w-100" routerLink="/admin/utenti">
-                                <mat-icon>people</mat-icon>
-                                Gestisci Utenti
-                            </button>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <button mat-raised-button class="w-100" routerLink="/admin/medici">
-                                <mat-icon>local_hospital</mat-icon>
-                                Gestisci Medici
-                            </button>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <button mat-raised-button class="w-100" routerLink="/admin/prenotazioni">
-                                <mat-icon>event</mat-icon>
-                                Tutte le Prenotazioni
-                            </button>
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <button mat-raised-button class="w-100" routerLink="/admin/statistiche">
-                                <mat-icon>bar_chart</mat-icon>
-                                Report Completo
-                            </button>
-                        </div>
-                    </div>
                 </mat-card-content>
             </mat-card>
         </div>
