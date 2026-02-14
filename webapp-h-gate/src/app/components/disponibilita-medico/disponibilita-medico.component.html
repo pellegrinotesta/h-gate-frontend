@@ -1,0 +1,99 @@
+<div class="disponibilita-dialog">
+    <h2 mat-dialog-title class="dialog-title">
+        <mat-icon class="me-2">event_available</mat-icon>
+        Gestisci Disponibilità
+    </h2>
+
+    <mat-dialog-content class="dialog-content">
+        @if(isLoading()) {
+        <div class="text-center py-5">
+            <mat-spinner diameter="50"></mat-spinner>
+            <p class="mt-3">Caricamento...</p>
+        </div>
+        } @else {
+
+        <!-- Azione rapida -->
+        <div class="quick-action mb-4">
+            <button mat-stroked-button color="primary" (click)="configuraStandard()" [disabled]="isSaving()">
+                <mat-icon>auto_fix_high</mat-icon>
+                Configura disponibilità standard (Lun-Ven 9-17)
+            </button>
+        </div>
+
+        <!-- Giorni della settimana -->
+        @for(giorno of giorni; track giorno.valore) {
+        <mat-card class="giorno-card mb-3" [class.attivo]="isGiornoAttivo(giorno.valore)">
+            <mat-card-content>
+                <div [formGroup]="getForm(giorno.valore)">
+                    <!-- Header con toggle -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <mat-icon [class.text-primary]="isGiornoAttivo(giorno.valore)">
+                                {{ isGiornoAttivo(giorno.valore) ? 'event_available' : 'event_busy' }}
+                            </mat-icon>
+                            <h5 class="mb-0">{{ giorno.nome }}</h5>
+                        </div>
+                        <mat-slide-toggle formControlName="isAttiva" (change)="toggleGiorno(giorno.valore)"
+                            color="primary">
+                            {{ isGiornoAttivo(giorno.valore) ? 'Attivo' : 'Chiuso' }}
+                        </mat-slide-toggle>
+                    </div>
+
+                    <!-- Orari (mostrati solo se attivo) -->
+                    @if(isGiornoAttivo(giorno.valore)) {
+                    <div class="row g-3">
+                        <!-- Ora inizio -->
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Ora inizio</mat-label>
+                                <input matInput type="time" formControlName="oraInizio" required>
+                                <mat-icon matPrefix>schedule</mat-icon>
+                                <mat-error>Obbligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Ora fine -->
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Ora fine</mat-label>
+                                <input matInput type="time" formControlName="oraFine" required>
+                                <mat-icon matPrefix>schedule</mat-icon>
+                                <mat-error>Obbligatorio</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Note -->
+                        <div class="col-12">
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label>Note (opzionale)</mat-label>
+                                <textarea matInput formControlName="note" rows="2"
+                                    placeholder="Es: Pausa pranzo 13:00-14:00"></textarea>
+                                <mat-icon matPrefix>note</mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Pulsante salva singolo -->
+                        <div class="col-12">
+                            <button mat-button color="primary" (click)="salvaGiorno(giorno.valore)"
+                                [disabled]="getForm(giorno.valore).invalid || isSaving()">
+                                <mat-icon>save</mat-icon>
+                                Salva questo giorno
+                            </button>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </mat-card-content>
+        </mat-card>
+        }
+        }
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-button (click)="chiudi()">Annulla</button>
+        <button mat-raised-button color="primary" (click)="salvaTutto()" [disabled]="isSaving()">
+            <mat-icon>save</mat-icon>
+            Salva tutto
+        </button>
+    </mat-dialog-actions>
+</div>
