@@ -4,7 +4,7 @@
             <img src="/assets/logo.png" alt="Logo H-GATE" width="60" class="me-3">
             <app-menu></app-menu>
 
-            <div class="ms-auto d-flex align-items-center gap-3">
+            <div class="ms-auto d-flex align-items-center">
                 <!-- NOTIFICHE -->
                 <button mat-icon-button [matMenuTriggerFor]="notificheMenu" [matBadge]="conteggioNonLette || 0"
                     [matBadgeHidden]="!conteggioNonLette || conteggioNonLette === 0" matBadgeColor="warn"
@@ -14,7 +14,7 @@
 
                 <!-- USER INFO -->
                 @if(me) {
-                <div class="me-2 text-start small d-none d-md-block" style="color: #fff;">
+                <div class="user-info text-start small d-none d-md-block" style="color: #fff;">
                     <div class="fw-semibold">{{me.nome}} {{me.cognome}}</div>
                     <div class="opacity-75">{{me.email}}</div>
                 </div>
@@ -73,7 +73,7 @@
                     </mat-icon>
                 </div>
                 <div class="flex-grow-1" style="min-width: 0;">
-                    <div class="fw-semibold mb-1 text-truncate">{{ notifica.titolo }}</div>
+                    <div class="fw-semibold mb-1 notifica-titolo">{{ notifica.titolo }}</div>
                     <div class="small text-muted notifica-messaggio">
                         {{ notifica.messaggio }}
                     </div>

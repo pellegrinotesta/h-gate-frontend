@@ -176,10 +176,10 @@
                                         Referto
                                     </button>
                                     @if(app.stato === 'IN_ATTESA') {
-                                        <button mat-button color="warn" (click)="confermaAppuntamento(app.id)">
-                                            <mat-icon>check_circle</mat-icon>
-                                            Conferma 
-                                        </button>
+                                    <button mat-button color="warn" (click)="confermaAppuntamento(app.id)">
+                                        <mat-icon>check_circle</mat-icon>
+                                        Conferma
+                                    </button>
                                     }
                                 </div>
                             </div>
@@ -239,10 +239,6 @@
                         <button mat-raised-button routerLink="/pazienti">
                             <mat-icon>people</mat-icon>
                             I miei pazienti
-                        </button>
-                        <button mat-raised-button routerLink="/disponibilita">
-                            <mat-icon>event_available</mat-icon>
-                            Disponibilità
                         </button>
                         <button mat-raised-button routerLink="/statistiche">
                             <mat-icon>analytics</mat-icon>
