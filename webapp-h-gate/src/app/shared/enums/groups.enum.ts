@@ -1,5 +1,6 @@
 export enum Group {
-    ADMIN = 'admin',
-    PAZIENTE = 'paziente',
-    MEDICO = 'medico'
+    ADMIN = 'ADMIN',
+    PAZIENTE = 'PAZIENTE',
+    MEDICO = 'MEDICO',
+    TUTORE = 'TUTORE'
 }

@@ -1,4 +1,5 @@
 export interface ResponseDTO<T> {
+    ok: boolean;
     data: T;
     message: string;
     response_code: number;

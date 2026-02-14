@@ -3,125 +3,286 @@
 }
 @else {
 <div class="container py-4">
+    <!-- Header Profilo -->
     <mat-card class="mb-4">
         <mat-card-content class="p-4">
             <div class="row align-items-center">
-
                 <!-- Avatar -->
                 <div class="col-md-3 text-center mb-3 mb-md-0">
                     <div class="position-relative d-inline-block">
-
                         <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
                             style="width: 120px; height: 120px; font-size: 40px;">
-                            {{user()?.nome?.charAt(0) }} {{ user()?.cognome?.charAt(0)}}
+                            {{user()?.nome?.charAt(0)}}{{user()?.cognome?.charAt(0)}}
                         </div>
-
                         <label class="btn btn-sm btn-dark position-absolute bottom-0 end-0 rounded-circle"
-                            style="width: 38px; height: 38px; padding: 6px;" [class.disabled]="!editMode()">
+                            style="width: 38px; height: 38px; padding: 6px;">
                             <input type="file" accept="image/*" hidden />
                             <i class="bi bi-camera-fill"></i>
                         </label>
                     </div>
                 </div>
 
-                <!-- Info-->
+                <!-- Info -->
                 <div class="col-md-6">
                     <h3 class="mb-1">{{ fullName() }}</h3>
                     <p class="text-muted mb-1">{{ user()?.email }}</p>
-                    @for( role of user()?.roles; track role) {
-                    <span class="badge bg-primary">
-                        {{ getRoleLabel(role) }}
-                    </span>
+                    @for(role of user()?.roles; track role) {
+                    <span class="badge bg-primary me-1">{{ getRoleLabel(role) }}</span>
+                    }
+
+                    <!-- Conteggio pazienti per tutore -->
+                    @if(isTutore() && pazienti().length > 0) {
+                    <div class="mt-2">
+                        <small class="text-muted">
+                            <i class="bi bi-people-fill"></i>
+                            {{ pazienti().length }} Minore{{ pazienti().length > 1 ? 'i' : '' }} in carico
+                        </small>
+                    </div>
                     }
                 </div>
 
                 <!-- Edit Button -->
                 <div class="col-md-3 text-md-end mt-3 mt-md-0">
-                    @if(!editMode()) {
-                    <button class="btn btn-primary" (click)="toggleEditMode()">
-                        <i class="bi bi-pencil-square"></i> Modica Profilo
+                    <button class="btn btn-primary" (click)="setActiveTab('general')">
+                        <i class="bi bi-pencil-square"></i> Modifica Profilo
                     </button>
-                    } @else {
-                    <button class="btn btn-secondary" (click)="toggleEditMode()">
-                        <i class="bi bi-x-lg"></i> Annulla
-                    </button>
-                    }
                 </div>
             </div>
         </mat-card-content>
     </mat-card>
 
-    <!--Tabs-->
-    <ul class="nav nav-items mb-3">
-
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-3">
+        <!-- Tab Tutore -->
         <li class="nav-item">
             <button class="nav-link" [class.active]="activeTab() === 'general'" (click)="setActiveTab('general')">
-                Informazioni Generali
+                <i class="bi bi-person-circle"></i> Il Mio Profilo
             </button>
         </li>
 
-        @if(isPaziente() || isMedico()) {
+        <!-- Tab Pazienti (solo per tutori) -->
+        @if(isTutore()) {
         <li class="nav-item">
-            <button class="nav-link" [class.active]="activeTab() === 'specific'" (click)="setActiveTab('specific')">
-                @if (isPaziente()) {Dati Sanitari}
-                @if(isMedico()) {Dati Professionali}
+            <button class="nav-link" [class.active]="activeTab() === 'pazienti'" (click)="setActiveTab('pazienti')">
+                <i class="bi bi-people-fill"></i> I Miei Bambini
+                @if(pazienti().length > 0) {
+                <span class="badge bg-primary ms-1">{{ pazienti().length }}</span>
+                }
             </button>
         </li>
         }
 
+        <!-- Tab Dati Professionali (solo per medici) -->
+        @if(isMedico()) {
+        <li class="nav-item">
+            <button class="nav-link" [class.active]="activeTab() === 'medico'" (click)="setActiveTab('medico')">
+                <i class="bi bi-briefcase-fill"></i> Dati Professionali
+            </button>
+        </li>
+        }
+
+        <!-- Tab Sicurezza -->
         <li class="nav-item">
             <button class="nav-link" [class.active]="activeTab() === 'security'" (click)="setActiveTab('security')">
-                Sicurezza
+                <i class="bi bi-shield-lock-fill"></i> Sicurezza
             </button>
         </li>
     </ul>
 
-    <!--Tab Content-->
+    <!-- ============================================ -->
+    <!-- TAB CONTENT -->
+    <!-- ============================================ -->
+
     <div class="tab-content">
-        <!-- General Info Tab -->
+
+        <!-- ==================== TAB: IL MIO PROFILO (TUTORE) ==================== -->
         @if(activeTab() === 'general') {
         <mat-card class="shadow-sm">
             <mat-card-content>
-                <h5 class="mb-4">Informazioni Personali</h5>
-                <app-generic-form [fields]="generalInfoFields" [initialData]="user()" [editMode]="editMode()"
-                    [showButtons]="true" submitButtonText="Salva" cancelButtonText="Annulla"
-                    (save)="saveGeneralInfo($event)" (cancel)="toggleEditMode()">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-vcard me-2"></i>
+                        Le Mie Informazioni Personali
+                    </h5>
+                    @if(!editModeTutore()) {
+                    <button class="btn btn-sm btn-primary" (click)="toggleEditModeTutore()">
+                        <i class="bi bi-pencil"></i> Modifica
+                    </button>
+                    }
+                </div>
+
+                <app-generic-form [fields]="generalInfoFields" [initialData]="user()" [editMode]="editModeTutore()"
+                    [showButtons]="editModeTutore()" submitButtonText="Salva Modifiche" cancelButtonText="Annulla"
+                    (save)="saveGeneralInfoTutore($event)" (cancel)="toggleEditModeTutore()">
                 </app-generic-form>
             </mat-card-content>
         </mat-card>
         }
 
-        <!-- Patient Specific Info Tab -->
-        @else if(activeTab() === 'specific' && isPaziente()) {
+        <!-- ==================== TAB: I MIEI BAMBINI (PAZIENTI) ==================== -->
+        @else if(activeTab() === 'pazienti' && isTutore()) {
+        <div class="row">
+
+            <!-- SIDEBAR: Lista Pazienti -->
+            <div class="col-md-4">
+                <mat-card class="shadow-sm">
+                    <mat-card-content>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0">I Miei Bambini</h6>
+                            <button class="btn btn-sm btn-success" (click)="openAddPazienteDialog()">
+                                <i class="bi bi-plus-circle"></i> Aggiungi
+                            </button>
+                        </div>
+
+                        <!-- Nessun paziente -->
+                        @if(pazienti().length === 0) {
+                        <div class="text-center text-muted py-5">
+                            <i class="bi bi-inbox display-4 d-block mb-3"></i>
+                            <p>Nessun bambino registrato</p>
+                            <button class="btn btn-sm btn-outline-primary" (click)="openAddPazienteDialog()">
+                                Aggiungi il primo
+                            </button>
+                        </div>
+                        }
+
+                        <!-- Lista pazienti -->
+                        @else {
+                        <div class="list-group">
+                            @for(paziente of pazienti(); track paziente.id) {
+                            <button class="list-group-item list-group-item-action"
+                                [class.active]="selectedPaziente()?.id === paziente.id"
+                                (click)="selectPaziente(paziente)">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ paziente.nome }} {{ paziente.cognome }}</h6>
+                                        <small class="opacity-75">
+                                            <i class="bi bi-calendar3"></i>
+                                            {{ calculateAge(paziente.dataNascita) }} anni
+                                        </small>
+                                    </div>
+                                    <i class="bi bi-chevron-right"></i>
+                                </div>
+                            </button>
+                            }
+                        </div>
+                        }
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <!-- DETTAGLIO: Paziente Selezionato -->
+            <div class="col-md-8">
+                @if(selectedPaziente()) {
+
+                <!-- Card Dati Anagrafici -->
+                <mat-card class="shadow-sm mb-3">
+                    <mat-card-content>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h5 class="mb-1">
+                                    {{ selectedPaziente()!.nome }} {{ selectedPaziente()!.cognome }}
+                                </h5>
+                                <small class="text-muted">CF: {{ selectedPaziente()!.codiceFiscale }}</small>
+                            </div>
+                            <div>
+                                @if(!editModePaziente()) {
+                                <button class="btn btn-sm btn-outline-primary me-2" (click)="toggleEditModePaziente()">
+                                    <i class="bi bi-pencil"></i> Modifica
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger"
+                                    (click)="deletePaziente(selectedPaziente()!.id)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                                } @else {
+                                <button class="btn btn-sm btn-secondary" (click)="toggleEditModePaziente()">
+                                    <i class="bi bi-x-lg"></i> Annulla
+                                </button>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Info rapide -->
+                        <div class="row mb-3">
+                            <div class="col-6 col-md-3 mb-2">
+                                <small class="text-muted d-block">Età</small>
+                                <strong>{{ calculateAge(selectedPaziente()!.dataNascita) }} anni</strong>
+                            </div>
+                            <div class="col-6 col-md-3 mb-2">
+                                <small class="text-muted d-block">Sesso</small>
+                                <strong>{{ selectedPaziente()!.sesso === 'M' ? 'Maschio' : 'Femmina' }}</strong>
+                            </div>
+                            <div class="col-6 col-md-3 mb-2">
+                                <small class="text-muted d-block">Data Nascita</small>
+                                <strong>{{ selectedPaziente()!.dataNascita | date:'dd/MM/yyyy' }}</strong>
+                            </div>
+                            <div class="col-6 col-md-3 mb-2">
+                                <small class="text-muted d-block">Gruppo Sanguigno</small>
+                                <strong>{{ selectedPaziente()!.gruppoSanguigno || 'N/D' }}</strong>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Form Dati Sanitari -->
+                        <h6 class="mb-3">
+                            <i class="bi bi-heart-pulse me-2"></i>
+                            Dati Sanitari e Clinici
+                        </h6>
+
+                        <app-generic-form [fields]="patientInfoFields" [initialData]="selectedPaziente()"
+                            [editMode]="editModePaziente()" [showButtons]="editModePaziente()"
+                            submitButtonText="Salva Dati" cancelButtonText="Annulla" (save)="saveInfoPaziente($event)"
+                            (cancel)="toggleEditModePaziente()">
+                        </app-generic-form>
+                    </mat-card-content>
+                </mat-card>
+
+                } @else {
+                <!-- Nessun paziente selezionato -->
+                <mat-card class="shadow-sm">
+                    <mat-card-content class="text-center text-muted py-5">
+                        <i class="bi bi-arrow-left-circle display-3 d-block mb-3"></i>
+                        <h5>Seleziona un bambino</h5>
+                        <p>Clicca su un nome dalla lista per visualizzare i dettagli</p>
+                    </mat-card-content>
+                </mat-card>
+                }
+            </div>
+        </div>
+        }
+
+        <!-- ==================== TAB: DATI PROFESSIONALI (MEDICO) ==================== -->
+        @else if(activeTab() === 'medico' && isMedico()) {
         <mat-card class="shadow-sm">
             <mat-card-content>
-                <h5 class="mb-4">Dati Sanitari</h5>
-                <app-generic-form [fields]="patientInfoFields" [initialData]="user()" [editMode]="editMode()"
-                    [showButtons]="true" submitButtonText="Salva" cancelButtonText="Annulla"
-                    (save)="saveSpecificInfo($event)" (cancel)="toggleEditMode()">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0">
+                        <i class="bi bi-briefcase me-2"></i>
+                        Dati Professionali
+                    </h5>
+                    @if(!editModeMedico()) {
+                    <button class="btn btn-sm btn-primary" (click)="toggleEditModeMedico()">
+                        <i class="bi bi-pencil"></i> Modifica
+                    </button>
+                    }
+                </div>
+
+                <app-generic-form [fields]="doctorInfoFields" [initialData]="user()" [editMode]="editModeMedico()"
+                    [showButtons]="editModeMedico()" submitButtonText="Salva" cancelButtonText="Annulla"
+                    (save)="saveInfoMedico($event)" (cancel)="toggleEditModeMedico()">
                 </app-generic-form>
             </mat-card-content>
         </mat-card>
         }
 
-        <!-- Doctor Specific Info Tab -->
-        @else if(activeTab() === 'specific' && isMedico()) {
-        <mat-card class="shadow-sm">
-            <mat-card-content>
-                <h5 class="mb-4">Dati Professionali</h5>
-                <app-generic-form [fields]="doctorInfoFields" [initialData]="user()" [editMode]="editMode()"
-                    [showButtons]="true" submitButtonText="Salva" cancelButtonText="Annulla"
-                    (save)="saveSpecificInfo($event)" (cancel)="toggleEditMode()">
-                </app-generic-form>
-            </mat-card-content>
-        </mat-card>
-        }
-
-        <!-- Security Tab -->
+        <!-- ==================== TAB: SICUREZZA ==================== -->
         @else if(activeTab() === 'security') {
         <mat-card class="shadow-sm">
             <mat-card-content>
-                <h5 class="mb-4">Cambia Password</h5>
+                <h5 class="mb-4">
+                    <i class="bi bi-shield-lock me-2"></i>
+                    Cambia Password
+                </h5>
                 <app-generic-form [fields]="passwordChangeFields" [editMode]="true" [showButtons]="true"
                     submitButtonText="Cambia Password" [formValidator]="passwordMatchValidator"
                     (save)="changePassword($event)">
@@ -129,9 +290,6 @@
             </mat-card-content>
         </mat-card>
         }
-
     </div>
-
 </div>
-
 }

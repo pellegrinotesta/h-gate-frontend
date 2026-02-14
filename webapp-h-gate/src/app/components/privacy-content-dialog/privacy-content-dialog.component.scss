@@ -1,0 +1,56 @@
+.info-box {
+    background-color: #f5f5f5;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid #1976d2;
+}
+
+.privacy-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.privacy-summary {
+    display: grid;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.privacy-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.privacy-item i {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.consent-checkbox {
+    background-color: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.consent-text {
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+.full-width-checkbox {
+    width: 100%;
+}
+
+::ng-deep .full-width-checkbox .mdc-label {
+    white-space: normal;
+    line-height: 1.5;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 8px;
+}

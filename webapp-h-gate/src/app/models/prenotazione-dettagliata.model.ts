@@ -1,0 +1,20 @@
+export interface PrenotazioneDettagliata {
+    id: number,
+    uuid: string,
+    numeroPrenotazione: string,
+    dataOra: Date,
+    dataOraFine: Date,
+    tipoVisita: string,
+    stato: string,
+    costo: number,
+    pazienteUserId: number,
+    pazienteNome: string,
+    pazienteEmail: string,
+    pazienteCf: string,
+    medicoUserId: number,
+    medicoNome: string,
+    medicoEmail: string,
+    medicoSpecializzazione: string,
+    medicoRating: number,
+    createdAt: Date
+}

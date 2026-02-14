@@ -1,0 +1,279 @@
+<div class="prenotazione-container py-4">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 col-xl-9">
+
+        <!-- Header -->
+        <div class="mb-4">
+          <h2 class="mb-2">
+            <mat-icon class="me-2">event</mat-icon>
+            Nuova Prenotazione
+          </h2>
+          <p class="text-muted">Prenota una visita per il tuo bambino</p>
+        </div>
+
+        <!-- Stepper -->
+        <mat-stepper linear #stepper>
+
+          <!-- STEP 1: Selezione Paziente -->
+          <mat-step [stepControl]="pazienteForm">
+            <ng-template matStepLabel>Seleziona Paziente</ng-template>
+
+            <mat-card class="mt-3">
+              <mat-card-content>
+                <h5 class="mb-3">Per chi vuoi prenotare?</h5>
+
+                <form [formGroup]="pazienteForm">
+                  <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Seleziona il minore</mat-label>
+                    <mat-select formControlName="pazienteId" (selectionChange)="onPazienteSelected()">
+                      @for(minore of minori(); track minore.id) {
+                      <mat-option [value]="minore.id">
+                        {{ minore.nome }} {{ minore.cognome }}
+                        ({{ minore.dataNascita | date:'dd/MM/yyyy' }})
+                      </mat-option>
+                      }
+                    </mat-select>
+                    <mat-error>Seleziona un paziente</mat-error>
+                  </mat-form-field>
+
+                  @if(minoreSelezionato()) {
+                  <div class="alert alert-info">
+                    <strong>Paziente selezionato:</strong>
+                    {{ minoreSelezionato()!.nome }} {{ minoreSelezionato()!.cognome }}
+                  </div>
+                  }
+                </form>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button mat-button (click)="annulla()">
+                    <mat-icon>close</mat-icon>
+                    Annulla
+                  </button>
+                  <button mat-raised-button color="primary" matStepperNext [disabled]="!pazienteForm.valid">
+                    Avanti
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-step>
+
+          <!-- STEP 2: Selezione Medico -->
+          <mat-step [stepControl]="medicoForm">
+            <ng-template matStepLabel>Seleziona Medico</ng-template>
+
+            <mat-card class="mt-3">
+              <mat-card-content>
+                <h5 class="mb-3">Con quale specialista?</h5>
+
+                <form [formGroup]="medicoForm">
+                  <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Seleziona il medico</mat-label>
+                    <mat-select formControlName="medicoId" (selectionChange)="onMedicoSelected()">
+                      @for(medico of medici(); track medico.id) {
+                      <mat-option [value]="medico.id">
+                        Dr. {{ medico.user.nome }} {{ medico.user.cognome }} - {{ medico.specializzazione }}
+                      </mat-option>
+                      }
+                    </mat-select>
+                    <mat-error>Seleziona un medico</mat-error>
+                  </mat-form-field>
+
+                  @if(medicoSelezionato()) {
+                  <div class="medico-info-card p-3 border rounded">
+                    <div class="d-flex align-items-start">
+                      <mat-icon class="text-primary me-3">local_hospital</mat-icon>
+                      <div class="flex-grow-1">
+                        <h6 class="mb-1">
+                          Dr. {{ medicoSelezionato()!.user.nome }} {{ medicoSelezionato()!.user.cognome }}
+                        </h6>
+                        <p class="text-muted mb-2">{{ medicoSelezionato()!.specializzazione }}</p>
+                        <div class="d-flex gap-3">
+                          @if(medicoSelezionato()!.ratingMedio) {
+                          <small>
+                            <mat-icon class="small-icon text-warning">star</mat-icon>
+                            {{ medicoSelezionato()!.ratingMedio }}
+                          </small>
+                          }
+                          <small>
+                            <mat-icon class="small-icon">access_time</mat-icon>
+                            {{ medicoSelezionato()!.durataVisitaMinuti || 30 }} min
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </form>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button mat-button matStepperPrevious>
+                    <mat-icon>arrow_back</mat-icon>
+                    Indietro
+                  </button>
+                  <button mat-raised-button color="primary" matStepperNext [disabled]="!medicoForm.valid">
+                    Avanti
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-step>
+
+          <!-- STEP 3: Data e Ora -->
+          <mat-step [stepControl]="dataOraForm">
+            <ng-template matStepLabel>Scegli Data e Ora</ng-template>
+
+            <mat-card class="mt-3">
+              <mat-card-content>
+                <h5 class="mb-3">Quando vuoi la visita?</h5>
+
+                <form [formGroup]="dataOraForm">
+                  <!-- Calendario -->
+                  <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Seleziona la data</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="data" (dateChange)="onDataSelected()">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error>Seleziona una data</mat-error>
+                  </mat-form-field>
+
+                  <!-- Slot disponibili -->
+                  @if(slotsDisponibili().length > 0) {
+                  <div class="mb-3">
+                    <label class="form-label">Orari disponibili</label>
+
+                    <!-- Info orari medico -->
+                    @if(orariMedico) {
+                    <div class="alert alert-info mb-3">
+                      <mat-icon>schedule</mat-icon>
+                      <strong>Orari del medico:</strong> {{ orariMedico.inizio }} - {{ orariMedico.fine }}
+                    </div>
+                    }
+
+                    <div class="slots-grid">
+                      @for(slot of slotsDisponibili(); track slot.dataOra) {
+                      <mat-chip-option [value]="slot.dataOra"
+                        [selected]="dataOraForm.get('slot')?.value === slot.dataOra" [disabled]="!slot.disponibile"
+                        (click)="selectSlot(slot)">
+                        <mat-icon>schedule</mat-icon>
+                        {{ slot.dataOra | date:'HH:mm' }}
+                        @if(!slot.disponibile) {
+                        <mat-icon matSuffix class="text-muted">block</mat-icon>
+                        }
+                      </mat-chip-option>
+                      }
+                    </div>
+                  </div>
+                  } @else if(dataOraForm.get('data')?.value) {
+                  <div class="alert alert-warning">
+                    <mat-icon>event_busy</mat-icon>
+                    <strong>Nessuno slot disponibile</strong>
+                    <p class="mb-0 mt-2">Il medico non è disponibile in questa data. Prova a selezionare un altro
+                      giorno.</p>
+                  </div>
+                  }
+                </form>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button mat-button matStepperPrevious>
+                    <mat-icon>arrow_back</mat-icon>
+                    Indietro
+                  </button>
+                  <button mat-raised-button color="primary" matStepperNext [disabled]="!dataOraForm.valid">
+                    Avanti
+                    <mat-icon>arrow_forward</mat-icon>
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-step>
+
+          <!-- STEP 4: Dettagli -->
+          <mat-step [stepControl]="dettagliForm">
+            <ng-template matStepLabel>Dettagli Visita</ng-template>
+
+            <mat-card class="mt-3">
+              <mat-card-content>
+                <h5 class="mb-3">Ultimi dettagli</h5>
+
+                <form [formGroup]="dettagliForm">
+                  <!-- Tipo Visita -->
+                  <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Tipo di visita</mat-label>
+                    <mat-select formControlName="tipoVisita">
+                      @for(tariffa of tipoVisita(); track tariffa.id) {
+                      <mat-option [value]="tariffa.tipoVisita">
+                        {{ tariffa.tipoVisita }} - {{ tariffa.costo | currency:'EUR' }}
+                      </mat-option>
+                      }
+                    </mat-select>
+                    <mat-error>Seleziona il tipo di visita</mat-error>
+                  </mat-form-field>
+
+                  <!-- Note -->
+                  <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Note (opzionale)</mat-label>
+                    <textarea matInput formControlName="note" rows="3"
+                      placeholder="Inserisci eventuali note o richieste particolari"></textarea>
+                  </mat-form-field>
+
+                  <!-- Prima Visita -->
+                  <div class="mb-3">
+                    <mat-checkbox formControlName="isPrimaVisita">
+                      Questa è la prima visita con questo medico
+                    </mat-checkbox>
+                  </div>
+
+                  <!-- Riepilogo -->
+                  <div class="riepilogo-card p-3 bg-light rounded">
+                    <h6 class="mb-3">
+                      <mat-icon class="me-2">summarize</mat-icon>
+                      Riepilogo Prenotazione
+                    </h6>
+                    <div class="row">
+                      <div class="col-md-6 mb-2">
+                        <small class="text-muted d-block">Paziente</small>
+                        <strong>{{ getMinoreNome(pazienteForm.get('pazienteId')?.value) }}</strong>
+                      </div>
+                      <div class="col-md-6 mb-2">
+                        <small class="text-muted d-block">Medico</small>
+                        <strong>{{ getMedicoNome(medicoForm.get('medicoId')?.value) }}</strong>
+                      </div>
+                      <div class="col-md-6 mb-2">
+                        <small class="text-muted d-block">Data e Ora</small>
+                        <strong>{{ dataOraForm.get('slot')?.value | date:'EEEE, dd MMMM yyyy - HH:mm' }}</strong>
+                      </div>
+                      <div class="col-md-6 mb-2">
+                        <small class="text-muted d-block">Tipo Visita</small>
+                        <strong>{{ dettagliForm.get('tipoVisita')?.value }}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button mat-button matStepperPrevious>
+                    <mat-icon>arrow_back</mat-icon>
+                    Indietro
+                  </button>
+                  <button mat-raised-button color="primary" (click)="confermaPrenotazione()"
+                    [disabled]="!isFormValid() || isSaving()">
+                    @if(isSaving()) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    <mat-icon>check</mat-icon>
+                    Conferma Prenotazione
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </mat-step>
+
+        </mat-stepper>
+
+      </div>
+    </div>
+  </div>
+</div>

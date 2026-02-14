@@ -1,0 +1,68 @@
+<app-generic-dialog [title]="'Consenso al Trattamento dei Dati Personali'"
+    [subtitle]="'Ai sensi del Regolamento UE 2016/679 (GDPR)'">
+
+    <!-- Informazioni Minore -->
+    <div class="info-box mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <small class="text-muted d-block">Minore</small>
+                <strong class="fs-6">{{ data.minoreName }}</strong>
+            </div>
+            <div class="text-end">
+                <small class="text-muted d-block">CF</small>
+                <strong class="font-monospace">{{ data.codiceFiscale }}</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informativa Privacy - versione compatta -->
+    <div class="privacy-text">
+        <p class="mb-2">
+            In qualità di tutore/genitore, dichiaro di essere stato informato che i dati
+            del minore saranno trattati per finalità di assistenza sanitaria, in conformità
+            al GDPR (Reg. UE 2016/679).
+        </p>
+
+        <div class="privacy-summary">
+            <div class="privacy-item">
+                <i class="bi bi-shield-check text-primary me-2"></i>
+                <small>Dati trattati solo per cure mediche e assistenza</small>
+            </div>
+            <div class="privacy-item">
+                <i class="bi bi-lock text-primary me-2"></i>
+                <small>Accesso limitato a personale sanitario autorizzato</small>
+            </div>
+            <div class="privacy-item">
+                <i class="bi bi-arrow-repeat text-primary me-2"></i>
+                <small>Diritti GDPR esercitabili in qualsiasi momento</small>
+            </div>
+            <div class="privacy-item">
+                <i class="bi bi-x-circle text-primary me-2"></i>
+                <small>Consenso revocabile senza conseguenze</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkbox di consenso -->
+    <div class="consent-checkbox mt-3">
+        <mat-checkbox [(ngModel)]="consentGiven" color="primary" class="full-width-checkbox">
+            <span class="consent-text">
+                <strong>Presto il consenso</strong> al trattamento dei dati di
+                <strong>{{ data.minoreName }}</strong> per le finalità sanitarie indicate.
+            </span>
+        </mat-checkbox>
+    </div>
+
+    <!-- Azioni -->
+    <div class="dialog-actions mt-3">
+        <button mat-button (click)="onCancel()">
+            <i class="bi bi-x-lg me-1"></i>
+            Annulla
+        </button>
+        <button mat-raised-button color="primary" [disabled]="!consentGiven" (click)="onAccept()">
+            <i class="bi bi-check-lg me-1"></i>
+            Confermo
+        </button>
+    </div>
+
+</app-generic-dialog>

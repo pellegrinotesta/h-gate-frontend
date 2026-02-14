@@ -1,0 +1,140 @@
+.disponibilita-dialog {
+    max-width: 800px;
+
+    .dialog-title {
+        display: flex;
+        align-items: center;
+        font-size: 24px;
+        font-weight: 600;
+        color: #1e3a5f;
+        padding: 20px 24px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    .dialog-content {
+        padding: 24px;
+        max-height: 70vh;
+        overflow-y: auto;
+
+        // Custom scrollbar
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #bdbdbd;
+            border-radius: 4px;
+
+            &:hover {
+                background: #9e9e9e;
+            }
+        }
+    }
+
+    .dialog-actions {
+        padding: 16px 24px;
+        border-top: 1px solid #e0e0e0;
+    }
+}
+
+.quick-action {
+    text-align: center;
+    padding: 16px;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f0f7ff 100%);
+    border-radius: 12px;
+
+    button {
+        font-weight: 600;
+    }
+}
+
+.giorno-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+
+    &.attivo {
+        border-color: #006699;
+        background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+        box-shadow: 0 4px 12px rgba(0, 102, 153, 0.1);
+    }
+
+    &:not(.attivo) {
+        background: #fafafa;
+        opacity: 0.8;
+    }
+
+    mat-card-content {
+        padding: 20px;
+    }
+
+    h5 {
+        font-weight: 600;
+        color: #1e3a5f;
+    }
+
+    mat-icon {
+        transition: all 0.3s ease;
+
+        &.text-primary {
+            color: #006699;
+            transform: scale(1.1);
+        }
+    }
+}
+
+// Form styling
+mat-form-field {
+    &.w-100 {
+        width: 100%;
+    }
+
+    ::ng-deep {
+        .mat-mdc-form-field-subscript-wrapper {
+            margin-top: 4px;
+        }
+    }
+}
+
+mat-slide-toggle {
+    ::ng-deep {
+        .mdc-switch--selected .mdc-switch__track {
+            background-color: #006699 !important;
+        }
+
+        .mdc-switch--selected .mdc-switch__handle::after {
+            background-color: #006699 !important;
+        }
+    }
+}
+
+// Loading state
+.text-center {
+    mat-spinner {
+        margin: 0 auto;
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .disponibilita-dialog {
+        .dialog-title {
+            font-size: 20px;
+            padding: 16px 20px;
+        }
+
+        .dialog-content {
+            padding: 16px;
+        }
+
+        .giorno-card {
+            mat-card-content {
+                padding: 16px;
+            }
+        }
+    }
+}

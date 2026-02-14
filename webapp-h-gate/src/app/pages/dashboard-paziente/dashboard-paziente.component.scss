@@ -1,0 +1,178 @@
+ .dashboard-container {
+     padding: 24px;
+     max-width: 1400px;
+     margin: 0 auto;
+ }
+
+ .welcome-card {
+     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+     color: white;
+     padding: 32px;
+     border-radius: 16px;
+     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+ }
+
+ .welcome-card h1 {
+     font-size: 2rem;
+     font-weight: 700;
+     margin: 0;
+ }
+
+ .stat-card {
+     height: 100%;
+     transition: transform 0.3s, box-shadow 0.3s;
+     cursor: pointer;
+ }
+
+ .stat-card:hover {
+     transform: translateY(-5px);
+     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+ }
+
+ .stat-title {
+     font-size: 0.875rem;
+     color: #64748b;
+     font-weight: 600;
+     margin: 0;
+ }
+
+ .stat-value {
+     font-size: 2rem;
+     font-weight: 700;
+     margin: 0;
+ }
+
+ .stat-icon mat-icon {
+     font-size: 3rem;
+     width: 3rem;
+     height: 3rem;
+     opacity: 0.2;
+ }
+
+ .stat-change {
+     display: inline-flex;
+     align-items: center;
+     font-size: 0.875rem;
+     font-weight: 600;
+     gap: 4px;
+ }
+
+ .stat-change.positive {
+     color: #10b981;
+ }
+
+ .stat-change mat-icon {
+     font-size: 1rem;
+     width: 1rem;
+     height: 1rem;
+ }
+
+ .stat-primary {
+     border-left: 4px solid #667eea;
+ }
+
+ .stat-success {
+     border-left: 4px solid #10b981;
+ }
+
+ .stat-warning {
+     border-left: 4px solid #f59e0b;
+ }
+
+ .stat-danger {
+     border-left: 4px solid #ef4444;
+ }
+
+ .stat-info {
+     border-left: 4px solid #3b82f6;
+ }
+
+ mat-card-header {
+     display: flex;
+     align-items: center;
+     margin-bottom: 16px;
+ }
+
+ mat-card-title {
+     display: flex;
+     align-items: center;
+     margin: 0 !important;
+ }
+
+ .spacer {
+     flex: 1;
+ }
+
+ .appointment-card {
+     padding: 16px;
+     border: 2px solid #e2e8f0;
+     border-radius: 12px;
+     transition: all 0.3s;
+ }
+
+ .appointment-card:hover {
+     border-color: #667eea;
+     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+ }
+
+ .detail-item {
+     display: inline-flex;
+     align-items: center;
+     gap: 4px;
+     font-size: 0.875rem;
+     color: #64748b;
+ }
+
+ .small-icon {
+     font-size: 1rem;
+     width: 1rem;
+     height: 1rem;
+ }
+
+ .referto-item {
+     padding: 12px;
+     border-radius: 8px;
+     cursor: pointer;
+     transition: background 0.2s;
+ }
+
+ .referto-item:hover {
+     background: #f1f5f9;
+ }
+
+ .tiny-icon {
+     font-size: 0.875rem;
+     width: 0.875rem;
+     height: 0.875rem;
+     vertical-align: middle;
+ }
+
+ .empty-state {
+     color: #94a3b8;
+ }
+
+ .empty-icon {
+     font-size: 4rem;
+     width: 4rem;
+     height: 4rem;
+     opacity: 0.3;
+ }
+
+ mat-chip {
+     font-size: 0.75rem;
+ }
+
+ .chip-confermata {
+     background-color: #dcfce7;
+     color: #166534;
+ }
+
+ .chip-attesa {
+     background-color: #fef3c7;
+     color: #92400e;
+ }
+
+ .chip-completata {
+     background-color: #dbeafe;
+     color: #1e40af;
+ }

@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { SharedModule } from '../../shared.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { FormItem } from '../../models/form-item.model';
@@ -21,7 +21,7 @@ export class GenericFormComponent implements OnInit {
   @Input() submitButtonText = 'Salva';
   @Input() cancelButtonText = 'Annulla';
   @Input() formValidator?: ValidatorFn | ValidatorFn[];
-  @Input() excludeFields?: string[]; 
+  @Input() excludeFields?: string[];
 
   @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
@@ -31,11 +31,9 @@ export class GenericFormComponent implements OnInit {
 
   visibleFields = computed(() => {
     return this.fields.filter(field => {
-      // Escludi se il campo ha hidden=true
       if (field.hidden || field.excludeFromRender) {
         return false;
       }
-      // Escludi se il campo è nella lista excludeFields
       if (this.excludeFields && this.excludeFields.includes(field.name)) {
         return false;
       }
@@ -50,12 +48,23 @@ export class GenericFormComponent implements OnInit {
     }
   }
 
-  ngOnChanges(): void {
-    if (this.form && this.initialData) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialData'] && this.form && this.initialData) {
       this.patchForm(this.initialData);
+    }
+
+    if (changes['editMode'] && this.form) {
+      this.updateFormState();
     }
   }
 
+  private updateFormState(): void {
+    if (this.editMode) {
+      this.form.enable({ emitEvent: false });
+    } else {
+      this.form.disable({ emitEvent: false });
+    }
+  }
 
   private initForm(): void {
     const formConfig: { [key: string]: any } = {};
@@ -68,10 +77,12 @@ export class GenericFormComponent implements OnInit {
       validators: this.formValidator || []
     });
 
-    // Emetti i cambiamenti del form
+    this.updateFormState();
+    
     this.form.valueChanges.subscribe(value => {
       this.formChanged.emit(value);
     });
+
   }
 
   private patchForm(data: any): void {
@@ -89,27 +100,36 @@ export class GenericFormComponent implements OnInit {
 
   getErrorMessage(fieldName: string): string {
     const control = this.form.get(fieldName);
-    if (!control || !control.errors) {
-      // Controlla se c'è un errore a livello di form (es. passwordMismatch)
-      if (this.form.errors) {
-        if (this.form.errors['passwordMismatch'] && fieldName === 'confirmPassword') {
-          return 'Le password non coincidono';
-        }
-      }
+
+    if (!control) {
       return '';
     }
 
-    const errors = control.errors;
+    // Controlla prima gli errori del controllo
+    if (control.errors) {
+      const errors = control.errors;
 
-    if (errors['required']) return 'Campo obbligatorio';
-    if (errors['email']) return 'Email non valida';
-    if (errors['minlength']) return `Minimo ${errors['minlength'].requiredLength} caratteri`;
-    if (errors['maxlength']) return `Massimo ${errors['maxlength'].requiredLength} caratteri`;
-    if (errors['min']) return `Valore minimo: ${errors['min'].min}`;
-    if (errors['max']) return `Valore massimo: ${errors['max'].max}`;
-    if (errors['pattern']) return 'Formato non valido';
+      if (errors['passwordMismatch']) {
+        return 'Le password non coincidono';
+      }
 
-    return 'Campo non valido';
+      if (errors['required']) return 'Campo obbligatorio';
+      if (errors['email']) return 'Email non valida';
+      if (errors['minlength']) return `Minimo ${errors['minlength'].requiredLength} caratteri`;
+      if (errors['maxlength']) return `Massimo ${errors['maxlength'].requiredLength} caratteri`;
+      if (errors['min']) return `Valore minimo: ${errors['min'].min}`;
+      if (errors['max']) return `Valore massimo: ${errors['max'].max}`;
+      if (errors['pattern']) return 'Formato non valido';
+
+      return 'Campo non valido';
+    }
+
+    // Controlla se c'è un errore a livello di form
+    if (this.form.errors && this.form.errors['passwordMismatch'] && fieldName === 'confirmPassword') {
+      return 'Le password non coincidono';
+    }
+
+    return '';
   }
 
   onSubmit(): void {
@@ -118,7 +138,7 @@ export class GenericFormComponent implements OnInit {
     } else {
       Object.keys(this.form.controls).forEach(key => {
         this.form.get(key)?.markAsTouched();
-      })
+      });
     }
   }
 
