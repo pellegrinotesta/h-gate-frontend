@@ -2,7 +2,7 @@
    LAYOUT GENERALE
    ========================================== */
 
-mat-toolbar {
+   mat-toolbar {
     box-shadow: 3px 10px 5px -4px var(--shadow);
 }
 
@@ -38,7 +38,7 @@ mat-toolbar {
         padding: 0 !important;
         overflow: hidden !important;
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18) !important;
-        max-height: 600px;
+        max-height: 700px;
     }
 
     .mat-mdc-menu-panel {
@@ -145,7 +145,7 @@ mat-toolbar {
    ========================================== */
 
 .notifiche-list-modern {
-    max-height: 400px;
+    max-height: 500px;
     overflow-y: auto;
     background: #ffffff;
 
@@ -199,22 +199,13 @@ mat-toolbar {
     }
 
     .notifica-titolo {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
         line-height: 1.3;
         word-wrap: break-word;
         word-break: break-word;
+        margin-bottom: 8px;
     }
 
     .notifica-messaggio {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
         line-height: 1.5;
         word-wrap: break-word;
         word-break: break-word;
@@ -279,22 +270,15 @@ mat-toolbar {
    ========================================== */
 
 @keyframes bell-ring {
-
-    0%,
-    100% {
+    0%, 100% {
         transform: rotate(0deg);
     }
-
-    10%,
-    30% {
+    10%, 30% {
         transform: rotate(-10deg);
     }
-
-    20%,
-    40% {
+    20%, 40% {
         transform: rotate(10deg);
     }
-
     50% {
         transform: rotate(0deg);
     }
@@ -305,7 +289,6 @@ mat-toolbar {
    ========================================== */
 
 @media (max-width: 768px) {
-
     /* Navbar mobile */
     .notification-button {
         margin-right: 8px;
