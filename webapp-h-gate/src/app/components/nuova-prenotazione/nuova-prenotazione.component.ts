@@ -52,6 +52,7 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
   medicoForm!: FormGroup;
   dataOraForm!: FormGroup;
   dettagliForm!: FormGroup;
+  orariMedico: { inizio: string; fine: string } | null = null;
 
   minori = signal<Paziente[]>([]);
   medici = signal<Medico[]>([]);
@@ -165,15 +166,47 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
 
     this.prenotazioneService.getSlotDisponibili(medicoId, dataString).subscribe({
       next: (response) => {
-        this.slotsDisponibili.set(response.data?.slots ?? []);
+        if (response.data?.message) {
+          // Medico non disponibile
+          this.snackBar.openSnackBar(response.data.message, 'Chiudi');
+          this.slotsDisponibili.set([]);
+          this.orariMedico = null;
+        } else {
+          // Slot disponibili
+          this.slotsDisponibili.set(response.data?.slots ?? []);
+
+          // Salva orari per visualizzazione
+          if (response.data?.orarioInizio && response.data?.orarioFine) {
+            this.orariMedico = {
+              inizio: response.data.orarioInizio,
+              fine: response.data.orarioFine
+            };
+          }
+        }
       },
-      error: () => {
+      error: (err) => {
         this.snackBar.openSnackBar(
           'Errore nel caricamento degli slot disponibili',
           'Chiudi'
         );
+        this.slotsDisponibili.set([]);
+        this.orariMedico = null;
       }
     });
+  }
+
+  /**
+   * Seleziona uno slot
+   */
+  selectSlot(slot: SlotDisponibile): void {
+    if (slot.disponibile) {
+      this.dataOraForm.patchValue({ slot: slot.dataOra });
+    } else {
+      this.snackBar.openSnackBar(
+        slot.motivoNonDisponibilita || 'Slot non disponibile',
+        'Chiudi'
+      );
+    }
   }
 
   confermaPrenotazione(): void {
@@ -195,7 +228,7 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
       note: this.dettagliForm.get('note')?.value,
       isPrimaVisita: this.dettagliForm.get('isPrimaVisita')?.value
     };
-    
+
     this.prenotazioneService.creaPrenotazione(data).subscribe({
       next: (res) => {
         if (res.ok === false) {

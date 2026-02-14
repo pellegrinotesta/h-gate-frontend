@@ -40,6 +40,9 @@ export interface SlotDisponibili {
     medicoNome: string;
     data: string;
     slots: SlotDisponibile[];
+    message?: string;
+    orarioInizio?: string;
+    orarioFine?: string;
 }
 
 

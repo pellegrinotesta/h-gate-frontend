@@ -10,7 +10,7 @@ import { METHODS } from '../shared/enums/methods.enum';
   providedIn: 'root'
 })
 export class PrenotazioneService extends HttpBaseService<Prenotazione> {
- 
+
   constructor(injector: Injector) {
     super(injector, environment.endpoints.prenotazione);
   }
@@ -35,7 +35,7 @@ export class PrenotazioneService extends HttpBaseService<Prenotazione> {
     return this.request<ResponseDTO<Prenotazione>>(`/${id}`, METHODS.GET);
   }
 
-   confermaPrenotazione(prenotazioneId: number): Observable<ResponseDTO<Prenotazione>> {
+  confermaPrenotazione(prenotazioneId: number): Observable<ResponseDTO<Prenotazione>> {
     return this.request<ResponseDTO<Prenotazione>>(`/${prenotazioneId}/conferma`, METHODS.PUT);
   }
 }

@@ -147,8 +147,6 @@ export class DashboardMedicoComponent extends BasePageComponent {
       grouped.get(chiave)!.push(app);
     });
 
-    console.log('Appuntamenti futuri raggruppati per giorno:', grouped);
-
     return grouped;
   }
 

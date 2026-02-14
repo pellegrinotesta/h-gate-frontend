@@ -143,21 +143,35 @@
                   @if(slotsDisponibili().length > 0) {
                   <div class="mb-3">
                     <label class="form-label">Orari disponibili</label>
+
+                    <!-- Info orari medico -->
+                    @if(orariMedico) {
+                    <div class="alert alert-info mb-3">
+                      <mat-icon>schedule</mat-icon>
+                      <strong>Orari del medico:</strong> {{ orariMedico.inizio }} - {{ orariMedico.fine }}
+                    </div>
+                    }
+
                     <div class="slots-grid">
                       @for(slot of slotsDisponibili(); track slot.dataOra) {
                       <mat-chip-option [value]="slot.dataOra"
                         [selected]="dataOraForm.get('slot')?.value === slot.dataOra" [disabled]="!slot.disponibile"
-                        (click)="dataOraForm.patchValue({slot: slot.dataOra})">
+                        (click)="selectSlot(slot)">
                         <mat-icon>schedule</mat-icon>
                         {{ slot.dataOra | date:'HH:mm' }}
+                        @if(!slot.disponibile) {
+                        <mat-icon matSuffix class="text-muted">block</mat-icon>
+                        }
                       </mat-chip-option>
                       }
                     </div>
                   </div>
                   } @else if(dataOraForm.get('data')?.value) {
                   <div class="alert alert-warning">
-                    <mat-icon>info</mat-icon>
-                    Nessuno slot disponibile per questa data
+                    <mat-icon>event_busy</mat-icon>
+                    <strong>Nessuno slot disponibile</strong>
+                    <p class="mb-0 mt-2">Il medico non è disponibile in questa data. Prova a selezionare un altro
+                      giorno.</p>
                   </div>
                   }
                 </form>
