@@ -44,7 +44,7 @@
         }
     </div>
 
-    @if(notificheNonLette?.length === 0) {
+    @if(notificheNonLette.length === 0) {
     <div class="p-4 text-center text-muted">
         <mat-icon class="mb-2" style="font-size: 3rem; width: 3rem; height: 3rem; opacity: 0.3;">
             notifications_none
@@ -63,22 +63,24 @@
                     </mat-icon>
                 </div>
                 <div class="flex-grow-1" style="min-width: 0;">
-                    <div class="fw-semibold mb-1 text-truncate">{{ notifica.titolo }}</div>
+                    <div class="fw-semibold mb-1">{{ notifica.titolo }}</div>
+
                     <div class="small text-muted notifica-messaggio">
                         {{ notifica.messaggio }}
                     </div>
+
                     <div class="small text-secondary mt-1">
                         {{ getTempoRelativo(notifica.createdAt) }}
                     </div>
-                </div>
-                @if(!notifica.isLetta) {
-                <div class="notifica-badge">
-                    <span class="badge bg-primary rounded-circle" style="width: 8px; height: 8px;"></span>
-                </div>
-                }
             </div>
-        </button>
-        }
+            @if(!notifica.isLetta) {
+            <div class="notifica-badge">
+                <span class="badge bg-primary rounded-circle" style="width: 8px; height: 8px;"></span>
+            </div>
+            }
+    </div>
+    </button>
+    }
     </div>
 
     <div class="notifiche-footer p-2 border-top text-center">
