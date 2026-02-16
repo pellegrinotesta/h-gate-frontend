@@ -1,4 +1,8 @@
-<form [formGroup]="form" class="row g-3" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" class="d-flex flex-row flex-wrap justify-content-start align-items-center gap-2 mx-1 my-3"
+    (keydown.enter)="enterable && onSubmit()">
+    <div class="d-flex flex-row flex-wrap justify-content-start align-items-start gap-2">
+
+    </div>
     @for(field of visibleFields(); track field.name) {
     <div [class]="field.colClass || 'col-12'">
         @switch (field.type) {
@@ -31,7 +35,7 @@
         @case ('date') {
         <mat-form-field class="w-100" appearance="outline">
             <mat-label>{{ field.label }}</mat-label>
-            <input matInput [matDatepicker]="picker" [formControlName]="field.name"/>
+            <input matInput [matDatepicker]="picker" [formControlName]="field.name" />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {

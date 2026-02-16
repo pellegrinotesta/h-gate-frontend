@@ -5,6 +5,7 @@ import { METHODS } from "../../enums/methods.enum";
 import { BaseModel } from "../../models/base-model";
 import { AdvancedSearchCriteria } from "../../models/advanced-search/advanced-search-criteria.model";
 import { AdvancedSearchSimpleCriteria } from "../../models/advanced-search/advanced-search-simple-criteria.model";
+import { PaginatedResponseDTO } from "../../models/response.model";
 
 
 export abstract class HttpBaseService<M extends BaseModel> extends HttpRequestBaseService {
@@ -42,6 +43,18 @@ export abstract class HttpBaseService<M extends BaseModel> extends HttpRequestBa
     }): Observable<S> {
         let finalUrl = 'advanced-search' + this.getParams(params);
         return this.request<S>(finalUrl, METHODS.POST, criteria)
+    }
+
+    searchAdvanced(params?: any): Observable<PaginatedResponseDTO<M[]>> {
+        return this.request<PaginatedResponseDTO<M[]>>(`/advanced-search`, METHODS.GET, {}, params);
+    }
+
+    goNextPage(url: string): Observable<PaginatedResponseDTO<M[]>> {
+        return this.httpClient.get<PaginatedResponseDTO<M[]>>(url);
+    }
+    
+    goPreviousPage(url: string): Observable<PaginatedResponseDTO<M[]>> {
+        return this.httpClient.get<PaginatedResponseDTO<M[]>>(url);
     }
 
 }

@@ -1,0 +1,8 @@
+<app-generic-dialog [title]="title" [subtitle]="data?.subtitle">
+    <span [innerHTML]="data?.message ?? 'Sei sicuro di voler confermare?'" class="mate-text-color mx-4 my-3"></span>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button id="submit-button" color="accent" type="button"
+            (click)="dialogRef.close(true)">Conferma</button>
+        <button mat-raised-button type="button" (click)="dialogRef.close(false)">Annulla</button>
+    </mat-dialog-actions>
+</app-generic-dialog>

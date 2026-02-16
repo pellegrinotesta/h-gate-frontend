@@ -37,6 +37,25 @@
             </div> -->
         </div>
     </div>
+    <app-generic-card [title]="title">
+        <ng-container card-actions>
+            <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Nuova prenotazione"
+                [matTooltipPosition]="'left'">add</mat-icon>
+        </ng-container>
+        <div card-body>
+            <app-generic-form [fields]="formItems" [submitButtonText]="'Cerca'" [resetable]="true" (submit)="onSearch($event)"
+                (reset)="onReset()">
+            </app-generic-form>
+            <app-generic-table [data]="data.results" [size]="size" [totalElements]="data.count" [columns]="columns"
+                [actions]="actions" (changePage)="onChangePage($event)" (pageSizeChanged)="onPageSizeChanged($event)"
+                (clickEvent)="onActionClick($event)">
+            </app-generic-table>
+        </div>
+
+    </app-generic-card>
+
+
+
 
 </div>
 

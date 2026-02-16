@@ -1,0 +1,16 @@
+<div class="h-gate-card">
+    <div class="h-gate-card-header">
+        <div class="d-flex flex-column">
+            <h3 class="title-h-gate-card">{{title()}}</h3>
+            @if (subtitle()) {
+            <h6 class="subtitle-h-gate-card">{{subtitle()}}</h6>
+            }
+        </div>
+        <div class="actions-h-gate-card d-flex flex-row gap-3" card-actions>
+            <ng-content select="[card-actions]"></ng-content>
+        </div>
+    </div>
+    <div class="h-gate-card-body">
+        <ng-content select="[card-body]"></ng-content>
+    </div>
+</div>

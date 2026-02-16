@@ -1,39 +1,110 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { LoaderComponent } from '../../components/loader/loader.component';
-import { BasePageComponent } from '../../shared/components/base/base-page.component';
 import { PrenotazioneService } from '../../services/prenotazione.service';
-import { AdvancedSearchBasePageComponent } from '../../shared/components/base/advanced-search-base-page.component';
+import { ListBasePage } from '../../shared/components/base/list-base-page.component';
+import { PrenotazioneFiltri } from '../../models/prenotazione-filtri.model';
+import { Column } from '../../shared/models/column.model';
+import { PrenotazioneTableColumn } from '../../shared/constants/prenotazione-table-column.constant';
+import { TableAction } from '../../shared/models/table-action.model';
+import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
+import { GenericTableComponent } from '../../shared/components/generic-table/generic-table.component';
 import { PrenotazioneDettagliata } from '../../models/prenotazione-dettagliata.model';
-import { PageResponse } from '../../shared/models/page-response.model';
-import { Observable } from 'rxjs';
-import { EmptyObject } from '../../shared/base/authentication/types/empty-object.type';
-import { AdvancedSearchCriteria } from '../../shared/models/advanced-search/advanced-search-criteria.model';
-import { AdvancedSearchSimpleCriteria } from '../../shared/models/advanced-search/advanced-search-simple-criteria.model';
-import { PagingAndSortingCriteria } from '../../shared/models/advanced-search/paging-and-sorting-criteria.model';
+import { TableOperation } from '../../shared/models/table-operation.model';
+import { RoutesEnum } from '../../shared/enums/routes.enum';
+import { SNACKBAR } from '../../shared/enums/snackbar-class.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
+import { GenericCardComponent } from '../../shared/components/generic-card/generic-card.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @Component({
   selector: 'app-prenotazioni-list',
   imports: [
     SharedModule,
-    LoaderComponent
+    LoaderComponent,
+    GenericFormComponent,
+    GenericTableComponent,
+    GenericCardComponent,
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './prenotazioni-list.component.html',
   styleUrl: './prenotazioni-list.component.scss'
 })
-export class PrenotazioniListComponent extends AdvancedSearchBasePageComponent<PageResponse<PrenotazioneDettagliata>> {
+export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> {
 
+  readonly matDialog = inject(MatDialog);
   readonly prenotazioneService = inject(PrenotazioneService);
 
-  protected override search(criteria?: AdvancedSearchCriteria | AdvancedSearchSimpleCriteria, sortCriteria?: PagingAndSortingCriteria): Observable<PageResponse<PrenotazioneDettagliata>> {
-    throw new Error('Method not implemented.');
-  }
-  protected override defineSearchCriteria(): AdvancedSearchCriteria | AdvancedSearchSimpleCriteria | EmptyObject {
-    throw new Error('Method not implemented.');
-  }
-  protected override defineSortCriteria(): string | { [key: string]: 'asc' | 'desc'; } {
-    throw new Error('Method not implemented.');
+  title = 'Prenotazioni';
+
+  columns: Column[] = PrenotazioneTableColumn;
+  actions: TableAction[] = [];
+
+  prenotazioneId = input<number>();
+
+  constructor() {
+    super();
+    this.formItems = [
+      { name: 'numeroPrenotazione', label: 'Numero Prenotazione', type: 'text', initialValue: '' },
+      { name: 'tipoVisita', label: 'Tipo visita', type: 'text', initialValue: '' },
+      { name: 'stato', label: 'Stato', type: 'text', initialValue: '' },
+      { name: 'pazienteNomeCompleto', label: 'Paziente', type: 'text', initialValue: '' },
+      { name: 'tutoreNomeCompleto', label: 'Tutore', type: 'text', initialValue: '' },
+      { name: 'medicoNomeCompleto', label: 'Medico', type: 'text', initialValue: '' },
+    ]
   }
 
-  
+  onActionClick(ev: { action: TableAction, element: PrenotazioneDettagliata }): void {
+    switch (ev.action.operation) {
+      case TableOperation.VIEW:
+        this.router.navigate([RoutesEnum.PRENOTAZIONI, this.prenotazioneId(), ev.element.id]);
+        break;
+      case TableOperation.EDIT:
+        this.router.navigate([RoutesEnum.PRENOTAZIONI, this.prenotazioneId(), ev.element.id]);
+        break;
+      case TableOperation.UPDATE:
+        this.router.navigate([RoutesEnum.PRENOTAZIONI, this.prenotazioneId(), ev.element, ev.element.id]);
+        break;
+      case TableOperation.DELETE:
+        this.onDeletePrenotazione(ev.element);
+        break;
+      default: this.snackBar.openSnackBar('Operazione non disponibile', 'Chiudi', SNACKBAR.WARN);
+    }
+  }
+
+  onDeletePrenotazione(element: PrenotazioneDettagliata): void {
+    const dialogRef = this.matDialog.open(ConfirmDialogComponent, {
+      data: {
+        message: `Sei sicuro di voler eliminare la prenotazione ${element.numeroPrenotazione}?`,
+        subtitle: 'L\'operazione non può essere annullata.'
+      }
+    });
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) {
+        this.prenotazioneService.delete(element.id).subscribe(res => {
+          this.executeSearch(this.size, this.currentFilter);
+        });
+      }
+    });
+  }
+
+  override goNextPage(): void {
+    this.prenotazioneService.goNextPage(this.data.next).subscribe(res => this.data = res.data);
+  }
+
+  override goPreviousPage(): void {
+    this.prenotazioneService.goPreviousPage(this.data.previous).subscribe(res => this.data = res.data);
+  }
+
+  override executeSearch(pageSize?: number, filter?: PrenotazioneFiltri | undefined): void {
+    this.prenotazioneService.searchAdvanced({ ...filter, modello_id: this.prenotazioneId(), page_size: pageSize ?? 10 }).subscribe(res => this.data = res.data);
+  }
+
+
+
+
 }
