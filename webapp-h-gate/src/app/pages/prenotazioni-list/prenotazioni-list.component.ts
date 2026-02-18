@@ -36,6 +36,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> {
 
+
   readonly matDialog = inject(MatDialog);
   readonly prenotazioneService = inject(PrenotazioneService);
 
@@ -100,11 +101,20 @@ export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> 
     this.prenotazioneService.goPreviousPage(this.data.previous).subscribe(res => this.data = res.data);
   }
 
-  override executeSearch(pageSize?: number, filter?: PrenotazioneFiltri | undefined): void {
-    this.prenotazioneService.searchAdvanced({ ...filter, modello_id: this.prenotazioneId(), page_size: pageSize ?? 10 }).subscribe(res => this.data = res.data);
+  private readonly fieldMap: { key: keyof PrenotazioneFiltri; operator: string }[] = [
+    { key: 'numeroPrenotazione', operator: 'IS_LIKE' },
+    { key: 'tipoVisita', operator: 'IS_LIKE' },
+    { key: 'stato', operator: 'EQUALS' },
+    { key: 'pazienteNomeCompleto', operator: 'IS_LIKE' },
+    { key: 'tutoreNomeCompleto', operator: 'IS_LIKE' },
+    { key: 'medicoNomeCompleto', operator: 'IS_LIKE' },
+  ];
+
+  override executeSearch(pageSize?: number, filter?: PrenotazioneFiltri): void {
+    this.prenotazioneService.searchAdvanced(
+      { ...filter, page_size: pageSize ?? 10 },
+      this.fieldMap
+    ).subscribe(res => this.data = res.data);
   }
-
-
-
 
 }

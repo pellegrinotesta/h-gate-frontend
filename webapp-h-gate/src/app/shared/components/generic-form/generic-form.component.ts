@@ -1,12 +1,12 @@
 import { Component, computed, EventEmitter, inject, Input, OnInit, output, Output, SimpleChanges } from '@angular/core';
 import { SharedModule } from '../../shared.module';
-import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { FormItem } from '../../models/form-item.model';
 import { MatDatepickerModule } from "@angular/material/datepicker";
 
 @Component({
   selector: 'app-generic-form',
-  standalone: true, 
+  standalone: true,
   imports: [SharedModule, ReactiveFormsModule, MatDatepickerModule],
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.scss'
@@ -25,11 +25,12 @@ export class GenericFormComponent implements OnInit {
   @Input() excludeFields?: string[];
   @Input() resetable: boolean = false;
   @Input() enterable = true;
+  @Input() autoClear: boolean = false;
 
-  @Output() save = new EventEmitter<any>();
   @Output() cancel = new EventEmitter<void>();
   @Output() formChanged = new EventEmitter<any>();
   submit = output<any>();
+  reset = output<void>();
 
   form!: FormGroup;
 
@@ -82,7 +83,7 @@ export class GenericFormComponent implements OnInit {
     });
 
     this.updateFormState();
-    
+
     this.form.valueChanges.subscribe(value => {
       this.formChanged.emit(value);
     });
@@ -136,9 +137,39 @@ export class GenericFormComponent implements OnInit {
     return '';
   }
 
+  getControls(formArrayName: string): AbstractControl[] {
+    const control = this.form.get(formArrayName);
+    return control instanceof FormArray ? control.controls : [];
+  }
+
+  // Metodo per aggiungere un elemento all'array (usato nel template)
+  addArrayItem(item: FormItem) {
+    const formArray = this.form.get(item.name) as FormArray;
+    if (item.array && item.array.length > 0) {
+      const template = item.array[0];
+      if (template.controls) {
+        // Se è un array di gruppi, crea un nuovo FormGroup
+        const groupConfig: any = {};
+        template.controls.forEach(ctrl => {
+          groupConfig[ctrl.name] = ['', ctrl.validators || []];
+        });
+        formArray.push(this.fb.group(groupConfig));
+      } else {
+        // Se è un array di controlli semplici
+        formArray.push(this.fb.control('', template.validators || []));
+      }
+    }
+  }
+
+  // Metodo per rimuovere un elemento dall'array
+  removeArrayItem(item: FormItem, index: number) {
+    const formArray = this.form.get(item.name) as FormArray;
+    formArray.removeAt(index);
+  }
+
   onSubmit(): void {
     if (this.form.valid) {
-      this.save.emit(this.form.value);
+      this.submit.emit(this.form.value);
     } else {
       Object.keys(this.form.controls).forEach(key => {
         this.form.get(key)?.markAsTouched();
@@ -149,6 +180,12 @@ export class GenericFormComponent implements OnInit {
   onCancel(): void {
     this.cancel.emit();
   }
+
+  onReset() {
+    this.form.reset();
+    this.reset.emit();
+  }
+
 
   public getFormValue(): any {
     return this.form.value;

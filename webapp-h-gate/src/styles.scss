@@ -1,0 +1,102 @@
+:root {
+    --background-color: white;
+    --text-color: black;
+    --disabled-text-color: rgba(0, 0, 0, 0.284);
+    --shadow: rgba(0, 0, 0, 0.10);
+    --sharow-card: rgba(0, 0, 0, 0.10);
+    --element-border: #fdfdfd51;
+    --divider-color: rgba(0, 0, 0, 0.10);
+    --h-gate-black: #000000ab;
+    --h-gate-blu: #006699;
+    --h-gate-red-darker: #971e22;
+    --h-gate-red-light: #e51e250a;
+
+    // toolbar
+    --mat-toolbar-container-background-color: transparent;
+    --mat-toolbar-standard-height: 64px;
+    --mat-toolbar-container-text-color: var(--text-color);
+    // divider
+    --mat-divider-color: var(--divider-color);
+    // menu
+    --mat-menu-container-color: var(--background-color);
+    --mat-select-panel-background-color: var(--background-color);
+    --mat-menu-item-icon-color: var(--text-color);
+    // form field
+    --mat-form-field-filled-container-color: var(--text-color);
+    --mat-form-field-outlined-caret-color: var(--text-color);
+    --mat-form-field-filled-focus-label-text-color: var(--text-color);
+    --mat-form-field-outlined-focus-label-text-color: var(--text-color);
+    --mat-form-field-outlined-outline-color: var(--text-color);
+    --mat-form-field-outlined-focus-outline-color: var(--text-color);
+    --mat-form-field-outlined-input-text-color: var(--text-color);
+    --mat-form-field-outlined-label-text-color: var(--text-color);
+    --mat-form-field-outlined-hover-label-text-color: var(--text-color);
+    --mat-form-field-outlined-hover-outline-color: var(--text-color);
+    // select
+    --mat-select-enabled-arrow-color: var(--text-color);
+    --mat-select-focused-arrow-color: var(--text-color);
+    --mat-select-panel-background-color: var(--background-color);
+    --mat-option-selected-state-layer-color: #ffffffaa;
+    --mat-option-selected-state-label-text-color: var(--text-color);
+    --mat-option-focus-state-layer-color: var(--background-color);
+    // autocomplete
+    --mat-autocomplete-background-color: var(--background-color);
+    // table
+    --mat-table-background-color: var(--background-color);
+    --mat-paginator-container-background-color: var(--background-color);
+    --mat-table-header-container-height: 42px;
+    --mat-table-row-item-container-height: 42px;
+    //paginator
+    --mat-paginator-container-text-color: var(--text-color);
+    --mat-paginator-container-background-color: var(--background-color);
+    --mat-paginator-enabled-icon-color: var(--text-color);
+    --mat-paginator-disabled-icon-color: var(--disabled-text-color);
+    // spinner
+    --mat-progress-spinner-active-indicator-color: var(--h-gate-blu);
+    // button
+    --mat-icon-button-disabled-icon-color: var(--disabled-text-color);
+    --mat-button-protected-label-text-color: var(--h-gate-blu);
+    --mat-button-text-label-text-color: var(--h-gate-blu);
+    // badge
+    --mat-badge-legacy-container-size: 12px;
+    --mat-badge-container-size: 12px;
+    --mat-badge-line-height: 11px;
+    --mat-badge-text-size: 10px;
+    --mat-badge-container-padding: 0px;
+    --mat-badge-background-color: rgb(255, 195, 117);
+    --mat-badge-container-overlap-offset: -18px;
+    --mat-badge-text-color: var(--text-color);
+    // dialod
+    --mat-dialog-container-min-width: 45vw;
+    --mat-dialog-container-shape: 0px;
+    --mat-dialog-container-color: var(--background-color);
+    // expantion-panel
+    --mat-expansion-container-shape: 0px;
+    --mat-expansion-container-background-color: var(--background-color);
+    --mat-expansion-header-text-size: calc(1.1rem + .6vw);
+    --mat-expansion-header-text-weight: 500;
+    --mat-expansion-header-text-line-height: 1.2;
+    --mat-expansion-header-text-color: var(--text-color);
+    --mat-expansion-header-indicator-color: var(--text-color);
+    // icon
+    --mat-icon-button-icon-color: var(--text-color);
+    --mat-icon-button-disabled-icon-color: var(--disabled-text-color);
+    // tree
+    --mat-tree-container-background-color: var(--background-color);
+    --mat-tree-node-min-height: 40px;
+    --mat-tree-node-text-color: var(--text-color);
+    // stepper
+    --mat-stepper-container-color: var(--background-color);
+    --mat-stepper-header-selected-state-icon-background-color: var(--h-gate-blu);
+    --mat-stepper-header-edit-state-icon-background-color: var(--h-gate-red-darker);
+    --mat-stepper-header-done-state-icon-background-color: var(--h-gate-red-darker);
+    --mat-stepper-header-label-text-color: var(--text-color);
+    --mat-tree-node-text-color: var(--text-color);
+    // checkbox
+    --mat-checkbox-selected-icon-color: var(--h-gate-blu);
+    --mat-checkbox-selected-icon-color: var(--h-gate-blu);
+    // snackbar
+    --mat-snack-bar-supporting-text-size: 18px;
+    --mat-snack-bar-button-color: white;
+    --mat-snack-bar-supporting-text-color: white;
+}

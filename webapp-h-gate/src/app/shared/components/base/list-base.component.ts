@@ -5,8 +5,8 @@ import { Location } from '@angular/common';
 import { FormItem } from "../../models/form-item.model";
 
 @Component({
-    selector: 'app-base-list',
-    template: `
+  selector: 'app-base-list',
+  template: `
       <p>
         base works!
       </p>
@@ -23,7 +23,7 @@ export abstract class ListBase<T> {
   currentFilter: T | undefined;
   size = 10;
   isLoading = false;
-  
+
   protected readonly router = inject(Router);
   protected readonly snackBar = inject(SnackbarService);
   protected readonly location = inject(Location);
@@ -31,7 +31,7 @@ export abstract class ListBase<T> {
   onReset(): void {
     this.onSearch();
   }
-  
+
   onSearch(filter?: T): void {
     this.currentFilter = filter;
     this.executeSearch(this.size, filter);

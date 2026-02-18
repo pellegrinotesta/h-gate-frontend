@@ -113,7 +113,7 @@
 
                 <app-generic-form [fields]="generalInfoFields" [initialData]="user()" [editMode]="editModeTutore()"
                     [showButtons]="editModeTutore()" submitButtonText="Salva Modifiche" cancelButtonText="Annulla"
-                    (save)="saveGeneralInfoTutore($event)" (cancel)="toggleEditModeTutore()">
+                    (submit)="saveGeneralInfoTutore($event)" (cancel)="toggleEditModeTutore()">
                 </app-generic-form>
             </mat-card-content>
         </mat-card>
@@ -231,7 +231,7 @@
 
                         <app-generic-form [fields]="patientInfoFields" [initialData]="selectedPaziente()"
                             [editMode]="editModePaziente()" [showButtons]="editModePaziente()"
-                            submitButtonText="Salva Dati" cancelButtonText="Annulla" (save)="saveInfoPaziente($event)"
+                            submitButtonText="Salva Dati" cancelButtonText="Annulla" (submit)="saveInfoPaziente($event)"
                             (cancel)="toggleEditModePaziente()">
                         </app-generic-form>
                     </mat-card-content>
@@ -269,7 +269,7 @@
 
                 <app-generic-form [fields]="doctorInfoFields" [initialData]="user()" [editMode]="editModeMedico()"
                     [showButtons]="editModeMedico()" submitButtonText="Salva" cancelButtonText="Annulla"
-                    (save)="saveInfoMedico($event)" (cancel)="toggleEditModeMedico()">
+                    (submit)="saveInfoMedico($event)" (cancel)="toggleEditModeMedico()">
                 </app-generic-form>
             </mat-card-content>
         </mat-card>
@@ -285,7 +285,7 @@
                 </h5>
                 <app-generic-form [fields]="passwordChangeFields" [editMode]="true" [showButtons]="true"
                     submitButtonText="Cambia Password" [formValidator]="passwordMatchValidator"
-                    (save)="changePassword($event)">
+                    (submit)="changePassword($event)">
                 </app-generic-form>
             </mat-card-content>
         </mat-card>

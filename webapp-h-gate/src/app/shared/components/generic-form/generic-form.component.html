@@ -1,72 +1,131 @@
 <form [formGroup]="form" class="d-flex flex-row flex-wrap justify-content-start align-items-center gap-2 mx-1 my-3"
     (keydown.enter)="enterable && onSubmit()">
+
     <div class="d-flex flex-row flex-wrap justify-content-start align-items-start gap-2">
-
-    </div>
-    @for(field of visibleFields(); track field.name) {
-    <div [class]="field.colClass || 'col-12'">
-        @switch (field.type) {
-        @case('textarea') {
-        <mat-form-field class="w-100" appearance="outline">
-            <mat-label>{{field.label}}</mat-label>
-            <textarea matInput [formControlName]="field.name" [rows]="field.rows || 3"
-                [placeholder]="field.placeholder || ''">
-                            </textarea>
-            @if(form.get(field.name)?.invalid && form.get(field.name)?.touched) {
-            <mat-error>{{getErrorMessage(field.name)}}</mat-error>
-            }
-        </mat-form-field>
-        }
-
-        @case ('select') {
-        <mat-form-field class="w-100" appearance="outline">
-            <mat-label>{{field.label}}</mat-label>
-            <mat-select [formControlName]="field.name" [placeholder]="field.placeholder || ''">
-                @for(option of field.options; track option.value) {
-                <mat-option [value]="option.value">{{option.label}}</mat-option>
-                }
-            </mat-select>
-            @if(form.get(field.name)?.invalid && form.get(field.name)?.touched) {
-            <mat-error>{{getErrorMessage(field.name)}}</mat-error>
-            }
-        </mat-form-field>
-        }
-
-        @case ('date') {
-        <mat-form-field class="w-100" appearance="outline">
-            <mat-label>{{ field.label }}</mat-label>
-            <input matInput [matDatepicker]="picker" [formControlName]="field.name" />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
-            <mat-error>{{ getErrorMessage(field.name) }}</mat-error>
-            }
-        </mat-form-field>
-        }
-
-        @default {
-        <mat-form-field class="w-100" appearance="outline">
-            <mat-label>{{ field.label }}</mat-label>
-            <input matInput [type]="field.type || 'text'" [formControlName]="field.name"
-                [maxlength]="field.maxLength ?? null" [placeholder]="field.placeholder || ''" />
-            @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
-            <mat-error>{{ getErrorMessage(field.name) }}</mat-error>
-            }
-        </mat-form-field>
-        }
+        @for (item of visibleFields(); track item.name) {
+        <ng-container
+            *ngTemplateOutlet="renderItem; context: { item: item, controlName: item.name, parentGroup: form }">
+        </ng-container>
         }
     </div>
-    }
 
-    @if(showButtons && editMode) {
-    <div class="col-12 text-end mt-3">
-        <button mat-stroked-button color="warn" (click)="onCancel()" type="button">
+    @if(showButtons) {
+    <div class="form-actions d-flex flex-row flex-nowrap justify-content-end align-items-end gap-2 pe-3 mb-1 w-100">
+        <button mat-stroked-button color="warn" (click)="onCancel()" type="button" class="mb-1">
             {{ cancelButtonText }}
         </button>
-        <button mat-flat-button color="primary" class="ms-2" type="submit" [disabled]="form.invalid">
+
+        <button mat-flat-button color="primary" type="button" class="mb-1 ms-2" (click)="onSubmit()"
+            [disabled]="form.invalid || (!editMode && form.pristine)">
             {{ submitButtonText }}
         </button>
+
+        @if (resetable) {
+        <button mat-stroked-button type="button" class="mb-1 ms-2" (click)="onReset()">Reset</button>
+        }
     </div>
     }
-
 </form>
+
+<ng-template #renderItem let-item="item" let-controlName="name" let-parentGroup="parentGroup">
+    <div [formGroup]="parentGroup" [class]="item.colClass || 'col-auto'">
+
+        @if (item.controls && item.controls.length > 0) {
+        <fieldset [formGroupName]="item.name" class="mx-2 border p-2">
+            <legend class="float-none w-auto px-2">{{ item.label }}</legend>
+            <div class="d-flex flex-row flex-wrap justify-content-start align-items-end gap-3">
+                @for (child of item.controls; track child.name) {
+                <ng-container
+                    *ngTemplateOutlet="renderItem; context: { item: child, controlName: child.name, parentGroup: parentGroup.get(item.name) }">
+                </ng-container>
+                }
+            </div>
+        </fieldset>
+        }
+
+        @else if (item.array && item.array.length > 0) {
+        <fieldset class="mx-2 border p-2">
+            <div class="d-flex justify-content-between align-items-center w-100 mb-2">
+                <legend class="float-none w-auto px-2">{{ item.label }}</legend>
+                <button mat-icon-button type="button" (click)="addArrayItem(item)"><mat-icon>add</mat-icon></button>
+            </div>
+            <div [formArrayName]="item.name" class="d-flex flex-column gap-2">
+                @for (control of getControls(item.name); track control; let i = $index) {
+                <div class="d-flex flex-row align-items-center gap-2">
+                    @if (item.array[0].controls) {
+                    <div [formGroupName]="i" class="d-flex flex-row flex-wrap gap-2 border-bottom pb-2">
+                        @for (child of item.array[0].controls; track child.name) {
+                        <ng-container
+                            *ngTemplateOutlet="renderItem; context: { item: child, controlName: child.name, parentGroup: parentGroup.get(item.name).at(i) }">
+                        </ng-container>
+                        }
+                    </div>
+                    }
+                    @else {
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>{{ item.array[0].label }}</mat-label>
+                        <input matInput [formControlName]="i" [type]="item.array[0].type || 'text'">
+                    </mat-form-field>
+                    }
+                    <button mat-icon-button color="warn" type="button"
+                        (click)="removeArrayItem(item, i)"><mat-icon>delete</mat-icon></button>
+                </div>
+                }
+            </div>
+        </fieldset>
+        }
+
+        @else {
+        @switch (item.type) {
+        @case ('checkbox') {
+        <mat-checkbox [formControlName]="item.name" class="mb-3">
+            {{ item.label }}
+        </mat-checkbox>
+        }
+        @case ('date') {
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ item.label }}</mat-label>
+            <input matInput [matDatepicker]="picker" [formControlName]="item.name" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (form.get(item.name)?.invalid && form.get(item.name)?.touched) {
+            <mat-error>{{ getErrorMessage(item.name) }}</mat-error>
+            }
+        </mat-form-field>
+        }
+        @case ('textarea') {
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ item.label }}</mat-label>
+            <textarea matInput [formControlName]="item.name" [rows]="item.rows || 3"></textarea>
+            @if (form.get(item.name)?.invalid && form.get(item.name)?.touched) {
+            <mat-error>{{ getErrorMessage(item.name) }}</mat-error>
+            }
+        </mat-form-field>
+        }
+        @case ('select') {
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ item.label }}</mat-label>
+            <mat-select [formControlName]="item.name">
+                @for (opt of item.options; track opt.value) {
+                <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                }
+            </mat-select>
+            @if (form.get(item.name)?.invalid && form.get(item.name)?.touched) {
+            <mat-error>{{ getErrorMessage(item.name) }}</mat-error>
+            }
+        </mat-form-field>
+        }
+        @default {
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{ item.label }}</mat-label>
+            <input matInput [type]="item.type || 'text'" [formControlName]="item.name"
+                [placeholder]="item.placeholder || ''">
+            @if (form.get(item.name)?.invalid && form.get(item.name)?.touched) {
+            <mat-error>{{ getErrorMessage(item.name) }}</mat-error>
+            }
+        </mat-form-field>
+        }
+        }
+        }
+    </div>
+</ng-template>

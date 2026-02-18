@@ -2,27 +2,27 @@ import { Column } from "../models/column.model";
 
 export const PrenotazioneTableColumn: Column[] = [
     {
-        title: 'numero prenotazione',
+        title: 'Numero prenotazione',
         attributeName: 'numeroPrenotazione',
     },
     {
-        title: 'tipoVisita',
+        title: 'Tipo visita',
         attributeName: 'tipoVisita',
     },
     {
-        title: 'stato',
+        title: 'Stato',
         attributeName: 'stato',
     },
     {
-        title: 'paziente',
+        title: 'Paziente',
         attributeName: 'pazienteNomeCompleto',
     },
     {
-        title: 'tutore',
+        title: 'Tutore',
         attributeName: 'tutoreNomeCompleto',
     }, 
     {
-        title: 'medico',
+        title: 'Medico',
         attributeName: 'medicoNomeCompleto',
     }
 ]

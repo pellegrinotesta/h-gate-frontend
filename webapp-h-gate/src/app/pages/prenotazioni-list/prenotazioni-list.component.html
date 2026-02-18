@@ -2,61 +2,21 @@
 <app-loader></app-loader>
 }
 @else {
-
-<div class="prenotazioni-container">
-    <div class="welcome-card mb-4">
-        <div class="row align-items-center">
-            <div class="col-md-5">
-                <h1 class="mb-2">Prenotazioni </h1>
-            </div>
-
-            <!-- Selezione Minore -->
-            <!-- @if(minori().length > 0) {
-            <div class="col-md-4">
-                <mat-form-field class="w-100" appearance="outline">
-                    <mat-label>Seleziona minore</mat-label>
-                    <mat-select [value]="minoreSelezionato()" (selectionChange)="onMinoreChange($event.value)">
-                        @for(minore of minori(); track minore.id) {
-                        <mat-option [value]="minore">
-                            {{ minore.nome }} {{ minore.cognome }} ({{ getEta(minore.dataNascita) }} anni)
-                        </mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-            </div>
-            }
-
-            <div class="col-md-3 text-end">
-                @if(minoreSelezionato()) {
-                <button mat-raised-button color="primary" [routerLink]="['/prenotazioni/nuova']"
-                    [queryParams]="{pazienteId: minoreSelezionato()!.id}">
-                    <mat-icon>add</mat-icon>
-                    Prenota Visita
-                </button>
-                }
-            </div> -->
-        </div>
+<app-generic-card [title]="title">
+    <ng-container card-actions>
+        <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Nuova prenotazione"
+            [matTooltipPosition]="'left'">add</mat-icon>
+    </ng-container>
+    <div card-body>
+        <app-generic-form [fields]="formItems" [editMode]="true" [submitButtonText]="'Cerca'" [resetable]="true"
+            (submit)="onSearch($event)" (reset)="onReset()">
+        </app-generic-form>
+        <app-generic-table [data]="data.results" [size]="size" [totalElements]="data.count" [columns]="columns"
+            [actions]="actions" (changePage)="onChangePage($event)" (pageSizeChanged)="onPageSizeChanged($event)"
+            (clickEvent)="onActionClick($event)">
+        </app-generic-table>
     </div>
-    <app-generic-card [title]="title">
-        <ng-container card-actions>
-            <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Nuova prenotazione"
-                [matTooltipPosition]="'left'">add</mat-icon>
-        </ng-container>
-        <div card-body>
-            <app-generic-form [fields]="formItems" [submitButtonText]="'Cerca'" [resetable]="true" (submit)="onSearch($event)"
-                (reset)="onReset()">
-            </app-generic-form>
-            <app-generic-table [data]="data.results" [size]="size" [totalElements]="data.count" [columns]="columns"
-                [actions]="actions" (changePage)="onChangePage($event)" (pageSizeChanged)="onPageSizeChanged($event)"
-                (clickEvent)="onActionClick($event)">
-            </app-generic-table>
-        </div>
 
-    </app-generic-card>
-
-
-
-
-</div>
+</app-generic-card>
 
 }

@@ -183,8 +183,7 @@ export class DashboardMedicoComponent extends BasePageComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
-        // Ricarica la lista dei pazienti dopo l'aggiunta
-        //this.loadPazienti();
+        this.snackBar.openSnackBar('Disponibilità aggiornata con successo', 'Chiudi');
       }
     });
   }
