@@ -15,5 +15,9 @@ export const ROLE_VISIBILITY = {
   ],
   AGENDA: [
     Group.MEDICO
+  ],
+  PRENOTAZIONI_DETTAGLIO: [
+    Group.TUTORE,
+    Group.MEDICO
   ]
 }

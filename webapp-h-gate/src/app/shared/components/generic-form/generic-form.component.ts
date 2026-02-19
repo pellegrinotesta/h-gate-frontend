@@ -3,11 +3,12 @@ import { SharedModule } from '../../shared.module';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import { FormItem } from '../../models/form-item.model';
 import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-generic-form',
   standalone: true,
-  imports: [SharedModule, ReactiveFormsModule, MatDatepickerModule],
+  imports: [SharedModule, ReactiveFormsModule, MatDatepickerModule, MatCheckboxModule  ],
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.scss'
 })

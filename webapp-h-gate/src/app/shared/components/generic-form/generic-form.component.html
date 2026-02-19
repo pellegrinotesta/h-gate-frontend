@@ -11,6 +11,7 @@
 
     @if(showButtons) {
     <div class="form-actions d-flex flex-row flex-nowrap justify-content-end align-items-end gap-2 pe-3 mb-1 w-100">
+        @if(editMode) {
         <button mat-stroked-button color="warn" (click)="onCancel()" type="button" class="mb-1">
             {{ cancelButtonText }}
         </button>
@@ -19,6 +20,8 @@
             [disabled]="form.invalid || (!editMode && form.pristine)">
             {{ submitButtonText }}
         </button>
+
+        }
 
         @if (resetable) {
         <button mat-stroked-button type="button" class="mb-1 ms-2" (click)="onReset()">Reset</button>

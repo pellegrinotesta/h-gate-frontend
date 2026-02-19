@@ -1,123 +1,116 @@
 <section tabindex="0" style="overflow: auto;" class="d-flex justify-content-center w-100">
-    
+
     <mat-table [dataSource]="dataSource">
 
         <!-- checkbox Column -->
         @if (selectable) {
-             <ng-container matColumnDef="select">
-                <mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox (change)="$event ? toggleAllRows() : null"
-                                [checked]="selection.hasValue() && isAllSelected()"
-                                [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                [aria-label]="checkboxLabel()">
-                    </mat-checkbox>
-                </mat-header-cell>
-                <mat-cell *matCellDef="let row">
-                    <mat-checkbox (click)="$event.stopPropagation()"
-                                (change)="$event ? selection.toggle(row) : null; selectionChange.emit(selection.selected);"
-                                [checked]="selection.isSelected(row)"
-                                [disabled]="!removeable"
-                                [aria-label]="checkboxLabel(row)">
-                    </mat-checkbox>
-                </mat-cell>
-            </ng-container>
+        <ng-container matColumnDef="select">
+            <mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null; selectionChange.emit(selection.selected);"
+                    [checked]="selection.isSelected(row)" [disabled]="!removeable" [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+            </mat-cell>
+        </ng-container>
         }
 
         <!-- data columns -->
         @for (column of columns; track column) {
-            <ng-container [matColumnDef]="column.columnDef?? column.attributeName" [sticky]="column.sticky">
-                <mat-header-cell *matHeaderCellDef [id]="column.columnDef?? column.attributeName"
-                    [class]="column.class ? column.class.toLowerCase() : ''"
-                    [ngStyle]="{'min-width': column.minWidth? column.minWidth : 'unset', 'max-width': column.maxWidth? column.maxWidth : 'unset'}">
-                    {{ column.title }}
-                </mat-header-cell>
-                <mat-cell *matCellDef="let item"
-                    [class]="column.class ? column.class.toLowerCase() : ''"
-                    [ngStyle]="{'min-width': column.minWidth? column.minWidth : 'unset', 'max-width': column.maxWidth? column.maxWidth : 'unset'}">
-                    <span class="mate-text-color">
-                        @if (column.computeField!!) {
-                            <span class="mate-text-color" [ngClass]="column.badge ? 'badge' : ''">{{transformValue(item, column.computeField)}}</span>
-                        }
-                        @else if (item[column.attributeName]!! && item[column.attributeName] !== '') {
-                            @let value = column.pipeArgs !== undefined ?
-                                transformValue(item[column.attributeName], column.pipeArgs)
-                                :
-                                item[column.attributeName];
-                            <span class="mate-text-color" [ngClass]="column.badge ? 'badge' : ''">{{value}}</span>
-                        }
-                        @else {
-                            <i>&mdash;</i>
-                        }
-                    </span>
-                </mat-cell>
-            </ng-container>
+        <ng-container [matColumnDef]="column.columnDef?? column.attributeName" [sticky]="column.sticky">
+            <mat-header-cell *matHeaderCellDef [id]="column.columnDef?? column.attributeName"
+                [class]="column.class ? column.class.toLowerCase() : ''"
+                [ngStyle]="{'min-width': column.minWidth? column.minWidth : 'unset', 'max-width': column.maxWidth? column.maxWidth : 'unset'}">
+                {{ column.title }}
+            </mat-header-cell>
+            <mat-cell *matCellDef="let item" [class]="column.class ? column.class.toLowerCase() : ''"
+                [ngStyle]="{'min-width': column.minWidth? column.minWidth : 'unset', 'max-width': column.maxWidth? column.maxWidth : 'unset'}">
+                <span class="mate-text-color">
+                    @if (column.computeField!!) {
+                    <span class="mate-text-color" [ngClass]="column.badge ? 'badge' : ''">{{transformValue(item,
+                        column.computeField)}}</span>
+                    }
+                    @else if (item[column.attributeName]!! && item[column.attributeName] !== '') {
+                    @let value = column.pipeArgs !== undefined ?
+                    transformValue(item[column.attributeName], column.pipeArgs)
+                    :
+                    item[column.attributeName];
+                    <span class="mate-text-color" [ngClass]="column.badge ? 'badge' : ''">{{value}}</span>
+                    }
+                    @else {
+                    <i>&mdash;</i>
+                    }
+                </span>
+            </mat-cell>
+        </ng-container>
         }
 
         <!-- actions column -->
         @if (authorizedActions.length > 0 && !selectable && !singleSelectable) {
-            <ng-container matColumnDef="actions">
+        <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef>Azioni</mat-header-cell>
             <mat-cell *matCellDef="let element">
                 @if (authorizedActions.length === 1) {
-                    @if (authorizedActions[0].icon) {
-                        <button matIconButton
-                            (click)="onAction(authorizedActions[0], element)"
-                            [disabled]="authorizedActions[0].isDisabled && authorizedActions[0].isDisabled(element)"
-                            [matBadge]="authorizedActions[0].isDisabled && authorizedActions[0].isDisabled(element)? 'x' : null"
-                            [matTooltip]="authorizedActions[0].tooltip" [matTooltipPosition]="'left'" [id]="authorizedActions[0].title">
-                            <mat-icon>{{ authorizedActions[0].icon }}</mat-icon>
-                        </button>
-                    } @else {
-                        <button matButton [id]="authorizedActions[0].title"
-                            (click)="onAction(authorizedActions[0], element)"
-                            [disabled]="authorizedActions[0].isDisabled && authorizedActions[0].isDisabled(element)">
-                            {{ authorizedActions[0].title | uppercase }}
-                        </button>
-                    }
+                @if (authorizedActions[0].icon) {
+                <button matIconButton (click)="onAction(authorizedActions[0], element)"
+                    [disabled]="authorizedActions[0].isDisabled && authorizedActions[0].isDisabled(element)"
+                    [matBadge]="authorizedActions[0].isDisabled && authorizedActions[0].isDisabled(element)? 'x' : null"
+                    [matTooltip]="authorizedActions[0].tooltip" [matTooltipPosition]="'left'"
+                    [id]="authorizedActions[0].title">
+                    <mat-icon>{{ authorizedActions[0].icon }}</mat-icon>
+                </button>
+                } @else {
+                <button matButton [id]="authorizedActions[0].title" (click)="onAction(authorizedActions[0], element)"
+                    [disabled]="authorizedActions[0].isDisabled && authorizedActions[0].isDisabled(element)">
+                    {{ authorizedActions[0].title | uppercase }}
+                </button>
+                }
                 }
                 @else if (authorizedActions.length > 1) {
-                    <button matIconButton id="menu-actions" [matMenuTriggerFor]="menu">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        @for (action of authorizedActions; track action) {
-                            <button mat-menu-item [id]="action.title" (click)="onAction(action, element)" [disabled]="action.isDisabled && action.isDisabled(element)">
-                                @if (action.icon) {
-                                    <mat-icon>{{ action.icon }}</mat-icon>
-                                }
-                                {{ action.title | uppercase }}
-                            </button>
+                <button matIconButton id="menu-actions" [matMenuTriggerFor]="menu">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    @for (action of authorizedActions; track action) {
+                    <button mat-menu-item [id]="action.title" (click)="onAction(action, element)"
+                        [disabled]="action.isDisabled && action.isDisabled(element)">
+                        @if (action.icon) {
+                        <mat-icon>{{ action.icon }}</mat-icon>
                         }
-                    </mat-menu>
+                        {{ action.title | uppercase }}
+                    </button>
+                    }
+                </mat-menu>
                 }
             </mat-cell>
         </ng-container>
         }
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"
-            [class]="row.class? row.class.toLowerCase() : ''"
-            [ngClass]="{'selected': selection.isSelected(row) || this.rowFocused == row, 'selectable pointer': singleSelectable}" (click)="onRowClick(row)"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" [class]="row.class? row.class.toLowerCase() : ''"
+            [ngClass]="{'selected': selection.isSelected(row) || this.rowFocused == row, 'selectable pointer': singleSelectable}"
+            (click)="onRowClick(row)"></mat-row>
     </mat-table>
 </section>
 
 @if(dataSource.data.length === 0) {
-    <div class="w-100 text-center py-3">
-        <p>No records found</p>
-        <mat-icon class="fs-4">sentiment_dissatisfied</mat-icon>
-    </div>
+<div class="w-100 text-center py-3">
+    <p>No records found</p>
+    <mat-icon class="fs-4">sentiment_dissatisfied</mat-icon>
+</div>
 }
 
 @if (isDataPaginated) {
-    <mat-paginator
-        [pageSize]="size"
-        [pageSizeOptions]="[10, 20, 50, 100]"
-        [length]="totalElements"
-        (page)="emitPageChange($event)">
-    </mat-paginator>
+<mat-paginator [pageSize]="size" [pageSizeOptions]="[10, 20, 50, 100]" [length]="totalElements"
+    (page)="emitPageChange($event)">
+</mat-paginator>
 }
 @else {
-    <mat-paginator
-        [pageSizeOptions]="[10, 20, 50, 100]">
-    </mat-paginator>
+<mat-paginator [pageSizeOptions]="[10, 20, 50, 100]">
+</mat-paginator>
 }

@@ -1,0 +1,18 @@
+@if(isLoading) {
+<app-loader></app-loader>
+}
+@else {
+<app-generic-card [title]="title">
+    @if(prenotazioneData?.stato === 'IN_ATTESA') {
+    <ng-container card-actions>
+        <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Modifica prenotazione" [matTooltipPosition]="'left'"
+            (click)="edit()">edit</mat-icon>
+    </ng-container>
+    }
+    <div card-body>
+        <app-generic-form [fields]="formItems" [initialData]="prenotazioneData" [editMode]="editMode">
+        </app-generic-form>
+    </div>
+
+</app-generic-card>
+}

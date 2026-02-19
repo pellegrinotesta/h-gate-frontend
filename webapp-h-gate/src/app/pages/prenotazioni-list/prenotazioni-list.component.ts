@@ -18,6 +18,7 @@ import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-
 import { GenericCardComponent } from '../../shared/components/generic-card/generic-card.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PrenotazioniAction } from '../../shared/constants/prenotazioni-table-action.constant';
 
 
 @Component({
@@ -36,16 +37,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> {
 
-
   readonly matDialog = inject(MatDialog);
   readonly prenotazioneService = inject(PrenotazioneService);
 
   title = 'Prenotazioni';
 
   columns: Column[] = PrenotazioneTableColumn;
-  actions: TableAction[] = [];
-
-  prenotazioneId = input<number>();
+  actions: TableAction[] = PrenotazioniAction;
 
   constructor() {
     super();
@@ -62,14 +60,14 @@ export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> 
   onActionClick(ev: { action: TableAction, element: PrenotazioneDettagliata }): void {
     switch (ev.action.operation) {
       case TableOperation.VIEW:
-        this.router.navigate([RoutesEnum.PRENOTAZIONI, this.prenotazioneId(), ev.element.id]);
+        this.router.navigate([RoutesEnum.PRENOTAZIONI, ev.element.id]);
         break;
-      case TableOperation.EDIT:
-        this.router.navigate([RoutesEnum.PRENOTAZIONI, this.prenotazioneId(), ev.element.id]);
-        break;
-      case TableOperation.UPDATE:
-        this.router.navigate([RoutesEnum.PRENOTAZIONI, this.prenotazioneId(), ev.element, ev.element.id]);
-        break;
+      // case TableOperation.EDIT:
+      //   this.router.navigate([RoutesEnum.PRENOTAZIONI, ev.element.id]);
+      //   break;
+      // case TableOperation.UPDATE:
+      //   this.router.navigate([RoutesEnum.PRENOTAZIONI, this.prenotazioneId(), ev.element, ev.element.id]);
+      //   break;
       case TableOperation.DELETE:
         this.onDeletePrenotazione(ev.element);
         break;

@@ -99,4 +99,16 @@
     --mat-snack-bar-supporting-text-size: 18px;
     --mat-snack-bar-button-color: white;
     --mat-snack-bar-supporting-text-color: white;
+
+      // ACTION BUTTONS - Aggiungi queste
+    --mat-icon-button-state-layer-color: transparent;
+    --mat-icon-button-ripple-color: rgba(139, 92, 246, 0.1);
+    --mat-icon-button-hover-state-layer-opacity: 0.08;
+    
+    // TABLE ACTIONS - Personalizzazione colonna azioni
+    --table-action-column-width: 100px;
+    --table-action-button-size: 36px;
+    --table-action-hover-bg: rgba(0, 0, 0, 0.04);
+    --table-action-icon-color: rgba(0, 0, 0, 0.54);
+    --table-action-hover-icon-color: var(--h-gate-blu);
 }

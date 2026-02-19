@@ -22,18 +22,6 @@ export class NotificheService {
     }
 
     /**
-     * Helper per creare una ResponseDTO vuota in caso di errore
-     */
-    private createEmptyResponse<T>(data: T, errorMessage: string = 'Errore'): ResponseDTO<T> {
-        return {
-            data: data,
-            ok: false,
-            response_code: 500,
-            message: errorMessage
-        };
-    }
-
-    /**
      * Avvia il polling automatico delle notifiche ogni 30 secondi
      */
     private startPolling(): void {
@@ -81,8 +69,6 @@ export class NotificheService {
             // Gestisci errori senza bloccare il polling
             catchError(error => {
                 console.error('Errore caricamento notifiche:', error);
-                // Non modificare i signal in caso di errore - mantieni i valori attuali
-                // Ritorna un observable con la struttura corretta di ResponseDTO
                 return of({
                     data: [],
                     ok: false,

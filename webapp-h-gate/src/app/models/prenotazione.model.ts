@@ -1,21 +1,35 @@
+import { Medico } from "./medico.model";
+import { Paziente } from "./paziente.model";
+import { Referto } from "./referto.model";
+import { User } from "./user.model";
+
 export interface Prenotazione {
     id: number;
+    uuid?: string;
     numeroPrenotazione: string;
     dataOra: Date;
+    dataOraFine?: Date;
     tipoVisita: string;
-    stato: 'IN_ATTESA' | 'CONFERMATA' | 'COMPLETATA' | 'ANNULLATA';
-    paziente?: {
-        id: number;
-        nome: string;
-        cognome: string;
-        codiceFiscale: string;
-    };
-    medico?: {
-        nome: string;
-        cognome: string;
-        specializzazione: string;
-    };
-    note?: string;
+    stato: 'IN_ATTESA' | 'CONFERMATA' | 'COMPLETATA' | 'ANNULLATA' | 'NON_PRESENTATO';
+    costo: number;
+    pazienteNomeCompleto: string;
+    medicoNomeCompleto: string;
+    tutoreNomeCompleto: string;
+    paziente?: Paziente;
+    tutore?: User;
+    medico?: Medico;
+    notePaziente?: string;
+    noteMedico?: string;
+    isPrimaVisita: boolean;
+    isUrgente: boolean;
+    promemoriaInviato: boolean;
+    confermaInviata: boolean;
+    dataAnnullamento?: Date;
+    motivoAnnullamento?: string;
+    cancellatoDa?: string;
+    referto?: Referto;
+    diagnosi?: string;
+    recensione?: string;
 }
 
 
@@ -46,4 +60,3 @@ export interface SlotDisponibili {
 }
 
 
-    

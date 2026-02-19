@@ -9,16 +9,6 @@ export const PrenotazioniAction: TableAction[] = [
         icon: "assignment",
     },
     {
-        operation: TableOperation.EDIT,
-        title: 'Modifica',
-        icon: "edit",
-    },
-    {
-        operation: TableOperation.UPDATE,
-        title: 'Aggiorna',
-        icon: "rebase_edit",
-    },
-    {
         operation: TableOperation.DELETE,
         title: 'Elimina',
         icon: "delete_forever",

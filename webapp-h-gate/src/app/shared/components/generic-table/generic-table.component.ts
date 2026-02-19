@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, Input, OnChanges, OnInit, output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, Input, OnChanges, OnInit, output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatButtonModule, MatIconButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -14,13 +14,15 @@ import { Column } from '../../models/column.model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AuthenticatedUser } from '../../../models/authenticated-user.model';
 import { AuthService } from '../../services/auth/auth.service';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-generic-table',
   standalone: true,
   imports: [CommonModule, MatTableModule, MatMenuModule, MatListModule, MatPaginatorModule, MatIconModule, MatButtonModule, MatBadgeModule, MatTooltipModule, MatCheckboxModule],
   templateUrl: './generic-table.component.html',
-  styleUrl: './generic-table.component.scss'
+  styleUrl: './generic-table.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class GenericTableComponent implements OnInit, AfterViewInit, OnChanges {
 
@@ -35,6 +37,7 @@ export class GenericTableComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() isDataPaginated = true;
   @Input() totalElements: number = 0;
   @Input() size = 10;
+
   changePage = output<'next' | 'previous'>();
   pageSizeChanged = output<number>();
   clickEvent = output<{ action: TableAction, element: any }>();
@@ -56,10 +59,22 @@ export class GenericTableComponent implements OnInit, AfterViewInit, OnChanges {
   pageIndex: number = 0;
 
   ngOnInit(): void {
-    this.authenticatedUser = this.userService.getStoredUsed() ?? null;
+    const encryptedUser = this.userService.getStoredUsed();
+    if (encryptedUser?.authentication) {
+      const decoded = jwtDecode<AuthenticatedUser>(encryptedUser.authentication);
+      this.authenticatedUser = {
+        ...decoded,
+        authentication: encryptedUser.authentication,
+        roles: decoded.authorities
+      };
+
+    }
+
     this.authorizedActions = this.getAuthorizedActions();
+
     this.displayedColumns = this.columns.map(column => column.columnDef ?? column.attributeName)
       .concat(this.authorizedActions.length > 0 && !this.selectable ? ['actions'] : []);
+
     if (this.selectable) this.displayedColumns.unshift('select');
     this.dataSource = new MatTableDataSource<any>(this.data);
     if (this.isDataPaginated) {
