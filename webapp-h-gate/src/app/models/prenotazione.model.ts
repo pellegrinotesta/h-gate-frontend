@@ -16,7 +16,7 @@ export interface Prenotazione {
     medicoNomeCompleto: string;
     tutoreNomeCompleto: string;
     paziente?: Paziente;
-    tutore?: User;
+    createdByUserId?: User;
     medico?: Medico;
     notePaziente?: string;
     noteMedico?: string;

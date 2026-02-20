@@ -2,8 +2,13 @@
 <app-loader></app-loader>
 }
 @else {
-<app-generic-card [title]="title">
-    @if(prenotazioneData?.stato === 'IN_ATTESA') {
+<div class="d-flex justify-content-between mt-2">
+    <button *ngIf="!isLoading" mat-button class="btn btn-link button-back" type="button" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>&nbsp;Back
+    </button>
+</div>
+<app-generic-card [title]="title" [subtitle]="subtitle">
+    @if(prenotazioneData?.stato === 'IN_ATTESA' && isMedico) {
     <ng-container card-actions>
         <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Modifica prenotazione" [matTooltipPosition]="'left'"
             (click)="edit()">edit</mat-icon>

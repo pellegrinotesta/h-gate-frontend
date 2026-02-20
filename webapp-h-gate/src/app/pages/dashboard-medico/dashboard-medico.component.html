@@ -82,10 +82,10 @@
                                     CF: {{ app.paziente?.codiceFiscale }}
                                 </p>
                                 <p class="mb-2"><strong>{{ app.tipoVisita }}</strong> </p>
-                                @if(app.note) {
+                                @if(app.noteMedico) {
                                 <p class="text-muted small mb-0">
                                     <mat-icon class="tiny-icon">note</mat-icon>
-                                    {{ app.note }}
+                                    {{ app.noteMedico }}
                                 </p>
                                 }
                             </div>
@@ -159,10 +159,10 @@
                                         CF: {{ app.paziente?.codiceFiscale }}
                                     </p>
                                     <p class="mb-2"><strong>{{ app.tipoVisita }}</strong> </p>
-                                    @if(app.note) {
+                                    @if(app.noteMedico) {
                                     <p class="text-muted small mb-0">
                                         <mat-icon class="tiny-icon">note</mat-icon>
-                                        {{ app.note }}
+                                        {{ app.noteMedico }}
                                     </p>
                                     }
                                 </div>

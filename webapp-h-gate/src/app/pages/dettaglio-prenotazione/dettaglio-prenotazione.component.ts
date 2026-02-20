@@ -9,6 +9,10 @@ import { PrenotazioneService } from '../../services/prenotazione.service';
 import { FormItem } from '../../shared/models/form-item.model';
 import { FormConfigs } from '../../shared/constants/form-config.constant';
 import { Prenotazione } from '../../models/prenotazione.model';
+import { RoutesEnum } from '../../shared/enums/routes.enum';
+import { AuthService } from '../../shared/services/auth/auth.service';
+import { jwtDecode } from 'jwt-decode';
+import { AuthenticatedUser } from '../../models/authenticated-user.model';
 
 @Component({
   selector: 'app-dettaglio-prenotazione',
@@ -25,19 +29,38 @@ import { Prenotazione } from '../../models/prenotazione.model';
 export class DettaglioPrenotazioneComponent extends BasePageComponent {
 
   readonly prenotazioneService = inject(PrenotazioneService);
+  readonly authService = inject(AuthService);
   prenotazioneId = input<number>();
   editMode = false;
 
   title = 'Dettaglio Prenotazione';
+  subtitle = '';
+  userRole = '';
+  isMedico = false;
   formItems: FormItem[] = FormConfigs.DETTAGLIO_PRENOTAZIONE_FIELDS;
 
   prenotazioneData: Prenotazione | null = null;
+
+  constructor() {
+    super();
+    const user = this.authService.getStoredUsed();
+    if (user?.authentication) {
+      const decoded = jwtDecode<AuthenticatedUser>(user.authentication);
+      this.userRole = decoded.authorities[0] || '';
+      this.isMedico = this.userRole === 'MEDICO';
+    }
+  }
 
   override ngOnInit(): void {
     if (this.prenotazioneId()) {
       this.loadPrenotazione(this.prenotazioneId()!);
     }
   }
+
+  goBack(): void {
+    this.router.navigate([`${RoutesEnum.PRENOTAZIONI}`]);
+  }
+
 
   private loadPrenotazione(id: number): void {
     this.isLoading = true;
@@ -49,20 +72,21 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
         // Appiattisci i dati per il form
         this.prenotazioneData = {
           ...prenotazione,
-    
+
           pazienteNomeCompleto: `${prenotazione.paziente?.nome} ${prenotazione.paziente?.cognome}`,
 
-          // Medico
+          tutoreNomeCompleto: `${prenotazione.createdByUserId?.nome} ${prenotazione.createdByUserId?.cognome}`,
+
           medicoNomeCompleto: `${prenotazione.medico?.user?.nome} ${prenotazione.medico?.user?.cognome}`,
 
-          // Referto (se esiste)
           diagnosi: prenotazione.referto?.diagnosi
 
-        //   // Recensione (se esiste)
-        //   recensione: prenotazione.recensione?.commento
+          //   // Recensione (se esiste)
+          //   recensione: prenotazione.recensione?.commento
         };
 
-        this.title = `Prenotazione ${prenotazione.numeroPrenotazione}`;
+        this.title = `Prenotazione`;
+        this.subtitle = `${prenotazione.numeroPrenotazione}`;
         this.isLoading = false;
       },
       error: (error) => {

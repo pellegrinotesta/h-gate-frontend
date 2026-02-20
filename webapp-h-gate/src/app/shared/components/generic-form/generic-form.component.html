@@ -81,16 +81,16 @@
         @else {
         @switch (item.type) {
         @case ('checkbox') {
-        <mat-checkbox [formControlName]="item.name" class="mb-3">
+        <mat-checkbox [formControlName]="item.name" [disabled]="item.readonly || item.disabled" class="mb-3">
             {{ item.label }}
         </mat-checkbox>
         }
         @case ('date') {
         <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ item.label }}</mat-label>
-            <input matInput [matDatepicker]="picker" [formControlName]="item.name" />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <input matInput [matDatepicker]="picker" [formControlName]="item.name" [readonly]="item.readonly" />
+            <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="item.readonly"></mat-datepicker-toggle>
+            <mat-datepicker #picker [disabled]="item.readonly || !editMode"></mat-datepicker>
             @if (form.get(item.name)?.invalid && form.get(item.name)?.touched) {
             <mat-error>{{ getErrorMessage(item.name) }}</mat-error>
             }
@@ -99,7 +99,8 @@
         @case ('textarea') {
         <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ item.label }}</mat-label>
-            <textarea matInput [formControlName]="item.name" [rows]="item.rows || 3"></textarea>
+            <textarea matInput [formControlName]="item.name" [rows]="item.rows || 3"
+                [readonly]="isFieldReadonly(item)"></textarea>
             @if (form.get(item.name)?.invalid && form.get(item.name)?.touched) {
             <mat-error>{{ getErrorMessage(item.name) }}</mat-error>
             }
@@ -108,7 +109,7 @@
         @case ('select') {
         <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ item.label }}</mat-label>
-            <mat-select [formControlName]="item.name">
+            <mat-select [formControlName]="item.name" [disabled]="item.readonly || item.disabled">
                 @for (opt of item.options; track opt.value) {
                 <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
                 }
@@ -122,7 +123,7 @@
         <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ item.label }}</mat-label>
             <input matInput [type]="item.type || 'text'" [formControlName]="item.name"
-                [placeholder]="item.placeholder || ''">
+                [placeholder]="item.placeholder || ''" [readonly]="isFieldReadonly(item)">
             @if (form.get(item.name)?.invalid && form.get(item.name)?.touched) {
             <mat-error>{{ getErrorMessage(item.name) }}</mat-error>
             }

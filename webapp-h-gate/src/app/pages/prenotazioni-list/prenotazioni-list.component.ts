@@ -57,6 +57,10 @@ export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> 
     ]
   }
 
+  addNew(): void {
+    this.router.navigate([RoutesEnum.PRENOTAZIONI, 'nuova']);
+  }
+
   onActionClick(ev: { action: TableAction, element: PrenotazioneDettagliata }): void {
     switch (ev.action.operation) {
       case TableOperation.VIEW:

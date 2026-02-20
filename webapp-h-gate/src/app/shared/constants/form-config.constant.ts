@@ -329,7 +329,7 @@ export class FormConfigs {
     ]
 
     static readonly DETTAGLIO_PRENOTAZIONE_FIELDS: FormItem[] = [
-        { name: 'numeroPrenotazione', label: 'Numero prenotazione', type: 'text', initialValue: '', colClass: 'col-md-2' },
+        { name: 'numeroPrenotazione', label: 'Numero prenotazione', type: 'text', initialValue: '', colClass: 'col-md-2', readonly: true },
         { name: 'pazienteNomeCompleto', label: 'Paziente', type: 'text', initialValue: '', colClass: 'col-md-3' },
         { name: 'tutoreNomeCompleto', label: 'Tutore', type: 'text', initialValue: '', colClass: 'col-md-3' },
         { name: 'medicoNomeCompleto', label: 'Medico', type: 'text', initialValue: '', colClass: 'col-md-3' },
@@ -340,15 +340,14 @@ export class FormConfigs {
         { name: 'costo', label: 'Costo', type: 'number', initialValue: 0, colClass: 'col-md-2' },
         { name: 'notePaziente', label: 'Note paziente', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-5' },
         { name: 'noteMedico', label: 'Note medico', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-5' },
-        { name: 'motivoAnnullamento', label: 'Motivo cancellazione', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-5' },
-        { name: 'dataAnnullamento', label: 'Data cancellazione', type: 'date', initialValue: '', colClass: 'col-md-3' },
-        { name: 'cancellatoDa', label: 'Cancellato da', type: 'text', initialValue: '', colClass: 'col-md-3' },
-        { name: 'promemoriaInviato', label: 'Promemoria inviato', type: 'checkbox', initialValue: false },
-        { name: 'confermaInviata', label: 'Conferma prenotazione', type: 'checkbox', initialValue: false },
-        { name: 'isPrimaVisita', label: 'Prima visita', type: 'checkbox', initialValue: false },
-        { name: 'isUrgente', label: 'Visita urgente', type: 'checkbox', initialValue: false },
-        { name: 'diagnosi', label: 'Diagnosi', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-6' },
-        { name: 'recensione', label: 'Recensione', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-5' }
+        { name: 'motivoAnnullamento', label: 'Motivo cancellazione', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-5', condition: (data) => data?.stato === 'ANNULLATA' || data?.stato === 'NON_PRESENTATO' },
+        { name: 'dataAnnullamento', label: 'Data cancellazione', type: 'date', initialValue: '', colClass: 'col-md-3', condition: (data) => data?.stato === 'ANNULLATA' || data?.stato === 'NON_PRESENTATO' },
+        { name: 'cancellatoDa', label: 'Cancellato da', type: 'text', initialValue: '', colClass: 'col-md-3', condition: (data) => data?.stato === 'ANNULLATA' || data?.stato === 'NON_PRESENTATO' },
+        { name: 'promemoriaInviato', label: 'Promemoria inviato', type: 'checkbox', initialValue: false, colClass: 'col-md-2' },
+        { name: 'confermaInviata', label: 'Conferma prenotazione', type: 'checkbox', initialValue: false, colClass: 'col-md-2' },
+        { name: 'isPrimaVisita', label: 'Prima visita', type: 'checkbox', initialValue: false, colClass: 'col-md-2' },
+        { name: 'isUrgente', label: 'Visita urgente', type: 'checkbox', initialValue: false, colClass: 'col-md-2' },
+        { name: 'diagnosi', label: 'Diagnosi', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-6' }
 
     ]
 }

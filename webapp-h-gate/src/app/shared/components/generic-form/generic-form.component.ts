@@ -8,7 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 @Component({
   selector: 'app-generic-form',
   standalone: true,
-  imports: [SharedModule, ReactiveFormsModule, MatDatepickerModule, MatCheckboxModule  ],
+  imports: [SharedModule, ReactiveFormsModule, MatDatepickerModule, MatCheckboxModule],
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.scss'
 })
@@ -27,6 +27,7 @@ export class GenericFormComponent implements OnInit {
   @Input() resetable: boolean = false;
   @Input() enterable = true;
   @Input() autoClear: boolean = false;
+  @Input() userRole?: string;
 
   @Output() cancel = new EventEmitter<void>();
   @Output() formChanged = new EventEmitter<any>();
@@ -41,6 +42,9 @@ export class GenericFormComponent implements OnInit {
         return false;
       }
       if (this.excludeFields && this.excludeFields.includes(field.name)) {
+        return false;
+      }
+      if (field.condition && !field.condition(this.initialData)) {
         return false;
       }
       return true;
@@ -67,6 +71,16 @@ export class GenericFormComponent implements OnInit {
   private updateFormState(): void {
     if (this.editMode) {
       this.form.enable({ emitEvent: false });
+      this.fields.forEach(field => {
+        const control = this.form.get(field.name);
+        if (control) {
+          const isReadonly = field.readonly || (field.readonlyCondition && field.readonlyCondition(this.initialData, this.userRole));
+
+          if (isReadonly) {
+            control.disable({ emitEvent: false });
+          }
+        }
+      })
     } else {
       this.form.disable({ emitEvent: false });
     }
@@ -76,7 +90,20 @@ export class GenericFormComponent implements OnInit {
     const formConfig: { [key: string]: any } = {};
 
     this.fields.forEach(field => {
-      formConfig[field.name] = ['', field.validators || []];
+      const control = this.fb.control(
+        field.initialValue ?? '',
+        field.validators || []
+      );
+
+      const isReadonly = field.readonly ||
+        (field.readonlyCondition &&
+          field.readonlyCondition(this.initialData, this.userRole));
+
+      if (isReadonly || field.disabled) {
+        control.disable();
+      }
+
+      formConfig[field.name] = control;
     });
 
     this.form = this.fb.group(formConfig, {
@@ -88,7 +115,11 @@ export class GenericFormComponent implements OnInit {
     this.form.valueChanges.subscribe(value => {
       this.formChanged.emit(value);
     });
+  }
 
+  isFieldReadonly(field: FormItem): boolean {
+    return field.readonly ||
+      (field.readonlyCondition ? field.readonlyCondition(this.initialData, this.userRole) : false);
   }
 
   private patchForm(data: any): void {
@@ -180,6 +211,7 @@ export class GenericFormComponent implements OnInit {
 
   onCancel(): void {
     this.cancel.emit();
+    this.editMode = false;
   }
 
   onReset() {

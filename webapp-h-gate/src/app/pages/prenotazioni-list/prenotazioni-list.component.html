@@ -5,7 +5,7 @@
 <app-generic-card [title]="title">
     <ng-container card-actions>
         <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Nuova prenotazione"
-            [matTooltipPosition]="'left'">add</mat-icon>
+            [matTooltipPosition]="'left'" (click)="addNew()">add</mat-icon>
     </ng-container>
     <div card-body>
         <app-generic-form [fields]="formItems" [editMode]="true" [submitButtonText]="'Cerca'" [resetable]="true"
@@ -16,7 +16,6 @@
             (clickEvent)="onActionClick($event)">
         </app-generic-table>
     </div>
-
 </app-generic-card>
 
 }
