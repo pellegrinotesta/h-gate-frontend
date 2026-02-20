@@ -29,7 +29,7 @@ export abstract class HttpBaseService<M extends BaseModel> extends HttpRequestBa
         return this.request<M[]>('', METHODS.POST, model);
     }
     update(id: number | string, model: M): Observable<M> {
-        return this.request<M>(id.toString(), METHODS.PUT, model);
+        return this.request<M>('/' + id.toString(), METHODS.PUT, model);
     }
     patch(id: number | string, model: Partial<M>): Observable<M> {
         return this.request<M>(id.toString(), METHODS.PATCH, model);

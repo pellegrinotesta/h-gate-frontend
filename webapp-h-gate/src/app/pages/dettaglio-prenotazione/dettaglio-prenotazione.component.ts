@@ -9,10 +9,10 @@ import { PrenotazioneService } from '../../services/prenotazione.service';
 import { FormItem } from '../../shared/models/form-item.model';
 import { FormConfigs } from '../../shared/constants/form-config.constant';
 import { Prenotazione } from '../../models/prenotazione.model';
-import { RoutesEnum } from '../../shared/enums/routes.enum';
 import { AuthService } from '../../shared/services/auth/auth.service';
 import { jwtDecode } from 'jwt-decode';
 import { AuthenticatedUser } from '../../models/authenticated-user.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-dettaglio-prenotazione',
@@ -24,12 +24,15 @@ import { AuthenticatedUser } from '../../models/authenticated-user.model';
     MatTooltipModule
   ],
   templateUrl: './dettaglio-prenotazione.component.html',
-  styleUrl: './dettaglio-prenotazione.component.scss'
+  styleUrl: './dettaglio-prenotazione.component.scss',
+  providers: [DatePipe]
 })
 export class DettaglioPrenotazioneComponent extends BasePageComponent {
 
   readonly prenotazioneService = inject(PrenotazioneService);
   readonly authService = inject(AuthService);
+  readonly datePipe = inject(DatePipe);
+
   prenotazioneId = input<number>();
   editMode = false;
 
@@ -58,7 +61,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
   }
 
   goBack(): void {
-    this.router.navigate([`${RoutesEnum.PRENOTAZIONI}`]);
+    this.location.back();
   }
 
 
@@ -69,20 +72,28 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
       next: (response) => {
         const prenotazione = response.data;
 
-        // Appiattisci i dati per il form
         this.prenotazioneData = {
           ...prenotazione,
 
+          dataOra: this.datePipe.transform(
+            prenotazione.dataOra,
+            'dd/MM/yyyy HH:mm'
+          ) ?? '',
+
+          dataOraFine: this.datePipe.transform(
+            prenotazione.dataOraFine,
+            'dd/MM/yyyy HH:mm'
+          ) ?? '',
+
+          dataAnnullamento: this.datePipe.transform(
+            prenotazione.dataAnnullamento,
+            'dd/MM/yyyy HH:mm'
+          ) ?? '',
+
           pazienteNomeCompleto: `${prenotazione.paziente?.nome} ${prenotazione.paziente?.cognome}`,
-
           tutoreNomeCompleto: `${prenotazione.createdByUserId?.nome} ${prenotazione.createdByUserId?.cognome}`,
-
           medicoNomeCompleto: `${prenotazione.medico?.user?.nome} ${prenotazione.medico?.user?.cognome}`,
-
           diagnosi: prenotazione.referto?.diagnosi
-
-          //   // Recensione (se esiste)
-          //   recensione: prenotazione.recensione?.commento
         };
 
         this.title = `Prenotazione`;
@@ -100,5 +111,41 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
   edit() {
     this.editMode = true;
   }
+
+  save(updatedData: any): void {
+    if (!this.prenotazioneId()) {
+      this.snackBar.openSnackBar('ID prenotazione mancante', 'Chiudi');
+      return;
+    }
+
+    this.isLoading = true;
+
+    const updateDTO: any = {
+      id: this.prenotazioneId()
+    };
+
+    updateDTO.noteMedico = updatedData.noteMedico;
+    updateDTO.diagnosi = updatedData.diagnosi;
+
+    this.prenotazioneService.update(this.prenotazioneId()!, updateDTO).subscribe({
+      next: (response) => {
+        if (response) {
+          this.snackBar.openSnackBar('Prenotazione aggiornata con successo', 'Chiudi');
+          this.editMode = false;
+          this.loadPrenotazione(this.prenotazioneId()!);
+        } else {
+          this.snackBar.openSnackBar('Errore durante il salvataggio', 'Chiudi');
+          this.isLoading = false;
+        }
+      },
+      error: (error) => {
+        console.error('Errore salvataggio prenotazione:', error);
+        this.snackBar.openSnackBar('Errore durante il salvataggio', 'Chiudi');
+        this.isLoading = false;
+      }
+    });
+
+  }
+
 
 }

@@ -7,8 +7,8 @@ export interface Prenotazione {
     id: number;
     uuid?: string;
     numeroPrenotazione: string;
-    dataOra: Date;
-    dataOraFine?: Date;
+    dataOra: string;
+    dataOraFine?: string;
     tipoVisita: string;
     stato: 'IN_ATTESA' | 'CONFERMATA' | 'COMPLETATA' | 'ANNULLATA' | 'NON_PRESENTATO';
     costo: number;
@@ -24,7 +24,7 @@ export interface Prenotazione {
     isUrgente: boolean;
     promemoriaInviato: boolean;
     confermaInviata: boolean;
-    dataAnnullamento?: Date;
+    dataAnnullamento?: string;
     motivoAnnullamento?: string;
     cancellatoDa?: string;
     referto?: Referto;

@@ -3,19 +3,19 @@
 }
 @else {
 <div class="d-flex justify-content-between mt-2">
-    <button *ngIf="!isLoading" mat-button class="btn btn-link button-back" type="button" (click)="goBack()">
+    <button  mat-button class="btn btn-link button-back" type="button" (click)="goBack()">
         <i class="bi bi-arrow-left"></i>&nbsp;Back
     </button>
 </div>
 <app-generic-card [title]="title" [subtitle]="subtitle">
-    @if(prenotazioneData?.stato === 'IN_ATTESA' && isMedico) {
+    @if(isMedico) {
     <ng-container card-actions>
         <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Modifica prenotazione" [matTooltipPosition]="'left'"
             (click)="edit()">edit</mat-icon>
     </ng-container>
     }
     <div card-body>
-        <app-generic-form [fields]="formItems" [initialData]="prenotazioneData" [editMode]="editMode">
+        <app-generic-form [fields]="formItems" [initialData]="prenotazioneData" [editMode]="editMode"  (submit)="save($event)">
         </app-generic-form>
     </div>
 
