@@ -14,6 +14,8 @@ import { jwtDecode } from 'jwt-decode';
 import { AuthenticatedUser } from '../../models/authenticated-user.model';
 import { DatePipe } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog } from '@angular/material/dialog';
+import { RefertoDialogComponent } from '../../components/referto-dialog/referto-dialog.component';
 
 @Component({
   selector: 'app-dettaglio-prenotazione',
@@ -34,6 +36,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
   readonly prenotazioneService = inject(PrenotazioneService);
   readonly authService = inject(AuthService);
   readonly datePipe = inject(DatePipe);
+  readonly dialog = inject(MatDialog);
 
   prenotazioneId = input<number>();
   editMode = false;
@@ -155,14 +158,12 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
 
   }
 
-  completaPrenotazione(): void {
+  private completaPrenotazione(): void {
     this.prenotazioneService.completaPrenotazione(this.prenotazioneId()!).subscribe({
       next: (response) => {
         if (response.ok) {
           this.snackBar.openSnackBar('Prenotazione completata, puoi ora creare il referto', 'Chiudi');
-          this.router.navigate(['/referti/nuovo'], {
-            queryParams: { prenotazioneId: this.prenotazioneId() }
-          });
+          this.loadPrenotazione(this.prenotazioneId()!);
         } else {
           this.snackBar.openSnackBar('Errore completamento prenotazione', response.message);
         }
@@ -173,6 +174,16 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
       }
     });
 
+  }
+
+  apriReferto(): void {
+    const dialogRef = this.dialog.open(RefertoDialogComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      maxHeight: '90vh',
+      disableClose: false,
+      autoFocus: true
+    });
   }
 
 

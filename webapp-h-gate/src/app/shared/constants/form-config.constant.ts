@@ -330,23 +330,58 @@ export class FormConfigs {
 
     static readonly DETTAGLIO_PRENOTAZIONE_FIELDS: FormItem[] = [
         { name: 'numeroPrenotazione', label: 'Numero prenotazione', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true },
-        { name: 'pazienteNomeCompleto', label: 'Paziente', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true  },
-        { name: 'tutoreNomeCompleto', label: 'Tutore', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true  },
+        { name: 'pazienteNomeCompleto', label: 'Paziente', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true },
+        { name: 'tutoreNomeCompleto', label: 'Tutore', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true },
         { name: 'medicoNomeCompleto', label: 'Medico', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true },
-        { name: 'dataOra', label: 'Data e ora', type: 'text', initialValue: '', colClass: 'col-md-4', readonly: true  },
+        { name: 'dataOra', label: 'Data e ora', type: 'text', initialValue: '', colClass: 'col-md-4', readonly: true },
         { name: 'dataOraFine', label: 'Data e ora fine', type: 'text', initialValue: '', colClass: 'col-md-4', readonly: true },
         { name: 'tipoVisita', label: 'Tipo visita', type: 'text', initialValue: '', colClass: 'col-md-4', readonly: true },
         { name: 'stato', label: 'Stato prenotazione', type: 'text', initialValue: '', colClass: 'col-md-4', readonly: true },
         { name: 'costo', label: 'Costo', type: 'number', initialValue: 0, colClass: 'col-md-2', readonly: true },
-        { name: 'notePaziente', label: 'Note paziente', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-5', readonly: true  },
+        { name: 'notePaziente', label: 'Note paziente', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-5', readonly: true },
         { name: 'noteMedico', label: 'Note medico', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-5' },
         { name: 'motivoAnnullamento', label: 'Motivo cancellazione', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-5', condition: (data) => data?.stato === 'ANNULLATA' || data?.stato === 'NON_PRESENTATO' },
         { name: 'dataAnnullamento', label: 'Data cancellazione', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true, condition: (data) => data?.stato === 'ANNULLATA' || data?.stato === 'NON_PRESENTATO' },
-        { name: 'cancellatoDa', label: 'Cancellato da', type: 'text', initialValue: '', colClass: 'col-md-3',  readonly: true, condition: (data) => data?.stato === 'ANNULLATA' || data?.stato === 'NON_PRESENTATO' },
-        { name: 'promemoriaInviato', label: 'Promemoria inviato', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true  },
+        { name: 'cancellatoDa', label: 'Cancellato da', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true, condition: (data) => data?.stato === 'ANNULLATA' || data?.stato === 'NON_PRESENTATO' },
+        { name: 'promemoriaInviato', label: 'Promemoria inviato', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true },
         { name: 'confermaInviata', label: 'Conferma prenotazione', type: 'checkbox', initialValue: false, colClass: 'col-md-2' },
-        { name: 'isPrimaVisita', label: 'Prima visita', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true  },
-        { name: 'isUrgente', label: 'Visita urgente', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true  }
+        { name: 'isPrimaVisita', label: 'Prima visita', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true },
+        { name: 'isUrgente', label: 'Visita urgente', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true }
 
     ]
+
+    static readonly FORM_REFERTO_FIELDS: FormItem[] = [
+
+        // Sezione 1
+        { name: '_s1', label: 'Informazioni generali', type: 'section-header', placeholder: 'info_outline', colClass: 'col-12' },
+        { name: 'titolo', label: 'Titolo referto', type: 'text', validators: [Validators.required], colClass: 'col-md-8' },
+        { name: 'tipoReferto', label: 'Tipo referto', type: 'text', validators: [Validators.required], colClass: 'col-md-4' },
+
+        // Sezione 2
+        { name: '_s2', label: 'Dati clinici', type: 'section-header', placeholder: 'biotech', colClass: 'col-12' },
+        { name: 'anamnesi', label: 'Anamnesi', type: 'textarea', rows: 3, colClass: 'col-12' },
+        { name: 'esameObiettivo', label: 'Esame obiettivo', type: 'textarea', rows: 3, colClass: 'col-12' },
+        { name: 'diagnosi', label: 'Diagnosi', type: 'textarea', validators: [Validators.required], rows: 3, colClass: 'col-12' },
+
+        // Sezione 3
+        { name: '_s3', label: 'Terapia e prescrizioni', type: 'section-header', placeholder: 'medication', colClass: 'col-12' },
+        { name: 'terapia', label: 'Terapia', type: 'textarea', rows: 3, colClass: 'col-12' },
+        { name: 'prescrizioni', label: 'Prescrizioni', type: 'textarea', rows: 3, colClass: 'col-12' },
+        { name: 'esamiRichiesti', label: 'Esami richiesti', type: 'textarea', rows: 3, colClass: 'col-12' },
+
+        // Sezione 4
+        { name: '_s4', label: 'Parametri vitali', type: 'section-header', placeholder: 'monitor_heart', initialValue: 'opzionali', colClass: 'col-12' },
+        { name: 'pressioneSistolica', label: 'Pressione sistolica (mmHg)', type: 'number', colClass: 'col-6 col-md-4' },
+        { name: 'pressioneDiastolica', label: 'Pressione diastolica (mmHg)', type: 'number', colClass: 'col-6 col-md-4' },
+        { name: 'frequenzaCardiaca', label: 'Freq. cardiaca (bpm)', type: 'number', colClass: 'col-6 col-md-4' },
+        { name: 'temperatura', label: 'Temperatura (°C)', type: 'number', colClass: 'col-6 col-md-3' },
+        { name: 'saturazione', label: 'Saturazione O₂ (%)', type: 'number', colClass: 'col-6 col-md-3' },
+        { name: 'peso', label: 'Peso (kg)', type: 'number', colClass: 'col-6 col-md-3' },
+        { name: 'altezza', label: 'Altezza (cm)', type: 'number', colClass: 'col-6 col-md-3' },
+
+        // Sezione 5
+        { name: '_s5', label: 'Note e follow-up', type: 'section-header', placeholder: 'event_repeat', colClass: 'col-12' },
+        { name: 'noteMediche', label: 'Note mediche', type: 'textarea', rows: 3, colClass: 'col-md-8' },
+        { name: 'prossimoControllo', label: 'Prossimo controllo', type: 'date', colClass: 'col-md-4' },
+    ];
 }

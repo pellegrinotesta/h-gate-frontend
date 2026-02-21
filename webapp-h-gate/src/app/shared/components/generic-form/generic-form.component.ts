@@ -90,6 +90,7 @@ export class GenericFormComponent implements OnInit {
     const formConfig: { [key: string]: any } = {};
 
     this.fields.forEach(field => {
+      if (field.type === 'section-header') return;
       const control = this.fb.control(
         field.initialValue ?? '',
         field.validators || []

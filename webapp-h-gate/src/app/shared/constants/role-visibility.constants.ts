@@ -19,5 +19,10 @@ export const ROLE_VISIBILITY = {
   PRENOTAZIONI_DETTAGLIO: [
     Group.TUTORE,
     Group.MEDICO
+  ],
+  REFERTO: [
+    Group.TUTORE,
+    Group.MEDICO
   ]
+
 }

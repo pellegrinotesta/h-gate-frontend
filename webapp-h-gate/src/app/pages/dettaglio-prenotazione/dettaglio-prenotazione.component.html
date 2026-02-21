@@ -11,13 +11,13 @@
     @if(isMedico) {
     <ng-container card-actions>
         @if(!hasReferto) {
-        <button mat-raised-button color="primary" (click)="completaPrenotazione()"
+        <button mat-raised-button color="primary" (click)="apriReferto()"
             matTooltip="Compila il referto per questa visita" [matTooltipPosition]="'left'" class="me-2">
             <mat-icon>task_alt</mat-icon>
             Completa visita
         </button>
         } @else {
-        <mat-chip class="chip-referto-presente me-2">
+        <mat-chip class="chip-referto-presente me-2" (click)="apriReferto()">
             <mat-icon class="tiny-icon me-1">check_circle</mat-icon>
             Referto presente
         </mat-chip>

@@ -119,6 +119,16 @@
             }
         </mat-form-field>
         }
+        @case ('section-header') {
+        <div class="section-header-item">
+            <span class="section-header-bar"></span>
+            <mat-icon>{{ item.placeholder || 'info_outline' }}</mat-icon>
+            {{ item.label }}
+            @if(item.initialValue) {
+            <span class="section-header-optional">{{ item.initialValue }}</span>
+            }
+        </div>
+        }
         @default {
         <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ item.label }}</mat-label>
