@@ -346,8 +346,7 @@ export class FormConfigs {
         { name: 'promemoriaInviato', label: 'Promemoria inviato', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true  },
         { name: 'confermaInviata', label: 'Conferma prenotazione', type: 'checkbox', initialValue: false, colClass: 'col-md-2' },
         { name: 'isPrimaVisita', label: 'Prima visita', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true  },
-        { name: 'isUrgente', label: 'Visita urgente', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true  },
-        { name: 'diagnosi', label: 'Diagnosi', type: 'textarea', initialValue: '', rows: 3, colClass: 'col-md-6' }
+        { name: 'isUrgente', label: 'Visita urgente', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true  }
 
     ]
 }

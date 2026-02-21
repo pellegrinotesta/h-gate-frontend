@@ -13,6 +13,7 @@ import { AuthService } from '../../shared/services/auth/auth.service';
 import { jwtDecode } from 'jwt-decode';
 import { AuthenticatedUser } from '../../models/authenticated-user.model';
 import { DatePipe } from '@angular/common';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-dettaglio-prenotazione',
@@ -21,7 +22,8 @@ import { DatePipe } from '@angular/common';
     GenericCardComponent,
     GenericFormComponent,
     LoaderComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    MatChipsModule
   ],
   templateUrl: './dettaglio-prenotazione.component.html',
   styleUrl: './dettaglio-prenotazione.component.scss',
@@ -35,6 +37,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
 
   prenotazioneId = input<number>();
   editMode = false;
+  hasReferto = false;
 
   title = 'Dettaglio Prenotazione';
   subtitle = '';
@@ -98,6 +101,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
 
         this.title = `Prenotazione`;
         this.subtitle = `${prenotazione.numeroPrenotazione}`;
+        this.hasReferto = !!prenotazione.referto;
         this.isLoading = false;
       },
       error: (error) => {
@@ -110,6 +114,10 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
 
   edit() {
     this.editMode = true;
+  }
+
+  cancel() {
+    this.editMode = false;
   }
 
   save(updatedData: any): void {
@@ -142,6 +150,26 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
         console.error('Errore salvataggio prenotazione:', error);
         this.snackBar.openSnackBar('Errore durante il salvataggio', 'Chiudi');
         this.isLoading = false;
+      }
+    });
+
+  }
+
+  completaPrenotazione(): void {
+    this.prenotazioneService.completaPrenotazione(this.prenotazioneId()!).subscribe({
+      next: (response) => {
+        if (response.ok) {
+          this.snackBar.openSnackBar('Prenotazione completata, puoi ora creare il referto', 'Chiudi');
+          this.router.navigate(['/referti/nuovo'], {
+            queryParams: { prenotazioneId: this.prenotazioneId() }
+          });
+        } else {
+          this.snackBar.openSnackBar('Errore completamento prenotazione', response.message);
+        }
+      },
+      error: (error) => {
+        console.error('Errore completamento prenotazione:', error);
+        this.snackBar.openSnackBar('Errore durante il completamento della prenotazione', 'Chiudi');
       }
     });
 

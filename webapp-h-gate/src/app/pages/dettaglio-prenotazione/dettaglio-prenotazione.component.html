@@ -3,19 +3,33 @@
 }
 @else {
 <div class="d-flex justify-content-between mt-2">
-    <button  mat-button class="btn btn-link button-back" type="button" (click)="goBack()">
+    <button mat-button class="btn btn-link button-back" type="button" (click)="goBack()">
         <i class="bi bi-arrow-left"></i>&nbsp;Back
     </button>
 </div>
 <app-generic-card [title]="title" [subtitle]="subtitle">
     @if(isMedico) {
     <ng-container card-actions>
+        @if(!hasReferto) {
+        <button mat-raised-button color="primary" (click)="completaPrenotazione()"
+            matTooltip="Compila il referto per questa visita" [matTooltipPosition]="'left'" class="me-2">
+            <mat-icon>task_alt</mat-icon>
+            Completa visita
+        </button>
+        } @else {
+        <mat-chip class="chip-referto-presente me-2">
+            <mat-icon class="tiny-icon me-1">check_circle</mat-icon>
+            Referto presente
+        </mat-chip>
+        }
+
         <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Modifica prenotazione" [matTooltipPosition]="'left'"
             (click)="edit()">edit</mat-icon>
     </ng-container>
     }
     <div card-body>
-        <app-generic-form [fields]="formItems" [initialData]="prenotazioneData" [editMode]="editMode"  (submit)="save($event)">
+        <app-generic-form [fields]="formItems" [initialData]="prenotazioneData" [editMode]="editMode"
+            (submit)="save($event)" (cancel)="cancel()">
         </app-generic-form>
     </div>
 
