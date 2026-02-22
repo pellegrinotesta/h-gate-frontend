@@ -11,6 +11,7 @@ export const ROLE_VISIBILITY = {
     Group.ADMIN
   ],
   PRENOTAZIONI_LIST: [
+    Group.ADMIN,
     Group.TUTORE
   ],
   AGENDA: [
@@ -18,9 +19,18 @@ export const ROLE_VISIBILITY = {
   ],
   PRENOTAZIONI_DETTAGLIO: [
     Group.TUTORE,
-    Group.MEDICO
+    Group.MEDICO,
+    Group.ADMIN
   ],
   REFERTO: [
+    Group.TUTORE,
+    Group.MEDICO
+  ],
+  PAZIENTI_LIST: [
+    Group.ADMIN,
+    Group.MEDICO
+  ],
+  CARTELLA_CLINICA: [
     Group.TUTORE,
     Group.MEDICO
   ]

@@ -72,6 +72,23 @@ export const routes: Routes = [
                 children: [
                 ]
                 
+            },
+            {
+                path: RoutesEnum.PAZIENTE,
+                children: [
+                    {
+                        path: '',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.PAZIENTI_LIST },
+                        loadComponent: () => import('./pages/lista-pazienti/lista-pazienti.component').then(m => m.ListaPazientiComponent)
+                    },
+                    {
+                        path: ':id',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/cartella-clinica/cartella-clinica.component').then(m => m.CartellaClinicaComponent)
+                    }
+                ]
             }
 
         ]
