@@ -7,5 +7,6 @@ export enum RoutesEnum {
   REGISTER = 'register',
   PRENOTAZIONI = 'prenotazioni',
   AGENDA = 'agenda',
+  REFERTO = 'referti',
 
 }

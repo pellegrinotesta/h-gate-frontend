@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DisponibilitaMedicoComponent } from '../../components/disponibilita-medico/disponibilita-medico.component';
 import { PrenotazioneService } from '../../services/prenotazione.service';
+import { RoutesEnum } from '../../shared/enums/routes.enum';
 
 @Component({
   selector: 'app-dashboard-medico',
@@ -183,8 +184,7 @@ export class DashboardMedicoComponent extends BasePageComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
-        // Ricarica la lista dei pazienti dopo l'aggiunta
-        //this.loadPazienti();
+        this.snackBar.openSnackBar('Disponibilità aggiornata con successo', 'Chiudi');
       }
     });
   }
@@ -206,6 +206,10 @@ export class DashboardMedicoComponent extends BasePageComponent {
     });
   }
 
+  annullaAppuntamento(id: number): void {
+    console.log('Annulla appuntamento ID:', id);
+  }
+
   iniziaVisita(id: number): void {
     // Implementare logica inizio visita
   }
@@ -216,6 +220,10 @@ export class DashboardMedicoComponent extends BasePageComponent {
 
   apriCartellaClinica(pazienteId: number): void {
     // Navigare a cartella clinica paziente
+  }
+
+  apriDettaglioPrenotazione(prenotazioneId: number): void {
+    this.router.navigate([RoutesEnum.PRENOTAZIONI, prenotazioneId]);
   }
 
   mostraCalendarioCompleto() {

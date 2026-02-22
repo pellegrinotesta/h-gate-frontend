@@ -1,0 +1,16 @@
+.mat-column-actions,
+.mat-column-select {
+    max-width: 100px;
+}
+
+.selected,
+.selectable:hover {
+    background-color: var(--ducati-red-light);
+}
+
+.badge {
+    background-color: var(--ducati-red);
+    color: white;
+    border-radius: 5px;
+    line-height: 12px;
+}

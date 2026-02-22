@@ -1,0 +1,131 @@
+.dialog-referto {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+// ===== HEADER =====
+.dialog-header {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.header-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #1a3a4a 100%);
+    z-index: 0;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse at 80% 50%, rgba(25, 118, 210, 0.25) 0%, transparent 60%),
+            radial-gradient(ellipse at 10% 80%, rgba(76, 175, 80, 0.15) 0%, transparent 50%);
+    }
+}
+
+.header-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.5rem 1.5rem 1.25rem;
+    gap: 1rem;
+}
+
+.header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    backdrop-filter: blur(4px);
+
+    mat-icon {
+        color: white;
+        font-size: 1.3rem;
+        width: 1.3rem;
+        height: 1.3rem;
+    }
+}
+
+.header-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+}
+
+.header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+
+.meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 500;
+
+    mat-icon {
+        font-size: 0.8rem;
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+}
+
+.meta-divider {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+    margin: 0 2px;
+}
+
+.close-btn {
+    color: rgba(255, 255, 255, 0.7) !important;
+    flex-shrink: 0;
+
+    &:hover {
+        color: white !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+    }
+}
+
+// ===== CONTENT =====
+.dialog-content {
+    padding: 0.75rem 1rem !important;
+    max-height: calc(90vh - 100px); // 100px = altezza header
+    overflow-y: auto;
+    background: #f8f9fb;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f0f0f0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+}

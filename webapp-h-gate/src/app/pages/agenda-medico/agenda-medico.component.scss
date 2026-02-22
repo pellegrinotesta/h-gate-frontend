@@ -140,6 +140,44 @@
     opacity: 0.3;
 }
 
+.evidenziato {
+    border: 2px solid var(--mat-sys-primary, #4caf50) !important;
+    background-color: rgba(76, 175, 80, 0.12) !important;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    animation: pulse-highlight 1.5s ease-in-out 2;
+}
+
+@keyframes pulse-highlight {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(76, 175, 80, 0.4);
+    }
+}
+
+.appuntamento-mini {
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.appuntamento-card-dettaglio {
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+}
+
 /* Responsive adjustments */
 @media (min-width: 768px) {
     .giorno-card {

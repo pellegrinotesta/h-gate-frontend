@@ -72,7 +72,7 @@
 
             <app-generic-form [fields]="tutoreGeneralFields" [editMode]="true" [showButtons]="true"
               submitButtonText="Continua" cancelButtonText="Indietro" [formValidator]="passwordMatchValidator"
-              (save)="onSaveTutoreGeneral($event)" (cancel)="goBack()">
+              (submit)="onSaveTutoreGeneral($event)" (cancel)="goBack()">
             </app-generic-form>
           </mat-card-content>
         </mat-card>
@@ -111,7 +111,7 @@
 
             <app-generic-form [fields]="minoreAnagraficiFields" [editMode]="true" [showButtons]="true"
               submitButtonText="Continua" cancelButtonText="Indietro" (formChanged)="onMinoreAnagraficaChange($event)"
-              (save)="onSaveMinoreAnagrafica($event)" (cancel)="goBack()">
+              (submit)="onSaveMinoreAnagrafica($event)" (cancel)="goBack()">
             </app-generic-form>
           </mat-card-content>
         </mat-card>
@@ -142,7 +142,7 @@
             </div>
 
             <app-generic-form [fields]="minoreClinicFields" [editMode]="true" [showButtons]="true"
-              submitButtonText="Completa Registrazione" cancelButtonText="Indietro" (save)="onSaveMinoreClinici($event)"
+              submitButtonText="Completa Registrazione" cancelButtonText="Indietro" (submit)="onSaveMinoreClinici($event)"
               (cancel)="goBack()">
             </app-generic-form>
 
@@ -176,7 +176,7 @@
 
             <app-generic-form [fields]="tutoreGeneralFields" [editMode]="true" [showButtons]="true"
               submitButtonText="Continua" cancelButtonText="Indietro" [formValidator]="passwordMatchValidator"
-              (save)="onSaveMedicoGeneral($event)" (cancel)="goBack()">
+              (submit)="onSaveMedicoGeneral($event)" (cancel)="goBack()">
             </app-generic-form>
           </mat-card-content>
         </mat-card>
@@ -213,7 +213,7 @@
             </div>
             } @else {
             <app-generic-form [fields]="medicoFields" [editMode]="true" [showButtons]="true"
-              submitButtonText="Completa Registrazione" cancelButtonText="Indietro" (save)="onSaveMedico($event)"
+              submitButtonText="Completa Registrazione" cancelButtonText="Indietro" (submit)="onSaveMedico($event)"
               (cancel)="goBack()">
             </app-generic-form>
             }

@@ -60,6 +60,7 @@ export class AgendaMedicoComponent extends BasePageComponent {
   totaleAppuntamenti = signal(0);
   appuntamentiOggi = signal(0);
   appuntamentiSettimana = signal(0);
+  appuntamentoEvidenziato = signal<number | null>(null);
 
   override ngOnInit(): void {
     this.loadPrenotazioni();
@@ -208,8 +209,19 @@ export class AgendaMedicoComponent extends BasePageComponent {
    * Genera la vista giornaliera
    */
   generaVistaGiorno(): void {
-    // La vista giornaliera mostra solo il giorno selezionato con dettagli orari
-    this.generaVistaSettimana(); // Usa la stessa struttura ma mostra solo un giorno
+    const oggi = new Date();
+    oggi.setHours(0, 0, 0, 0);
+    const data = new Date(this.dataSelezionata());
+    data.setHours(0, 0, 0, 0);
+
+    const giorno: GiornoCalendario = {
+      data: data,
+      appuntamenti: this.getAppuntamentiPerGiorno(data),
+      isOggi: data.getTime() === oggi.getTime(),
+      isMeseCorrente: true
+    };
+
+    this.giorniSettimana.set([giorno]);
   }
 
   /**
@@ -272,6 +284,7 @@ export class AgendaMedicoComponent extends BasePageComponent {
    */
   cambiaVista(vista: VistaCalendario): void {
     this.vistaCorrente.set(vista);
+    this.appuntamentoEvidenziato.set(null);
     this.aggiornaVista();
   }
 
@@ -280,6 +293,7 @@ export class AgendaMedicoComponent extends BasePageComponent {
    */
   vaiOggi(): void {
     this.dataSelezionata.set(new Date());
+    this.appuntamentoEvidenziato.set(null);
     this.aggiornaVista();
   }
 
@@ -297,6 +311,7 @@ export class AgendaMedicoComponent extends BasePageComponent {
         break;
     }
     this.dataSelezionata.set(data);
+    this.appuntamentoEvidenziato.set(null);
     this.aggiornaVista();
   }
 
@@ -314,6 +329,7 @@ export class AgendaMedicoComponent extends BasePageComponent {
         break;
     }
     this.dataSelezionata.set(data);
+    this.appuntamentoEvidenziato.set(null);
     this.aggiornaVista();
   }
 
@@ -322,9 +338,28 @@ export class AgendaMedicoComponent extends BasePageComponent {
    */
   applicaFiltroTipoVisita(tipo: string): void {
     this.filtroTipoVisita.set(tipo);
+    this.appuntamentoEvidenziato.set(null);
     this.applicaFiltri();
+
+    if (tipo !== 'tutte') {
+      const filtrate = this.prenotazioniFiltrate();
+      if (filtrate.length === 1) {
+        this.dataSelezionata.set(new Date(filtrate[0].inizio));
+        this.vistaCorrente.set('giorno');
+        this.appuntamentoEvidenziato.set(filtrate[0].id!);
+      } else if (filtrate.length > 1) {
+        this.dataSelezionata.set(new Date(filtrate[0].inizio));
+      }
+    }
+
     this.aggiornaVista();
     this.calcolaStats();
+  }
+
+  isAppuntamentoEvidenziato(appuntamenti: AgendaMedico[]): boolean {
+    const id = this.appuntamentoEvidenziato();
+    if (!id) return false;
+    return appuntamenti.some(a => a.id === id);
   }
 
   applicaFiltroStato(stato: string): void {
@@ -367,8 +402,7 @@ export class AgendaMedicoComponent extends BasePageComponent {
    * Azioni sugli appuntamenti
    */
   apriDettaglioAppuntamento(appuntamento: AgendaMedico): void {
-    // Navigare al dettaglio o aprire modal
-    console.log('Apri dettaglio:', appuntamento);
+    this.router.navigate(['/prenotazioni', appuntamento.id]);
   }
 
   apriCartellaClinica(pazienteId: number): void {

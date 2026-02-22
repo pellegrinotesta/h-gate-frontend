@@ -1,0 +1,48 @@
+.section-header-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #1976d2;
+    padding: 4px 0 2px;
+    border-bottom: 1px solid #e8edf2;
+    margin-bottom: 4px;
+
+    mat-icon {
+        font-size: 0.95rem;
+        width: 0.95rem;
+        height: 0.95rem;
+    }
+}
+
+.section-header-bar {
+    width: 3px;
+    height: 14px;
+    border-radius: 2px;
+    background: currentColor;
+    flex-shrink: 0;
+}
+
+.section-header-optional {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #aaa;
+    text-transform: none;
+    letter-spacing: 0;
+    background: #f0f0f0;
+    border-radius: 10px;
+    padding: 1px 7px;
+    margin-left: 2px;
+}
+
+form {
+    margin-bottom: 0 !important;
+}
+
+.form-actions {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}

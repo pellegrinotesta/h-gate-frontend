@@ -70,7 +70,15 @@ export class HomepageComponent extends BasePageComponent {
 
     // Marca come letta
     if (!notifica.isLetta) {
-      this.notificaService.marcaComeLetta(notifica.id).subscribe();
+      console.log('Marcando notifica come letta: ', notifica.id);
+      this.notificaService.marcaComeLetta(notifica.id).subscribe({
+        next: () => {
+          this.snackBar.openSnackBar('Notifica segnata come letta', 'Chiudi');
+        },
+        error: (err) => {
+          this.snackBar.openSnackBar('Errore durante l\'aggiornamento della notifica', 'Chiudi');
+        }
+      });
     }
 
     // Naviga al link se presente
