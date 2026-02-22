@@ -12,7 +12,7 @@ import { RefreshTokenService } from './shared/services/auth/refresh-token.servic
 import { JWT_OPTIONS, JwtModule } from '@auth0/angular-jwt';
 import { BrowserModule } from '@angular/platform-browser';
 import { TokenExpiredInterceptor } from './shared/interceptors/tokenExpired.interceptor';
-import { errorInterceptor } from './shared/interceptors/error.interceptor';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { authInterceptor } from './shared/interceptors/auth.interceptor';
 import { cacheInterceptorFn } from './shared/interceptors/cache.interceptor';
 
@@ -59,6 +59,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptorsFromDi(),
       withInterceptors([authInterceptor, cacheInterceptorFn])
     ),
+    provideCharts(withDefaultRegisterables()),
     importProvidersFrom(
       BrowserModule,
       JwtModule.forRoot({

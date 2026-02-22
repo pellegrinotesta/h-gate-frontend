@@ -51,6 +51,12 @@ export const routes: Routes = [
                         data: { roles: ROLE_VISIBILITY.PRENOTAZIONI_LIST },
                         loadComponent: () => import('./components/nuova-prenotazione/nuova-prenotazione.component').then(m => m.NuovaPrenotazioneComponent)
 
+                    },
+                    {
+                        path: ':prenotazioneId',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.PRENOTAZIONI_DETTAGLIO },
+                        loadComponent: () => import('./pages/dettaglio-prenotazione/dettaglio-prenotazione.component').then(m => m.DettaglioPrenotazioneComponent)
                     }
                 ]
 
@@ -60,6 +66,12 @@ export const routes: Routes = [
                 canActivate: [roleGuard],
                 data: { roles: ROLE_VISIBILITY.AGENDA },
                 loadComponent: () => import('./pages/agenda-medico/agenda-medico.component').then(m => m.AgendaMedicoComponent)
+            },
+            {
+                path: RoutesEnum.REFERTO,
+                children: [
+                ]
+                
             }
 
         ]

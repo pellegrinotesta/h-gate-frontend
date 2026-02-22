@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Observable, takeUntil } from "rxjs";
-import { PagingAndSortingCriteria } from "../../base/models/paging-and-sorting-criteria.model";
 import { BasePageComponent } from "./base-page.component";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
+import { PagingAndSortingCriteria } from "../../models/advanced-search/paging-and-sorting-criteria.model";
 
 @Component({
     selector: 'app-base-page',

@@ -3,7 +3,7 @@ import { ValidatorFn } from "@angular/forms";
 export interface FormItem {
   name: string;
   label: string;
-  type?: 'number' | 'text' | 'password' | 'email' | 'select' | 'textarea' | 'autocomplete' | 'image' | 'tel' | 'date' | 'checkbox' | 'radio' | 'file' | 'array' | 'group';
+  type?: 'number' | 'text' | 'password' | 'email' | 'select' | 'textarea' | 'autocomplete' | 'image' | 'tel' | 'date' | 'checkbox' | 'radio' | 'file' | 'array' | 'group' | 'section-header';
   options?: { label: string, value: any }[];
   initialValue?: any;
   required?: boolean;
@@ -15,6 +15,7 @@ export interface FormItem {
   email?: boolean;
   disabled?: boolean;
   readonly?: boolean;
+  readonlyCondition?: (data: any, userRole?: string) => boolean;
   hidden?: boolean;
   autoCompleteOptions?: { label: string, value: string | number }[];
   //customValidation?: any;
@@ -25,5 +26,5 @@ export interface FormItem {
   rows?: number;
   placeholder?: string;
   excludeFromRender?: boolean;
-
+  condition?: (data: any) => boolean;
 }

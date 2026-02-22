@@ -38,4 +38,13 @@ export class PrenotazioneService extends HttpBaseService<Prenotazione> {
   confermaPrenotazione(prenotazioneId: number): Observable<ResponseDTO<Prenotazione>> {
     return this.request<ResponseDTO<Prenotazione>>(`/${prenotazioneId}/conferma`, METHODS.PUT);
   }
+
+  completaPrenotazione(prenotazioneId: number): Observable<ResponseDTO<Prenotazione>> {
+    return this.request<ResponseDTO<Prenotazione>>(`/${prenotazioneId}/completa`, METHODS.PUT);
+  }
+
+  getById(id: number): Observable<ResponseDTO<Prenotazione>> {
+    return this.request<ResponseDTO<Prenotazione>>(`/${id}`, METHODS.GET);
+  }
+
 }

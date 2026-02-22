@@ -1,0 +1,60 @@
+.h-gate-card {
+    position: relative;
+    background-color: #fff;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px var(--sharow-card);
+    margin-bottom: 30px;
+
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 4px 12px var(--sharow-card);
+    }
+
+    label {
+        font-weight: 500;
+    }
+
+    .h-gate-card-header {
+        width: 100%;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+
+        .title-h-gate-card {
+            white-space: unset;
+        }
+
+        .subtitle-h-gate-card {
+            font-weight: lighter;
+        }
+    }
+
+    .actions-h-gate-card {
+        mat-icon {
+            cursor: pointer;
+        }
+    }
+}
+
+.h-gate-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 0;
+    background-color: var(--h-gate-blu);
+    animation: fillBorder 1.5s ease-out forwards;
+}
+
+@keyframes fillBorder {
+    from {
+        height: 0;
+    }
+
+    to {
+        height: 100%;
+    }
+}

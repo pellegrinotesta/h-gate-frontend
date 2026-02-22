@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Subject } from "rxjs";
 import { SnackbarService } from "../../services/snackbar.service";
 import { Location } from '@angular/common';
+import { LoaderService } from "../../services/loader.service";
 
 
 @Component({
@@ -21,6 +22,7 @@ export abstract class BasePageComponent implements OnInit, OnDestroy {
     protected readonly cdRef = inject(ChangeDetectorRef);
     protected readonly snackBar = inject(SnackbarService);
     protected readonly activatedRoute = inject(ActivatedRoute);
+    protected readonly loader = inject(LoaderService);
     protected readonly router = inject(Router);
     protected readonly location = inject(Location);
 

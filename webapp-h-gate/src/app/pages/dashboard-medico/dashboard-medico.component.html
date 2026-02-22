@@ -82,22 +82,34 @@
                                     CF: {{ app.paziente?.codiceFiscale }}
                                 </p>
                                 <p class="mb-2"><strong>{{ app.tipoVisita }}</strong> </p>
-                                @if(app.note) {
+                                @if(app.noteMedico) {
                                 <p class="text-muted small mb-0">
                                     <mat-icon class="tiny-icon">note</mat-icon>
-                                    {{ app.note }}
+                                    {{ app.noteMedico }}
                                 </p>
                                 }
                             </div>
                             <div class="btn-group-vertical" role="group">
-                                <button mat-raised-button color="primary"
-                                    (click)="apriCartellaClinica(app.paziente?.id!)">
-                                    <mat-icon>person</mat-icon>
+                                <button mat-button (click)="apriDettaglioPrenotazione(app.id)">
+                                    Dettaglio
+                                </button>
+                                @if(app.stato === 'IN_ATTESA') {
+                                <button mat-button color="warn" (click)="confermaAppuntamento(app.id)">
+                                    <mat-icon>check_circle</mat-icon>
+                                    Conferma
+                                </button>
+                                <button mat-button color="warn" (click)="annullaAppuntamento(app.id)">
+                                    <mat-icon>cancel</mat-icon>
+                                    Annulla
+                                </button>
+                                } @else if(app.stato === 'CONFERMATA') {
+                                <button mat-button color="primary" (click)="apriCartellaClinica(app.paziente?.id!)">
                                     Cartella
                                 </button>
                                 <button mat-button (click)="creaReferto(app.id)">
                                     Referto
                                 </button>
+                                }
                             </div>
                         </div>
                     </div>
@@ -159,28 +171,35 @@
                                         CF: {{ app.paziente?.codiceFiscale }}
                                     </p>
                                     <p class="mb-2"><strong>{{ app.tipoVisita }}</strong> </p>
-                                    @if(app.note) {
+                                    @if(app.noteMedico) {
                                     <p class="text-muted small mb-0">
                                         <mat-icon class="tiny-icon">note</mat-icon>
-                                        {{ app.note }}
+                                        {{ app.noteMedico }}
                                     </p>
                                     }
                                 </div>
                                 <div class="btn-group-vertical" role="group">
-                                    <button mat-raised-button color="primary"
-                                        (click)="apriCartellaClinica(app.paziente?.id!)">
-                                        <mat-icon>person</mat-icon>
-                                        Cartella
-                                    </button>
-                                    <button mat-button (click)="creaReferto(app.id)">
-                                        Referto
-                                    </button>
                                     @if(app.stato === 'IN_ATTESA') {
                                     <button mat-button color="warn" (click)="confermaAppuntamento(app.id)">
                                         <mat-icon>check_circle</mat-icon>
                                         Conferma
                                     </button>
+                                    <button mat-button color="warn" (click)="annullaAppuntamento(app.id)">
+                                        <mat-icon>cancel</mat-icon>
+                                        Annulla
+                                    </button>
                                     }
+                                    @else {
+                                    <button mat-raised-button color="primary"
+                                        (click)="apriCartellaClinica(app.paziente?.id!)">
+                                        <mat-icon>person</mat-icon>
+                                        Cartella
+                                    </button>
+                                    <button mat-button (click)="apriDettaglioPrenotazione(app.id)">
+                                        Dettaglio
+                                    </button>
+                                    }
+
                                 </div>
                             </div>
                         </div>
