@@ -12,6 +12,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { ParametriVitali, RefertoCreate } from '../../models/referto.model';
 import { FormConfigs } from '../../shared/constants/form-config.constant';
 import { FormItem } from '../../shared/models/form-item.model';
+import { RefertoService } from '../../services/referto.service';
 
 export interface FormRefertoDialogData {
   prenotazione: Prenotazione;
@@ -40,19 +41,23 @@ export interface FormRefertoDialogResult {
 export class RefertoDialogComponent {
 
   private dialogRef = inject(MatDialogRef<RefertoDialogComponent>);
-  // private refertoService = inject(RefertoService);
+  private refertoService = inject(RefertoService);
 
   data = inject<FormRefertoDialogData>(MAT_DIALOG_DATA);
+  prenotazione: Prenotazione | null = null;
 
-  get prenotazione(): Prenotazione | null {
-    return this.data?.prenotazione ?? null;
+  constructor() {
+    this.prenotazione = this.data?.prenotazione ?? null;
   }
-
   isSaving = signal(false);
 
   formItems: FormItem[] = FormConfigs.FORM_REFERTO_FIELDS;
 
   salvaReferto(formData: any): void {
+    if (!this.prenotazione) {
+      console.error('Prenotazione non disponibile');
+      return;
+    }
     const dto: RefertoCreate = {
       prenotazioneId: this.prenotazione!.id,
       titolo: formData.titolo,
@@ -71,14 +76,14 @@ export class RefertoDialogComponent {
     this.isSaving.set(true);
 
     // Decommentare quando RefertoService è disponibile:
-    // this.refertoService.create(dto).subscribe({
-    //   next: (res) => {
-    //     this.dialogRef.close({ success: true, referto: res.data });
-    //   },
-    //   error: () => {
-    //     this.isSaving.set(false);
-    //   }
-    // });
+    this.refertoService.create(dto).subscribe({
+      next: (res) => {
+        this.dialogRef.close({ success: true, referto: res.data });
+      },
+      error: () => {
+        this.isSaving.set(false);
+      }
+    });
 
     console.log('DTO referto:', dto);
     this.isSaving.set(false);
@@ -94,14 +99,19 @@ export class RefertoDialogComponent {
       'temperatura', 'peso', 'altezza', 'saturazione'];
     const hasValues = campi.some(c => v[c] !== null && v[c] !== '' && v[c] !== undefined);
     if (!hasValues) return null;
+
+    const toNum = (val: any) => (val !== null && val !== '' && val !== undefined)
+      ? Number(val)
+      : undefined;
+
     return {
-      pressioneSistolica: v.pressioneSistolica ?? undefined,
-      pressioneDiastolica: v.pressioneDiastolica ?? undefined,
-      frequenzaCardiaca: v.frequenzaCardiaca ?? undefined,
-      temperatura: v.temperatura ?? undefined,
-      peso: v.peso ?? undefined,
-      altezza: v.altezza ?? undefined,
-      saturazione: v.saturazione ?? undefined,
+      pressioneSistolica: toNum(v.pressioneSistolica),
+      pressioneDiastolica: toNum(v.pressioneDiastolica),
+      frequenzaCardiaca: toNum(v.frequenzaCardiaca),
+      temperatura: toNum(v.temperatura),
+      peso: toNum(v.peso),
+      altezza: toNum(v.altezza),
+      saturazione: toNum(v.saturazione),
     };
   }
 }

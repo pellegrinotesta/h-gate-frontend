@@ -13,6 +13,7 @@ export interface Referto {
 }
 
 export interface RefertoCreate {
+    id?: number;
     prenotazioneId?: number;
     tipoReferto: string;
     titolo: string;

@@ -44,9 +44,11 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
 
   title = 'Dettaglio Prenotazione';
   subtitle = '';
+  titleReferto = 'Referto';
   userRole = '';
   isMedico = false;
   formItems: FormItem[] = FormConfigs.DETTAGLIO_PRENOTAZIONE_FIELDS;
+  refertoFormItems: FormItem[] = FormConfigs.FORM_REFERTO_FIELDS;
 
   prenotazioneData: Prenotazione | null = null;
 
@@ -177,12 +179,24 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
   }
 
   apriReferto(): void {
+    if (!this.prenotazioneData) return;
     const dialogRef = this.dialog.open(RefertoDialogComponent, {
       width: '800px',
       maxWidth: '95vw',
       maxHeight: '90vh',
       disableClose: false,
-      autoFocus: true
+      autoFocus: true,
+      data: {
+        prenotazione: this.prenotazioneData // ← controlla che questo non sia null
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.completaPrenotazione();
+      if (result?.success) {
+        this.snackBar.openSnackBar('Referto creato con successo', 'Chiudi');
+        this.loadPrenotazione(this.prenotazioneId()!);
+      }
     });
   }
 
