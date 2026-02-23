@@ -164,20 +164,19 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
     this.prenotazioneService.completaPrenotazione(this.prenotazioneId()!).subscribe({
       next: (response) => {
         if (response.ok) {
-          this.snackBar.openSnackBar('Prenotazione completata, puoi ora creare il referto', 'Chiudi');
+          this.snackBar.openSnackBar('Prenotazione completata', 'Chiudi');
           this.loadPrenotazione(this.prenotazioneId()!);
         } else {
-          this.snackBar.openSnackBar('Errore completamento prenotazione', response.message);
+          this.snackBar.openSnackBar(response.message ?? 'Errore completamento', 'Chiudi');
         }
       },
       error: (error) => {
-        console.error('Errore completamento prenotazione:', error);
-        this.snackBar.openSnackBar('Errore durante il completamento della prenotazione', 'Chiudi');
+        const msg = error?.error?.message ?? 'Errore durante il completamento';
+        this.snackBar.openSnackBar(msg, 'Chiudi'); // ← mostra il messaggio del backend
       }
     });
-
   }
-
+  
   apriReferto(): void {
     if (!this.prenotazioneData) return;
     const dialogRef = this.dialog.open(RefertoDialogComponent, {
@@ -192,8 +191,8 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.completaPrenotazione();
       if (result?.success) {
+        this.completaPrenotazione();
         this.snackBar.openSnackBar('Referto creato con successo', 'Chiudi');
         this.loadPrenotazione(this.prenotazioneId()!);
       }

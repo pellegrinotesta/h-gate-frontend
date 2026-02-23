@@ -84,10 +84,6 @@ export class RefertoDialogComponent {
         this.isSaving.set(false);
       }
     });
-
-    console.log('DTO referto:', dto);
-    this.isSaving.set(false);
-    this.dialogRef.close({ success: true });
   }
 
   annulla(): void {
