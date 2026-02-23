@@ -8,7 +8,8 @@
     </button>
 </div>
 <app-generic-card [title]="title" [subtitle]="subtitle">
-    @if(isMedico) {
+
+    @if(isMedico && prenotazioneData?.stato !== 'NON_PRESENTATO') {
     <ng-container card-actions>
         @if(!hasReferto) {
         <button mat-raised-button color="primary" (click)="apriReferto()"
@@ -26,6 +27,7 @@
         <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Modifica prenotazione" [matTooltipPosition]="'left'"
             (click)="edit()">edit</mat-icon>
     </ng-container>
+
     }
     <div card-body>
         <app-generic-form [fields]="formItems" [initialData]="prenotazioneData" [editMode]="editMode"

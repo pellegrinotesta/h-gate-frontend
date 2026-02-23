@@ -172,11 +172,11 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
       },
       error: (error) => {
         const msg = error?.error?.message ?? 'Errore durante il completamento';
-        this.snackBar.openSnackBar(msg, 'Chiudi'); // ← mostra il messaggio del backend
+        this.snackBar.openSnackBar(msg, 'Chiudi');
       }
     });
   }
-  
+
   apriReferto(): void {
     if (!this.prenotazioneData) return;
     const dialogRef = this.dialog.open(RefertoDialogComponent, {
@@ -186,7 +186,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
       disableClose: false,
       autoFocus: true,
       data: {
-        prenotazione: this.prenotazioneData // ← controlla che questo non sia null
+        prenotazione: this.prenotazioneData
       }
     });
 
