@@ -18,4 +18,8 @@ export class RefertoService extends HttpBaseService<Referto> {
   create(model: RefertoCreate): Observable<ResponseDTO<Referto>> {
     return this.request<ResponseDTO<Referto>>('', METHODS.POST, model);
   }
+
+  listaRefertiPaziente(pazienteId: number): Observable<ResponseDTO<Referto[]>> {
+    return this.request<ResponseDTO<Referto[]>>(`/${pazienteId}/all`, METHODS.GET);
+  }
 }

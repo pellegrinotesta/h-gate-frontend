@@ -17,6 +17,7 @@ import { PercorsoTerapeutico } from '../../models/percorso-terapeutico.model';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { forkJoin } from 'rxjs';
 import { PazienteService } from '../../services/paziente.service';
+import { RefertoService } from '../../services/referto.service';
 
 @Component({
   selector: 'app-cartella-clinica',
@@ -37,6 +38,7 @@ import { PazienteService } from '../../services/paziente.service';
 export class CartellaClinicaComponent extends BasePageComponent {
 
   readonly pazientiService = inject(PazienteService);
+  readonly refertoService = inject(RefertoService);
 
   paziente = signal<Paziente | null>(null);
   referti = signal<Referto[]>([]);
@@ -68,9 +70,11 @@ export class CartellaClinicaComponent extends BasePageComponent {
     this.isLoading = true;
     forkJoin({
       paziente: this.pazientiService.getById(pazienteId),
+      referti: this.refertoService.listaRefertiPaziente(pazienteId),
     }).subscribe({
-      next: ({ paziente }) => {
+      next: ({ paziente, referti }) => {
         this.paziente.set(paziente.data);
+        this.referti.set(referti.data);
         this.isLoading = false;
       },
       error: (error) => {
@@ -102,33 +106,70 @@ export class CartellaClinicaComponent extends BasePageComponent {
   }
 
   async exportPdf(): Promise<void> {
+    // console.log('exportPdf chiamato, isExporting:', this.isExporting());
     // if (this.isExporting()) return;
     // this.isExporting.set(true);
     // try {
     //   const html2canvas = (await import('html2canvas')).default;
     //   const jsPDF = (await import('jspdf')).default;
+
     //   const element = document.querySelector('.cartella-pdf-content') as HTMLElement;
-    //   if (!element) return;
-    //   const canvas = await html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#f8f6f1', logging: false });
+    //   console.log('element trovato:', element);
+    //   if (!element) {
+    //     console.error('Elemento PDF non trovato');
+    //     return;
+    //   }
+
+    //   const canvas = await html2canvas(element, {
+    //     scale: 2,
+    //     useCORS: true,
+    //     backgroundColor: '#f8f6f1',
+    //     logging: false,
+    //     ignoreElements: (el) => {
+    //       // Ignora elementi Material che causano problemi
+    //       return el.tagName?.toLowerCase().startsWith('mat-');
+    //     },
+    //     onclone: (clonedDoc) => {
+    //       const allElements = clonedDoc.querySelectorAll<HTMLElement>('*');
+    //       allElements.forEach(el => {
+    //         try {
+    //           const computed = window.getComputedStyle(el);
+    //           if (computed.color?.includes('color(') ||
+    //             computed.backgroundColor?.includes('color(')) {
+    //             el.style.color = '#000000';
+    //             el.style.backgroundColor = 'transparent';
+    //           }
+    //         } catch { /* ignora */ }
+    //       });
+    //     }
+    //   });
     //   const imgData = canvas.toDataURL('image/png');
     //   const pdf = new jsPDF('p', 'mm', 'a4');
     //   const pdfWidth = pdf.internal.pageSize.getWidth();
     //   const pdfHeight = pdf.internal.pageSize.getHeight();
     //   const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
     //   let heightLeft = imgHeight;
     //   let position = 0;
+
     //   pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
     //   heightLeft -= pdfHeight;
+
     //   while (heightLeft > 0) {
     //     position -= pdfHeight;
     //     pdf.addPage();
     //     pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
     //     heightLeft -= pdfHeight;
     //   }
-    //   const nome = this.paziente() ? `${this.paziente()!.cognome}_${this.paziente()!.nome}` : 'cartella';
+
+    //   const nome = this.paziente()
+    //     ? `${this.paziente()!.cognome}_${this.paziente()!.nome}`
+    //     : 'cartella';
     //   pdf.save(`CartellaClinaca_${nome}_${new Date().toISOString().split('T')[0]}.pdf`);
     //   this.snackBar.openSnackBar('PDF scaricato con successo', 'Chiudi');
-    // } catch {
+
+    // } catch (err) {
+    //   console.error('Errore PDF:', err);
     //   this.snackBar.openSnackBar('Errore durante la generazione del PDF', 'Chiudi');
     // } finally {
     //   this.isExporting.set(false);
