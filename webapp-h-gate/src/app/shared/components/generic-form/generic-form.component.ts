@@ -28,6 +28,7 @@ export class GenericFormComponent implements OnInit {
   @Input() enterable = true;
   @Input() autoClear: boolean = false;
   @Input() userRole?: string;
+  @Input() cancellable: boolean = true;
 
   @Output() cancel = new EventEmitter<void>();
   @Output() formChanged = new EventEmitter<any>();

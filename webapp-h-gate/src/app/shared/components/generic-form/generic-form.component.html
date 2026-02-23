@@ -12,9 +12,11 @@
     @if(showButtons) {
     <div class="form-actions d-flex flex-row flex-nowrap justify-content-end align-items-end gap-2 pe-3 mb-1 w-100">
         @if(editMode) {
+        @if(cancellable) {
         <button mat-stroked-button color="warn" (click)="onCancel()" type="button" class="mb-1">
             {{ cancelButtonText }}
         </button>
+        }
 
         <button mat-flat-button color="primary" type="button" class="mb-1 ms-2" (click)="onSubmit()"
             [disabled]="form.invalid || (!editMode && form.pristine)">

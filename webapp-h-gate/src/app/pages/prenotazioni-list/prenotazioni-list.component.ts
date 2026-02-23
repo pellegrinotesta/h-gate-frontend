@@ -66,12 +66,6 @@ export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> 
       case TableOperation.VIEW:
         this.router.navigate([RoutesEnum.PRENOTAZIONI, ev.element.id]);
         break;
-      // case TableOperation.EDIT:
-      //   this.router.navigate([RoutesEnum.PRENOTAZIONI, ev.element.id]);
-      //   break;
-      // case TableOperation.UPDATE:
-      //   this.router.navigate([RoutesEnum.PRENOTAZIONI, this.prenotazioneId(), ev.element, ev.element.id]);
-      //   break;
       case TableOperation.DELETE:
         this.onDeletePrenotazione(ev.element);
         break;

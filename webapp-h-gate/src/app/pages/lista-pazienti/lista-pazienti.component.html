@@ -1,1 +1,21 @@
-<p>lista-pazienti works!</p>
+@if(isLoading) {
+<app-loader></app-loader>
+}
+@else {
+<app-generic-card [title]="title">
+    <ng-container card-actions>
+        <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Scarica Excel"
+            [matTooltipPosition]="'left'" (click)="downloadExcel()">download</mat-icon>
+    </ng-container>
+    <div card-body>
+        <app-generic-form [fields]="formItems" [editMode]="true" [cancellable]="false" [submitButtonText]="'Cerca'" [resetable]="true"
+            (submit)="onSearch($event)" (reset)="onReset()">
+        </app-generic-form>
+        <app-generic-table class="m-3" [data]="data.results" [size]="size" [totalElements]="data.count" [columns]="columns"
+            [actions]="actions" (changePage)="onChangePage($event)" (pageSizeChanged)="onPageSizeChanged($event)"
+            (clickEvent)="onActionClick($event)">
+        </app-generic-table>
+    </div>
+</app-generic-card>
+
+}

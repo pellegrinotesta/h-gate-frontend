@@ -190,11 +190,13 @@
                                     </button>
                                     }
                                     @else {
+                                    @if(app.referto ) {
                                     <button mat-raised-button color="primary"
                                         (click)="apriCartellaClinica(app.paziente?.id!)">
                                         <mat-icon>person</mat-icon>
                                         Cartella
                                     </button>
+                                    }
                                     <button mat-button (click)="apriDettaglioPrenotazione(app.id)">
                                         Dettaglio
                                     </button>

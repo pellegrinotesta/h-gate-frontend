@@ -14,3 +14,13 @@
     border-radius: 5px;
     line-height: 12px;
 }
+
+.mat-column-actions {
+
+    button[matIconButton],
+    button[mat-icon-button] {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+}

@@ -70,8 +70,14 @@ export const routes: Routes = [
             {
                 path: RoutesEnum.REFERTO,
                 children: [
+                    {
+                        path: ':pazienteId',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.REFERTO },
+                        loadComponent: () => import('./pages/cartella-clinica/cartella-clinica.component').then(m => m.CartellaClinicaComponent)
+                    }
                 ]
-                
+
             },
             {
                 path: RoutesEnum.PAZIENTE,
