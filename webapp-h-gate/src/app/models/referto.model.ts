@@ -10,6 +10,7 @@ export interface Referto {
     };
     diagnosi: string;
     hasAllegati: boolean;
+    isFirmato?: boolean;
 }
 
 export interface RefertoCreate {

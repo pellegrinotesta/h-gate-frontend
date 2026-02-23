@@ -19,6 +19,7 @@ export abstract class HttpBaseService<M extends BaseModel> extends HttpRequestBa
     get(id: number | string): Observable<M> {
         return this.request<M>(id.toString(), METHODS.GET);
     }
+    
     getAll(params?: any): Observable<M[]> {
         return this.request<M[]>('', METHODS.GET, {}, params);
     }

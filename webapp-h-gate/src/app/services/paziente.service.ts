@@ -15,6 +15,10 @@ export class PazienteService extends HttpBaseService<Paziente> {
     super(injector, environment.endpoints.paziente);
   }
 
+   getById(id: number | string): Observable<ResponseDTO<Paziente>> {
+        return this.request<ResponseDTO<Paziente>>('/' + id.toString(), METHODS.GET);
+    }
+
   getPazientiByTutore(): Observable<ResponseDTO<Paziente[]>> {
     return this.request<ResponseDTO<Paziente[]>>('/user-id', METHODS.GET);
   }

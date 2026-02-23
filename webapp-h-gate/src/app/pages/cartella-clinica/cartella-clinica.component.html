@@ -1,1 +1,327 @@
-<p>cartella-clinica works!</p>
+@if(isLoading) {
+<app-loader></app-loader>
+} @else {
+<div class="cartella-container">
+
+    <!-- Toolbar -->
+    <div class="cartella-toolbar no-print">
+        <button mat-icon-button (click)="tornaIndietro()" class="back-btn">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="toolbar-title">
+            <mat-icon>folder_shared</mat-icon>
+            <span>Cartella Clinica</span>
+        </div>
+        <span class="toolbar-spacer"></span>
+        <button mat-stroked-button class="btn-export" (click)="exportPdf()" [disabled]="isExporting()">
+            @if(isExporting()) {
+            <ng-container><mat-icon class="spin">sync</mat-icon> Generazione...</ng-container>
+            } @else {
+            <ng-container><mat-icon>picture_as_pdf</mat-icon> Scarica PDF</ng-container>
+            }
+        </button>
+    </div>
+
+    <!-- Contenuto PDF -->
+    <div class="cartella-pdf-content">
+
+        <!-- Intestazione clinica stile documento -->
+        <div class="cartella-intestazione">
+            <div class="intestazione-brand">
+                <div class="brand-logo">
+                    <mat-icon>local_hospital</mat-icon>
+                </div>
+                <div>
+                    <p class="brand-nome">H-Gate</p>
+                    <p class="brand-sub">Neuropsichiatria Infantile</p>
+                </div>
+            </div>
+            <div class="intestazione-titolo">
+                <h1>CARTELLA CLINICA</h1>
+                <p class="intestazione-sub">Documento riservato — Solo per uso medico</p>
+            </div>
+            <div class="intestazione-meta">
+                <p class="meta-row"><span>Data stampa:</span> {{ today | date: 'dd/MM/yyyy' }}</p>
+                @if(paziente()) {
+                <p class="meta-row"><span>ID Paziente:</span> #{{ paziente()!.id }}</p>
+                }
+            </div>
+        </div>
+
+        <!-- Sezione anagrafica -->
+        <div class="cartella-sezione">
+            <div class="sezione-header">
+                <div class="sezione-header-left">
+                    <div class="sezione-numero">01</div>
+                    <div>
+                        <h2 class="sezione-titolo">Anagrafica Paziente</h2>
+                        <p class="sezione-sub">Dati personali e informazioni cliniche di base</p>
+                    </div>
+                </div>
+                @if(paziente()) {
+                <div class="paziente-avatar">
+                    <span>{{ getInitials(paziente()) }}</span>
+                </div>
+                }
+            </div>
+
+            @if(paziente()) {
+            <div class="anagrafica-quick">
+                <div class="quick-item">
+                    <span class="quick-label">Nome completo</span>
+                    <span class="quick-value">{{ paziente()!.nome }} {{ paziente()!.cognome }}</span>
+                </div>
+                <div class="quick-item">
+                    <span class="quick-label">Codice Fiscale</span>
+                    <span class="quick-value mono">{{ paziente()!.codiceFiscale }}</span>
+                </div>
+                <div class="quick-item">
+                    <span class="quick-label">Età</span>
+                    <span class="quick-value">{{ getEta(paziente()!.dataNascita) }} anni</span>
+                </div>
+                <div class="quick-item">
+                    <span class="quick-label">Gruppo sanguigno</span>
+                    <span class="quick-value">{{ paziente()!.gruppoSanguigno || '—' }}</span>
+                </div>
+            </div>
+
+            @if(paziente()!.allergie || paziente()!.patologieCroniche) {
+            <div class="alert-clinici">
+                @if(paziente()!.allergie) {
+                <div class="alert-item alert-item--allergie">
+                    <mat-icon>warning</mat-icon>
+                    <div>
+                        <p class="alert-label">ALLERGIE</p>
+                        <p class="alert-text">{{ paziente()!.allergie }}</p>
+                    </div>
+                </div>
+                }
+                @if(paziente()!.patologieCroniche) {
+                <div class="alert-item alert-item--patologie">
+                    <mat-icon>monitor_heart</mat-icon>
+                    <div>
+                        <p class="alert-label">PATOLOGIE CRONICHE</p>
+                        <p class="alert-text">{{ paziente()!.patologieCroniche }}</p>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+
+            <div class="sezione-form">
+                <app-generic-form [fields]="anagraficaFields" [initialData]="paziente()" [editMode]="false"
+                    [showButtons]="false">
+                </app-generic-form>
+            </div>
+            }
+        </div>
+
+        <!-- Sezione referti -->
+        <div class="cartella-sezione">
+            <div class="sezione-header">
+                <div class="sezione-header-left">
+                    <div class="sezione-numero">02</div>
+                    <div>
+                        <h2 class="sezione-titolo">Referti Medici</h2>
+                        <p class="sezione-sub">{{ referti().length }} refert{{ referti().length === 1 ? 'o' : 'i' }}
+                            disponibil{{ referti().length === 1 ? 'e' : 'i' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            @if(referti().length === 0) {
+            <div class="empty-state">
+                <mat-icon>description</mat-icon>
+                <p>Nessun referto disponibile</p>
+            </div>
+            } @else {
+            <div class="record-list">
+                @for(referto of referti(); track referto.id) {
+                <div class="record-item">
+                    <div class="record-header" (click)="toggleReferto(referto)">
+                        <div class="record-header-left">
+                            <div class="record-dot record-dot--referto"></div>
+                            <div>
+                                <p class="record-titolo">{{ referto.titolo }}</p>
+                                <div class="record-meta">
+                                    <span><mat-icon>calendar_today</mat-icon>{{ referto.dataEmissione | date:
+                                        'dd/MM/yyyy' }}</span>
+                                    <span><mat-icon>category</mat-icon>{{ referto.tipoReferto }}</span>
+                                    @if(referto.medico) {
+                                    <span><mat-icon>person</mat-icon>{{ referto.medico.nome }} {{ referto.medico.cognome
+                                        }}</span>
+                                    }
+                                    @if(referto.isFirmato) {
+                                    <span class="firmato-badge"><mat-icon>verified</mat-icon>Firmato</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <mat-icon class="record-toggle-icon">
+                            {{ refertoSelezionato()?.id === referto.id ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+                        </mat-icon>
+                    </div>
+
+                    @if(refertoSelezionato()?.id === referto.id) {
+                    <div class="record-body">
+                        <app-generic-form [fields]="refertiFields" [initialData]="refertoSelezionato()"
+                            [editMode]="false" [showButtons]="false">
+                        </app-generic-form>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+            }
+        </div>
+
+        <!-- Sezione valutazioni psicologiche -->
+        <div class="cartella-sezione">
+            <div class="sezione-header">
+                <div class="sezione-header-left">
+                    <div class="sezione-numero">03</div>
+                    <div>
+                        <h2 class="sezione-titolo">Valutazioni Psicologiche</h2>
+                        <p class="sezione-sub">{{ valutazioni().length }} valutazion{{ valutazioni().length === 1 ? 'e'
+                            : 'i' }} disponibil{{ valutazioni().length === 1 ? 'e' : 'i' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            @if(valutazioni().length === 0) {
+            <div class="empty-state">
+                <mat-icon>psychology</mat-icon>
+                <p>Nessuna valutazione disponibile</p>
+            </div>
+            } @else {
+            <div class="record-list">
+                @for(valutazione of valutazioni(); track valutazione.id) {
+                <div class="record-item">
+                    <div class="record-header" (click)="toggleValutazione(valutazione)">
+                        <div class="record-header-left">
+                            <div class="record-dot record-dot--valutazione"></div>
+                            <div>
+                                <p class="record-titolo">{{ valutazione.tipoTest }}</p>
+                                <div class="record-meta">
+                                    <span><mat-icon>calendar_today</mat-icon>{{ valutazione.dataValutazione | date:
+                                        'dd/MM/yyyy' }}</span>
+                                    @if(valutazione.medico) {
+                                    <span><mat-icon>person</mat-icon>{{ valutazione.medico.nome }} {{
+                                        valutazione.medico.cognome }}</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <mat-icon class="record-toggle-icon">
+                            {{ valutazioneSelezionata()?.id === valutazione.id ? 'keyboard_arrow_up' :
+                            'keyboard_arrow_down' }}
+                        </mat-icon>
+                    </div>
+
+                    @if(valutazioneSelezionata()?.id === valutazione.id) {
+                    <div class="record-body">
+                        <app-generic-form [fields]="valutazioneFields" [initialData]="valutazioneSelezionata()"
+                            [editMode]="false" [showButtons]="false">
+                        </app-generic-form>
+
+                        @if(valutazioneSelezionata()!.punteggi) {
+                        <div class="punteggi-section">
+                            <p class="punteggi-title">Punteggi</p>
+                            <div class="punteggi-grid">
+                                @for(entry of $any(valutazioneSelezionata()!.punteggi) | keyvalue; track entry.key) {
+                                <div class="punteggio-item">
+                                    <span class="punteggio-key">{{ entry.key }}</span>
+                                    <span class="punteggio-value">{{ entry.value }}</span>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+            }
+        </div>
+
+        <!-- Sezione percorsi terapeutici -->
+        <div class="cartella-sezione">
+            <div class="sezione-header">
+                <div class="sezione-header-left">
+                    <div class="sezione-numero">04</div>
+                    <div>
+                        <h2 class="sezione-titolo">Percorsi Terapeutici</h2>
+                        <p class="sezione-sub">{{ percorsi().length }} percors{{ percorsi().length === 1 ? 'o' : 'i' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            @if(percorsi().length === 0) {
+            <div class="empty-state">
+                <mat-icon>route</mat-icon>
+                <p>Nessun percorso terapeutico disponibile</p>
+            </div>
+            } @else {
+            <div class="record-list">
+                @for(percorso of percorsi(); track percorso.id) {
+                <div class="record-item">
+                    <div class="record-header" (click)="togglePercorso(percorso)">
+                        <div class="record-header-left">
+                            <div class="record-dot" [ngClass]="'record-dot--' + percorso.stato.toLowerCase()"></div>
+                            <div>
+                                <p class="record-titolo">{{ percorso.titolo }}</p>
+                                <div class="record-meta">
+                                    <span><mat-icon>calendar_today</mat-icon>{{ percorso.dataInizio | date: 'dd/MM/yyyy'
+                                        }}</span>
+                                    @if(percorso.medico) {
+                                    <span><mat-icon>person</mat-icon>{{ percorso.medico.nome }} {{
+                                        percorso.medico.cognome }}</span>
+                                    }
+                                    <span [class]="'stato-badge ' + getStatoPercorsoClass(percorso.stato)">{{
+                                        percorso.stato }}</span>
+                                </div>
+                                <!-- Progress bar sedute -->
+                                @if(percorso.numeroSedutePreviste) {
+                                <div class="sedute-progress">
+                                    <mat-progress-bar mode="determinate" [value]="getProgressoPercorso(percorso)"
+                                        class="progress-sedute"></mat-progress-bar>
+                                    <span class="sedute-label">{{ percorso.numeroSeduteEffettuate ?? 0 }}/{{
+                                        percorso.numeroSedutePreviste }} sedute</span>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                        <mat-icon class="record-toggle-icon">
+                            {{ percorsoSelezionato()?.id === percorso.id ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                            }}
+                        </mat-icon>
+                    </div>
+
+                    @if(percorsoSelezionato()?.id === percorso.id) {
+                    <div class="record-body">
+                        <app-generic-form [fields]="percorsoFields" [initialData]="percorsoSelezionato()"
+                            [editMode]="false" [showButtons]="false">
+                        </app-generic-form>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+            }
+        </div>
+
+        <!-- Footer documento -->
+        <div class="cartella-footer">
+            <div class="footer-line"></div>
+            <div class="footer-content">
+                <span>H-Gate — Neuropsichiatria Infantile</span>
+                <span>Documento riservato — Vietata la divulgazione non autorizzata</span>
+                <span>{{ today | date: 'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+}
