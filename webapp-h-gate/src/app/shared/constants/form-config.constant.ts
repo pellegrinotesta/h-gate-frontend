@@ -424,4 +424,181 @@ export class FormConfigs {
         { name: 'obiettivi', label: 'Obiettivi terapeutici', type: 'textarea', rows: 4, colClass: 'col-md-12', readonly: true },
     ];
 
+    static readonly FORM_PERCORSO_CREATE_FIELDS: FormItem[] = [
+        {
+            name: 'section-info',
+            label: 'Informazioni percorso',
+            type: 'section-header',
+            placeholder: 'route',
+            colClass: 'col-12'
+        },
+        {
+            name: 'titolo',
+            label: 'Titolo percorso *',
+            type: 'text',
+            colClass: 'col-md-8',
+            validators: [Validators.required]
+        },
+        {
+            name: 'stato',
+            label: 'Stato',
+            type: 'select',
+            colClass: 'col-md-4',
+            options: [
+                { label: 'Attivo', value: 'ATTIVO' },
+                { label: 'Sospeso', value: 'SOSPESO' },
+                { label: 'Concluso', value: 'CONCLUSO' },
+            ],
+            initialValue: 'ATTIVO'
+        },
+        {
+            name: 'dataFinePrevista',
+            label: 'Data fine prevista',
+            type: 'date',
+            colClass: 'col-md-4'
+        },
+        {
+            name: 'numeroSedutePreviste',
+            label: 'Sedute previste',
+            type: 'number',
+            colClass: 'col-md-4'
+        },
+        {
+            name: 'numeroSeduteEffettuate',
+            label: 'Sedute effettuate',
+            type: 'number',
+            colClass: 'col-md-4',
+            initialValue: 0
+        },
+        {
+            name: 'section-obiettivi',
+            label: 'Obiettivi terapeutici',
+            type: 'section-header',
+            placeholder: 'flag',
+            colClass: 'col-12',
+            initialValue: 'opzionale'
+        },
+        {
+            name: 'obiettivi',
+            label: 'Descrivi gli obiettivi del percorso',
+            type: 'textarea',
+            rows: 5,
+            colClass: 'col-12'
+        },
+    ];
+
+    // ===== PERCORSO TERAPEUTICO - FORM SOLA LETTURA =====
+    static readonly FORM_PERCORSO_READ_FIELDS: FormItem[] = [
+        {
+            name: 'section-info',
+            label: 'Informazioni percorso',
+            type: 'section-header',
+            placeholder: 'route',
+            colClass: 'col-12'
+        },
+        { name: 'titolo', label: 'Titolo', type: 'text', colClass: 'col-md-8', readonly: true },
+        { name: 'stato', label: 'Stato', type: 'text', colClass: 'col-md-4', readonly: true },
+        { name: 'dataInizio', label: 'Data inizio', type: 'date', colClass: 'col-md-4', readonly: true },
+        { name: 'dataFinePrevista', label: 'Fine prevista', type: 'date', colClass: 'col-md-4', readonly: true },
+        { name: 'numeroSedutePreviste', label: 'Sedute previste', type: 'number', colClass: 'col-md-2', readonly: true },
+        { name: 'numeroSeduteEffettuate', label: 'Sedute effettuate', type: 'number', colClass: 'col-md-2', readonly: true },
+        {
+            name: 'section-obiettivi',
+            label: 'Obiettivi terapeutici',
+            type: 'section-header',
+            placeholder: 'flag',
+            colClass: 'col-12',
+            initialValue: 'opzionale'
+        },
+        { name: 'obiettivi', label: 'Obiettivi', type: 'textarea', rows: 4, colClass: 'col-12', readonly: true },
+    ];
+
+    // ===== VALUTAZIONE PSICOLOGICA - FORM CREAZIONE/MODIFICA =====
+    static readonly FORM_VALUTAZIONE_CREATE_FIELDS: FormItem[] = [
+        {
+            name: 'section-info',
+            label: 'Informazioni test',
+            type: 'section-header',
+            placeholder: 'psychology',
+            colClass: 'col-12'
+        },
+        {
+            name: 'tipoTest',
+            label: 'Tipo di test *',
+            type: 'select',
+            colClass: 'col-md-6',
+            validators: [Validators.required],
+            options: [
+                { label: 'WISC-IV (Intelligenza)', value: 'WISC-IV' },
+                { label: 'CARS-2 (Autismo)', value: 'CARS-2' },
+                { label: 'ADHD Rating Scale', value: 'ADHD-RS' },
+                { label: 'Conners 3 (ADHD)', value: 'CONNERS-3' },
+                { label: 'LEITER-3 (Non verbale)', value: 'LEITER-3' },
+                { label: 'GARS-3 (Autismo)', value: 'GARS-3' },
+                { label: 'Vineland-3 (Adattivo)', value: 'VINELAND-3' },
+                { label: 'Altro', value: 'ALTRO' },
+            ]
+        },
+        {
+            name: 'section-punteggi',
+            label: 'Punteggi',
+            type: 'section-header',
+            placeholder: 'analytics',
+            colClass: 'col-12',
+            initialValue: 'opzionale'
+        },
+        {
+            name: 'punteggi',
+            label: 'Punteggi (formato JSON, es: {"QI totale": 95, "Memoria": 88})',
+            type: 'textarea',
+            rows: 3,
+            colClass: 'col-12'
+        },
+        {
+            name: 'section-interpretazione',
+            label: 'Interpretazione clinica',
+            type: 'section-header',
+            placeholder: 'manage_search',
+            colClass: 'col-12'
+        },
+        {
+            name: 'interpretazione',
+            label: 'Interpretazione e osservazioni cliniche *',
+            type: 'textarea',
+            rows: 6,
+            colClass: 'col-12',
+            validators: [Validators.required]
+        },
+    ];
+
+    // ===== VALUTAZIONE PSICOLOGICA - FORM SOLA LETTURA =====
+    static readonly FORM_VALUTAZIONE_READ_FIELDS: FormItem[] = [
+        {
+            name: 'section-info',
+            label: 'Informazioni test',
+            type: 'section-header',
+            placeholder: 'psychology',
+            colClass: 'col-12'
+        },
+        { name: 'tipoTest', label: 'Tipo di test', type: 'text', colClass: 'col-md-6', readonly: true },
+        { name: 'dataValutazione', label: 'Data valutazione', type: 'date', colClass: 'col-md-3', readonly: true },
+        {
+            name: 'section-punteggi',
+            label: 'Punteggi',
+            type: 'section-header',
+            placeholder: 'analytics',
+            colClass: 'col-12',
+            initialValue: 'opzionale'
+        },
+        { name: 'punteggi', label: 'Punteggi (JSON)', type: 'textarea', rows: 3, colClass: 'col-12', readonly: true },
+        {
+            name: 'section-interpretazione',
+            label: 'Interpretazione clinica',
+            type: 'section-header',
+            placeholder: 'manage_search',
+            colClass: 'col-12'
+        },
+        { name: 'interpretazione', label: 'Interpretazione', type: 'textarea', rows: 6, colClass: 'col-12', readonly: true },
+    ];
+
 }

@@ -7,9 +7,7 @@ export interface PercorsoTerapeutico {
     dataInizio: Date;
     dataFinePrevista?: Date;
     stato: 'ATTIVO' | 'CONCLUSO' | 'SOSPESO';
-    numeroseduePreviste?: number;
     numeroSedutePreviste?: number;
-    numeroSedulteEffettuate?: number;
     numeroSeduteEffettuate?: number;
     medico?: {
         nome: string;

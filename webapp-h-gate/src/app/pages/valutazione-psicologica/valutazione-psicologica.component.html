@@ -1,0 +1,69 @@
+@if(isLoading) {
+<app-loader></app-loader>
+} @else {
+<div class="clinical-page">
+
+    <!-- Toolbar -->
+    <div class="clinical-toolbar">
+        <button mat-icon-button (click)="tornaIndietro()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="toolbar-info">
+            <div class="toolbar-icon toolbar-icon--valutazione">
+                <mat-icon>psychology</mat-icon>
+            </div>
+            <div>
+                <p class="toolbar-title">
+                    {{ isNew() ? 'Nuova valutazione psicologica' : 'Valutazione psicologica' }}
+                </p>
+                @if(!isNew() && valutazione()) {
+                <p class="toolbar-sub">{{ valutazione()!.tipoTest }}</p>
+                }
+            </div>
+        </div>
+        <span class="toolbar-spacer"></span>
+
+        @if(!editMode() && !isNew()) {
+        <button mat-icon-button matTooltip="Modifica" (click)="abilitaModifica()">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Elimina" color="warn" (click)="elimina()">
+            <mat-icon>delete</mat-icon>
+        </button>
+        }
+    </div>
+
+    <!-- Contenuto -->
+    <div class="clinical-content">
+
+        <!-- Punteggi card (solo lettura e se presenti) -->
+        @if(!isNew() && !editMode() && punteggiEntries.length > 0) {
+        <div class="punteggi-card">
+            <div class="punteggi-header">
+                <mat-icon>analytics</mat-icon>
+                <span>Punteggi test</span>
+            </div>
+            <div class="punteggi-grid">
+                @for(entry of punteggiEntries; track entry.key) {
+                <div class="punteggio-item">
+                    <span class="punteggio-key">{{ entry.key }}</span>
+                    <span class="punteggio-value">{{ entry.value }}</span>
+                </div>
+                }
+            </div>
+        </div>
+        }
+
+        <!-- Form -->
+        <app-generic-card [title]="isNew() ? 'Compila i dati della valutazione' : 'Dettaglio valutazione'">
+            <div card-body>
+                <app-generic-form [fields]="formFields()" [initialData]="valutazione()" [editMode]="editMode()"
+                    [showButtons]="editMode()" [cancellable]="!isNew()" submitButtonText="Salva valutazione"
+                    cancelButtonText="Annulla" (submit)="onSubmit($event)" (cancel)="annullaModifica()">
+                </app-generic-form>
+            </div>
+        </app-generic-card>
+
+    </div>
+</div>
+}

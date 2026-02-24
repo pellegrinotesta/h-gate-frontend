@@ -18,6 +18,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { forkJoin } from 'rxjs';
 import { PazienteService } from '../../services/paziente.service';
 import { RefertoService } from '../../services/referto.service';
+import { PercorsoTerapeuticoService } from '../../services/percorso-terapeutico.service';
+import { ValutazionePsicologicaService } from '../../services/valutazione-psicologica.service';
 
 @Component({
   selector: 'app-cartella-clinica',
@@ -39,6 +41,8 @@ export class CartellaClinicaComponent extends BasePageComponent {
 
   readonly pazientiService = inject(PazienteService);
   readonly refertoService = inject(RefertoService);
+  readonly percorsoService = inject(PercorsoTerapeuticoService);
+  readonly valutazioniService = inject(ValutazionePsicologicaService);
 
   paziente = signal<Paziente | null>(null);
   referti = signal<Referto[]>([]);
@@ -71,10 +75,14 @@ export class CartellaClinicaComponent extends BasePageComponent {
     forkJoin({
       paziente: this.pazientiService.getById(pazienteId),
       referti: this.refertoService.listaRefertiPaziente(pazienteId),
+      percorsi: this.percorsoService.percorsoTerapeuticoPazienteAndMedico(pazienteId),
+      valutazioni: this.valutazioniService.valutazioniPsicologichePazienteAndMedico(pazienteId)
     }).subscribe({
-      next: ({ paziente, referti }) => {
+      next: ({ paziente, referti, percorsi, valutazioni }) => {
         this.paziente.set(paziente.data);
         this.referti.set(referti.data);
+        this.percorsi.set(percorsi.data);
+        this.valutazioni.set(valutazioni.data);
         this.isLoading = false;
       },
       error: (error) => {

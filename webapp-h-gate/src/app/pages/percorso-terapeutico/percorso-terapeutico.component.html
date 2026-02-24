@@ -1,0 +1,73 @@
+@if(isLoading) {
+<app-loader></app-loader>
+} @else {
+<div class="clinical-page">
+
+    <!-- Toolbar -->
+    <div class="clinical-toolbar">
+        <button mat-icon-button (click)="tornaIndietro()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="toolbar-info">
+            <div class="toolbar-icon toolbar-icon--percorso">
+                <mat-icon>route</mat-icon>
+            </div>
+            <div>
+                <p class="toolbar-title">
+                    {{ isNew() ? 'Nuovo percorso terapeutico' : 'Percorso terapeutico' }}
+                </p>
+                @if(!isNew() && percorso()) {
+                <p class="toolbar-sub">{{ percorso()!.titolo }}</p>
+                }
+            </div>
+        </div>
+        <span class="toolbar-spacer"></span>
+
+        @if(!isNew() && percorso()) {
+        <span [class]="'stato-badge ' + getStatoClass(percorso()!.stato)">
+            {{ percorso()!.stato }}
+        </span>
+        }
+
+        @if(!editMode() && !isNew()) {
+        <button mat-icon-button matTooltip="Modifica" (click)="abilitaModifica()">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Elimina" color="warn" (click)="elimina()">
+            <mat-icon>delete</mat-icon>
+        </button>
+        }
+    </div>
+
+    <!-- Contenuto -->
+    <div class="clinical-content">
+
+        <!-- Progress bar sedute (solo se esistente) -->
+        @if(!isNew() && percorso()?.numeroSedutePreviste) {
+        <div class="sedute-card">
+            <div class="sedute-card-header">
+                <mat-icon>event_repeat</mat-icon>
+                <span>Avanzamento sedute</span>
+                <span class="sedute-count">
+                    {{ percorso()!.numeroSeduteEffettuate ?? 0 }} / {{ percorso()!.numeroSedutePreviste }}
+                </span>
+                <span class="sedute-perc">{{ getProgressoPercorso() }}%</span>
+            </div>
+            <mat-progress-bar mode="determinate" [value]="getProgressoPercorso()" class="sedute-bar">
+            </mat-progress-bar>
+        </div>
+        }
+
+        <!-- Form -->
+        <app-generic-card [title]="isNew() ? 'Compila i dati del percorso' : 'Dettaglio percorso'">
+            <div card-body>
+                <app-generic-form [fields]="formFields()" [initialData]="percorso()" [editMode]="editMode()"
+                    [showButtons]="editMode()" [cancellable]="!isNew()" submitButtonText="Salva percorso"
+                    cancelButtonText="Annulla" (submit)="onSubmit($event)" (cancel)="annullaModifica()">
+                </app-generic-form>
+            </div>
+        </app-generic-card>
+
+    </div>
+</div>
+}

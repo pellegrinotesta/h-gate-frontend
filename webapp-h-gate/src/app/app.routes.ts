@@ -93,6 +93,30 @@ export const routes: Routes = [
                         canActivate: [roleGuard],
                         data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
                         loadComponent: () => import('./pages/cartella-clinica/cartella-clinica.component').then(m => m.CartellaClinicaComponent)
+                    },
+                    {
+                        path: ':id/percorsi/nuovo',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/percorso-terapeutico/percorso-terapeutico.component').then(m => m.PercorsoTerapeuticoComponent)
+                    }, 
+                    {
+                        path: ':id/percorsi/:percorsoId',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/percorso-terapeutico/percorso-terapeutico.component').then(m => m.PercorsoTerapeuticoComponent)
+                    },
+                    {
+                        path: ':id/valutazioni/nuova',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/valutazione-psicologica/valutazione-psicologica.component').then(m => m.ValutazionePsicologicaComponent)
+                    },
+                    {
+                        path: ':id/valutazioni/:valutazioneId',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/valutazione-psicologica/valutazione-psicologica.component').then(m => m.ValutazionePsicologicaComponent)
                     }
                 ]
             }

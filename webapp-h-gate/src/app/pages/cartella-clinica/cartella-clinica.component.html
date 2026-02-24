@@ -256,6 +256,10 @@
                         </p>
                     </div>
                 </div>
+                <button mat-flat-button color="primary" class="no-print"
+                    (click)="router.navigate([pazienteId(), 'percorsi', 'nuovo'])">
+                    <mat-icon>add</mat-icon> Nuovo percorso
+                </button>
             </div>
 
             @if(percorsi().length === 0) {
