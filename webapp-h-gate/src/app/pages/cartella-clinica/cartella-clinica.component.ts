@@ -20,6 +20,7 @@ import { PazienteService } from '../../services/paziente.service';
 import { RefertoService } from '../../services/referto.service';
 import { PercorsoTerapeuticoService } from '../../services/percorso-terapeutico.service';
 import { ValutazionePsicologicaService } from '../../services/valutazione-psicologica.service';
+import { RoutesEnum } from '../../shared/enums/routes.enum';
 
 @Component({
   selector: 'app-cartella-clinica',
@@ -219,6 +220,17 @@ export class CartellaClinicaComponent extends BasePageComponent {
 
   apriPrenotazione(prenotazioneId: number): void {
     this.router.navigate(['/prenotazioni', prenotazioneId]);
+  }
+
+  creaNuovoPercorsoTerapeutico(): void {
+    const route = RoutesEnum.PAZIENTE + `/${this.paziente()?.id}/percorsi/nuovo`;
+
+    this.router.navigate([route]);
+  }
+
+  creaNuovaValutazionePsicologica(): void {
+    const route = RoutesEnum.PAZIENTE + `/${this.paziente()?.id}/valutazioni/nuova`;
+    this.router.navigate([route]);
   }
 
   tornaIndietro(): void {

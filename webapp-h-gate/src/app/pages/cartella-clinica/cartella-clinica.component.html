@@ -186,6 +186,9 @@
                             : 'i' }} disponibil{{ valutazioni().length === 1 ? 'e' : 'i' }}</p>
                     </div>
                 </div>
+                <button mat-flat-button color="primary" class="no-print" (click)="creaNuovaValutazionePsicologica()">
+                    <mat-icon>add</mat-icon> Nuova valutazione
+                </button>
             </div>
 
             @if(valutazioni().length === 0) {
@@ -256,8 +259,7 @@
                         </p>
                     </div>
                 </div>
-                <button mat-flat-button color="primary" class="no-print"
-                    (click)="router.navigate([pazienteId(), 'percorsi', 'nuovo'])">
+                <button mat-flat-button color="primary" class="no-print" (click)="creaNuovoPercorsoTerapeutico()">
                     <mat-icon>add</mat-icon> Nuovo percorso
                 </button>
             </div>
