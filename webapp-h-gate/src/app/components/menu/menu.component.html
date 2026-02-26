@@ -8,38 +8,5 @@
         </button>
         }
 
-        <!-- Bottone Cartella clinica — visibile solo ai TUTORE -->
-        @if(isTutore && minori().length > 0) {
-        <div class="cartella-selector">
-            <button mat-button [matMenuTriggerFor]="menuMinori" class="cartella-btn">
-                <mat-icon>folder_shared</mat-icon>
-                <span>Cartella clinica</span>
-                <mat-icon class="dropdown-arrow">expand_more</mat-icon>
-            </button>
-
-            <mat-menu #menuMinori="matMenu" class="minori-menu">
-                <div class="menu-header">
-                    <mat-icon>family_restroom</mat-icon>
-                    <span>Seleziona il minore</span>
-                </div>
-                @for(minore of minori(); track minore.id) {
-                <button mat-menu-item (click)="selezionaMinore(minore)"
-                    [class.active-minore]="minoreSelezionato()?.id === minore.id">
-                    <div class="minore-option">
-                        <div class="minore-avatar">{{ getInitials(minore) }}</div>
-                        <div class="minore-info">
-                            <span class="minore-nome">{{ minore.nome }} {{ minore.cognome }}</span>
-                            <span class="minore-eta">{{ getEta(minore.dataNascita) }} anni</span>
-                        </div>
-                        @if(minoreSelezionato()?.id === minore.id) {
-                        <mat-icon class="check-icon">check_circle</mat-icon>
-                        }
-                    </div>
-                </button>
-                }
-            </mat-menu>
-        </div>
-        }
-
     </mat-toolbar>
 </div>

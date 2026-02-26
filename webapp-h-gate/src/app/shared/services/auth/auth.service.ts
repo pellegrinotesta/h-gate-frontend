@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { LogicalOperator } from '../../base/authentication/types/logical-operator.type';
 import { BaseAuthService } from '../../base/authentication/services/base-auth.service';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import * as CryptoJS from 'crypto-js';
 import { AuthenticatedUser } from '../../../models/authenticated-user.model';
 import { environment } from '../../../../environment/environment';
+import { MinoriStateService } from '../minore.service';
 
 
 @Injectable({
@@ -16,6 +17,7 @@ import { environment } from '../../../../environment/environment';
 export class AuthService extends BaseAuthService{
 
     userLoggedIn: Subject<boolean> = new Subject<boolean>(); 
+    private minoriState = inject(MinoriStateService);
 
     constructor(private readonly router: Router) {
       super();
@@ -26,6 +28,7 @@ export class AuthService extends BaseAuthService{
     }
   
     logout(): void {
+      this.minoriState.clear(); 
       localStorage.removeItem('encryptedUser');
       localStorage.removeItem('permissions');
       this.userLoggedIn.next(false);
