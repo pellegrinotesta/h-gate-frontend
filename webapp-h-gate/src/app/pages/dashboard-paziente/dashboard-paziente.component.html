@@ -245,7 +245,7 @@
                             <mat-icon>search</mat-icon>
                             Cerca medico
                         </button>
-                        <button mat-raised-button [routerLink]="['/referti']"
+                        <button mat-raised-button [routerLink]="['/pazienti', minoreSelezionato()!.id]"
                             [queryParams]="{pazienteId: minoreSelezionato()!.id}">
                             <mat-icon>description</mat-icon>
                             Referti di {{ minoreSelezionato()!.nome }}
@@ -254,7 +254,7 @@
                             <mat-icon>edit</mat-icon>
                             Modifica profilo minore
                         </button>
-                        <button mat-raised-button [routerLink]="['/storico']"
+                        <button mat-raised-button [routerLink]="['/prenotazioni']"
                             [queryParams]="{pazienteId: minoreSelezionato()!.id}">
                             <mat-icon>history</mat-icon>
                             Storico visite

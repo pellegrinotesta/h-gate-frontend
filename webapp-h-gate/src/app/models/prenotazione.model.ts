@@ -26,7 +26,7 @@ export interface Prenotazione {
     confermaInviata: boolean;
     dataAnnullamento?: string;
     motivoAnnullamento?: string;
-    cancellatoDa?: string;
+    annullataDa?: User;
     referto?: Referto;
     diagnosi?: string;
     recensione?: string;

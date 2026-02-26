@@ -105,7 +105,8 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
           pazienteNomeCompleto: `${prenotazione.paziente?.nome} ${prenotazione.paziente?.cognome}`,
           tutoreNomeCompleto: `${prenotazione.createdByUserId?.nome} ${prenotazione.createdByUserId?.cognome}`,
           medicoNomeCompleto: `${prenotazione.medico?.user?.nome} ${prenotazione.medico?.user?.cognome}`,
-          diagnosi: prenotazione.referto?.diagnosi
+          diagnosi: prenotazione.referto?.diagnosi,
+          annullataDa: `${prenotazione.annullataDa?.nome ?? ''} ${prenotazione.annullataDa?.cognome ?? ''}`.trim() as any
         };
 
         this.title = `Prenotazione`;

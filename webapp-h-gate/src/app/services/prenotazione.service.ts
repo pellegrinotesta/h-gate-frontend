@@ -19,8 +19,8 @@ export class PrenotazioneService extends HttpBaseService<Prenotazione> {
     return this.request<ResponseDTO<Prenotazione>>('', METHODS.POST, data);
   }
 
-  annullaPrenotazione(id: number, motivo: string): Observable<ResponseDTO<any>> {
-    return this.request<ResponseDTO<any>>(`/${id}`, METHODS.DELETE, {
+  annullaPrenotazione(id: number, motivo: string): Observable<ResponseDTO<Prenotazione>> {
+    return this.request<ResponseDTO<Prenotazione>>(`/${id}/annulla`, METHODS.PUT, {
       prenotazioneId: id,
       motivo: motivo
     });
