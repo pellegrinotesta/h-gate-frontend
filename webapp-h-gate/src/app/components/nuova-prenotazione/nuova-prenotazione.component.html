@@ -270,6 +270,75 @@
               </mat-card-content>
             </mat-card>
           </mat-step>
+          <!-- STEP 5: Allegati -->
+          <mat-step>
+            <ng-template matStepLabel>Allegati</ng-template>
+
+            <mat-card class="mt-3">
+              <mat-card-content>
+
+                <div class="step-header mb-4">
+                  <mat-icon class="step-icon">attach_file</mat-icon>
+                  <div>
+                    <h5 class="mb-1">Documenti allegati</h5>
+                    <p class="text-muted mb-0">
+                      Carica referti, esami o documentazione precedente (opzionale)
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Conferma prenotazione -->
+                <div class="alert alert-success mb-4">
+                  <mat-icon>check_circle</mat-icon>
+                  <strong>Prenotazione creata con successo!</strong>
+                  Puoi allegare documenti ora oppure saltare questo passaggio.
+                </div>
+
+                <!-- Upload area -->
+                <div class="upload-area" (click)="fileInput.click()" (dragover)="$event.preventDefault()"
+                  (drop)="onFileSelected($event)">
+                  <mat-icon class="upload-icon">cloud_upload</mat-icon>
+                  <p class="upload-text">Clicca o trascina i file qui</p>
+                  <p class="upload-hint">PDF, JPG, PNG — max 10MB per file</p>
+                  <input #fileInput type="file" hidden multiple accept=".pdf,.jpg,.jpeg,.png"
+                    (change)="onFileSelected($event)">
+                </div>
+
+                <!-- Lista file selezionati -->
+                @if(allegatiDaCaricare().length > 0) {
+                <div class="file-list mt-3">
+                  @for(file of allegatiDaCaricare(); track file.name; let i = $index) {
+                  <div class="file-item">
+                    <mat-icon class="file-icon">{{ getFileIcon(file) }}</mat-icon>
+                    <div class="file-info">
+                      <p class="file-name">{{ file.name }}</p>
+                      <p class="file-size">{{ formatSize(file.size) }}</p>
+                    </div>
+                    <button mat-icon-button color="warn" (click)="rimuoviFile(i)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                  }
+                </div>
+                }
+
+                <div class="d-flex justify-content-between mt-4">
+                  <button mat-button (click)="saltaAllegati()" [disabled]="isUploadingAllegati()">
+                    Salta
+                  </button>
+                  <button mat-flat-button color="primary" (click)="uploadAllegati()"
+                    [disabled]="allegatiDaCaricare().length === 0 || isUploadingAllegati()">
+                    @if(isUploadingAllegati()) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    <mat-icon>upload</mat-icon>
+                    Carica allegati
+                  </button>
+                </div>
+
+              </mat-card-content>
+            </mat-card>
+          </mat-step>
 
         </mat-stepper>
 

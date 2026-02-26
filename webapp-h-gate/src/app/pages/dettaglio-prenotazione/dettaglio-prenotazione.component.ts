@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, signal, Signal } from '@angular/core';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
 import { LoaderComponent } from '../../components/loader/loader.component';
 import { GenericCardComponent } from '../../shared/components/generic-card/generic-card.component';
@@ -16,6 +16,8 @@ import { DatePipe } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { RefertoDialogComponent } from '../../components/referto-dialog/referto-dialog.component';
+import { Allegato } from '../../models/allegato.model';
+import { AllegatoService } from '../../services/allegato.service';
 
 @Component({
   selector: 'app-dettaglio-prenotazione',
@@ -37,6 +39,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
   readonly authService = inject(AuthService);
   readonly datePipe = inject(DatePipe);
   readonly dialog = inject(MatDialog);
+  readonly allegatiService = inject(AllegatoService);
 
   prenotazioneId = input<number>();
   editMode = false;
@@ -51,6 +54,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
   refertoFormItems: FormItem[] = FormConfigs.FORM_REFERTO_FIELDS;
 
   prenotazioneData: Prenotazione | null = null;
+  allegati = signal<Allegato[]>([]);
 
   constructor() {
     super();
@@ -65,13 +69,13 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
   override ngOnInit(): void {
     if (this.prenotazioneId()) {
       this.loadPrenotazione(this.prenotazioneId()!);
+      this.recuperaAllegati(this.prenotazioneId()!);
     }
   }
 
   goBack(): void {
     this.location.back();
   }
-
 
   private loadPrenotazione(id: number): void {
     this.isLoading = true;
@@ -113,6 +117,31 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
         console.error('Errore caricamento prenotazione:', error);
         this.snackBar.openSnackBar('Errore nel caricamento', 'Chiudi');
         this.isLoading = false;
+      }
+    });
+  }
+
+  private recuperaAllegati(prenotazioneId: number): void {
+    this.allegatiService.getByPrenotazioneId(prenotazioneId).subscribe({
+      next: (response) => {
+        this.allegati.set(response.data);
+      },
+      error: (error) => {
+        console.error('Errore caricamento allegati:', error);
+        this.snackBar.openSnackBar('Errore nel caricamento allegati', 'Chiudi');
+      }
+    });
+  }
+
+  downloadAllegato(allegatoId: number): void {
+    this.allegatiService.downloadAllegato(allegatoId).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+      },
+      error: (error) => {
+        console.error('Errore download allegato:', error);
+        this.snackBar.openSnackBar('Errore nel download allegato', 'Chiudi');
       }
     });
   }

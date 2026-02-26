@@ -21,6 +21,8 @@ import { RefertoService } from '../../services/referto.service';
 import { PercorsoTerapeuticoService } from '../../services/percorso-terapeutico.service';
 import { ValutazionePsicologicaService } from '../../services/valutazione-psicologica.service';
 import { RoutesEnum } from '../../shared/enums/routes.enum';
+import { AllegatoService } from '../../services/allegato.service';
+import { Allegato } from '../../models/allegato.model';
 
 @Component({
   selector: 'app-cartella-clinica',
@@ -44,11 +46,13 @@ export class CartellaClinicaComponent extends BasePageComponent {
   readonly refertoService = inject(RefertoService);
   readonly percorsoService = inject(PercorsoTerapeuticoService);
   readonly valutazioniService = inject(ValutazionePsicologicaService);
+  readonly allegatoService = inject(AllegatoService);
 
   paziente = signal<Paziente | null>(null);
   referti = signal<Referto[]>([]);
   valutazioni = signal<ValutazionePsicologica[]>([]);
   percorsi = signal<PercorsoTerapeutico[]>([]);
+  allegati = signal<Allegato[]>([]);
 
   refertoSelezionato = signal<Referto | null>(null);
   valutazioneSelezionata = signal<ValutazionePsicologica | null>(null);
@@ -77,13 +81,15 @@ export class CartellaClinicaComponent extends BasePageComponent {
       paziente: this.pazientiService.getById(pazienteId),
       referti: this.refertoService.listaRefertiPaziente(pazienteId),
       percorsi: this.percorsoService.percorsoTerapeuticoPazienteAndMedico(pazienteId),
-      valutazioni: this.valutazioniService.valutazioniPsicologichePazienteAndMedico(pazienteId)
+      valutazioni: this.valutazioniService.valutazioniPsicologichePazienteAndMedico(pazienteId),
+      allegati: this.allegatoService.getByPazienteId(pazienteId)
     }).subscribe({
-      next: ({ paziente, referti, percorsi, valutazioni }) => {
+      next: ({ paziente, referti, percorsi, valutazioni, allegati }) => {
         this.paziente.set(paziente.data);
         this.referti.set(referti.data);
         this.percorsi.set(percorsi.data);
         this.valutazioni.set(valutazioni.data);
+        this.allegati.set(allegati.data);
         this.isLoading = false;
       },
       error: (error) => {
@@ -91,6 +97,16 @@ export class CartellaClinicaComponent extends BasePageComponent {
         this.isLoading = false;
       }
     });
+  }
+
+  getAllegatiPerPrenotazione(prenotazioneId: number): Allegato[] {
+    return this.allegati().filter(a => a.prenotazione?.id === prenotazioneId);
+  }
+
+  getIconaAllegato(tipoFile: string): string {
+    if (tipoFile === 'PDF') return 'picture_as_pdf';
+    if (['JPG', 'JPEG', 'PNG'].includes(tipoFile)) return 'image';
+    return 'attach_file';
   }
 
   selezionaReferto(referto: Referto): void {
@@ -235,5 +251,32 @@ export class CartellaClinicaComponent extends BasePageComponent {
 
   tornaIndietro(): void {
     this.location.back();
+  }
+
+  scaricaAllegato(allegato: Allegato): void {
+    this.allegatoService.downloadAllegato(allegato.id).subscribe({
+      next: (blob: Blob) => {
+        // Creiamo un URL temporaneo per il blob ricevuto
+        const url = window.URL.createObjectURL(blob);
+
+        // Creiamo un elemento <a> invisibile per forzare il download
+        const link = document.createElement('a');
+        link.href = url;
+
+        // Usiamo il nome del file originale o uno di fallback
+        link.download = allegato.nomeFile || `allegato-${allegato.id}`;
+
+        // Simuliamo il click e puliamo la memoria
+        link.click();
+        window.URL.revokeObjectURL(url);
+        link.remove();
+
+        this.snackBar.openSnackBar('Download avviato', 'Chiudi');
+      },
+      error: (err) => {
+        console.error('Errore durante il download:', err);
+        this.snackBar.openSnackBar('Errore nel download del file', 'Chiudi');
+      }
+    });
   }
 }

@@ -13,13 +13,6 @@
             <span>Cartella Clinica</span>
         </div>
         <span class="toolbar-spacer"></span>
-        <button mat-stroked-button class="btn-export" (click)="exportPdf()" [disabled]="isExporting()">
-            @if(isExporting()) {
-            <ng-container><mat-icon class="spin">sync</mat-icon> Generazione...</ng-container>
-            } @else {
-            <ng-container><mat-icon>picture_as_pdf</mat-icon> Scarica PDF</ng-container>
-            }
-        </button>
     </div>
 
     <!-- Contenuto PDF -->
@@ -242,6 +235,7 @@
                         }
                     </div>
                     }
+
                 </div>
                 }
             </div>
@@ -312,6 +306,44 @@
                         </app-generic-form>
                     </div>
                     }
+                </div>
+                }
+            </div>
+            }
+        </div>
+
+        <!-- Sezione allegati -->
+        <div class="cartella-sezione">
+            <div class="sezione-header">
+                <div class="sezione-header-left">
+                    <div class="sezione-numero">05</div>
+                    <div>
+                        <h2 class="sezione-titolo">Documentazione Allegata</h2>
+                        <p class="sezione-sub">{{ allegati().length }} file disponibili</p>
+                    </div>
+                </div>
+            </div>
+
+            @if(allegati().length === 0) {
+            <div class="empty-state">
+                <mat-icon>attach_file</mat-icon>
+                <p>Nessun allegato presente</p>
+            </div>
+            } @else {
+            <div class="/-list">
+                @for(allegato of allegati(); track allegato.id) {
+                <div class="record-item">
+                    <div class="record-header">
+                        <div class="record-header-left">
+                            <mat-icon>{{ getIconaAllegato(allegato.tipoFile) }}</mat-icon>
+                            <div>
+                                <p class="record-titolo">{{ allegato.nomeFile }}</p>
+                            </div>
+                        </div>
+                        <button mat-icon-button (click)="scaricaAllegato(allegato)">
+                            <mat-icon>download</mat-icon>
+                        </button>
+                    </div>
                 </div>
                 }
             </div>

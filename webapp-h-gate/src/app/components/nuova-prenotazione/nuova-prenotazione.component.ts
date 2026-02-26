@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { BasePageComponent } from '../../shared/components/base/base-page.component';
 import { ActivatedRoute } from '@angular/router';
 import { PazienteService } from '../../services/paziente.service';
@@ -20,6 +20,7 @@ import { Medico } from '../../models/medico.model';
 import { PrenotazioneCreate, SlotDisponibile } from '../../models/prenotazione.model';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TariffeMedico } from '../../models/tariffe-medico.model';
+import { AllegatoService } from '../../services/allegato.service';
 
 @Component({
   selector: 'app-nuova-prenotazione',
@@ -47,6 +48,9 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
   private pazienteService = inject(PazienteService);
   private medicoService = inject(MedicoService);
   private prenotazioneService = inject(PrenotazioneService);
+  private allegatoService = inject(AllegatoService);
+
+  @ViewChild('stepper') stepper!: MatStepper;
 
   pazienteForm!: FormGroup;
   medicoForm!: FormGroup;
@@ -60,6 +64,10 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
 
   minoreSelezionato = signal<Paziente | null>(null);
   medicoSelezionato = signal<Medico | null>(null);
+
+  prenotazioneCreataId = signal<number | null>(null);
+  allegatiDaCaricare = signal<File[]>([]);
+  isUploadingAllegati = signal<boolean>(false);
 
   isSaving = signal<boolean>(false);
 
@@ -236,9 +244,10 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
           this.snackBar.openSnackBar(res.message, 'Chiudi');
           return;
         } else {
+          this.prenotazioneCreataId.set(res.data.id);
           this.isSaving.set(false);
           this.snackBar.openSnackBar('Prenotazione creata con successo', 'Chiudi');
-          this.router.navigate(['/prenotazioni']);
+          this.stepper.next();
         }
 
       },
@@ -247,6 +256,58 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
         this.snackBar.openSnackBar('Errore nella creazione della prenotazione', 'Chiudi');
       }
     })
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files) return;
+    const nuovi = Array.from(input.files);
+    this.allegatiDaCaricare.update(curr => [...curr, ...nuovi]);
+    input.value = ''; // reset input per permettere ricaricamento stesso file
+  }
+
+  rimuoviFile(index: number): void {
+    this.allegatiDaCaricare.update(curr => curr.filter((_, i) => i !== index));
+  }
+
+  uploadAllegati(): void {
+    if (!this.prenotazioneCreataId() || this.allegatiDaCaricare().length === 0) {
+      this.router.navigate(['/prenotazioni']);
+      return;
+    }
+
+    this.isUploadingAllegati.set(true);
+    const formData = new FormData();
+    this.allegatiDaCaricare().forEach(f => formData.append('files', f));
+
+    this.allegatoService.uploadAllegati(
+      this.prenotazioneCreataId()!, formData
+    ).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Allegati caricati con successo', 'Chiudi');
+        this.router.navigate(['/prenotazioni']);
+      },
+      error: () => {
+        this.snackBar.openSnackBar('Errore caricamento allegati', 'Chiudi');
+        this.isUploadingAllegati.set(false);
+      }
+    });
+  }
+
+  saltaAllegati(): void {
+    this.router.navigate(['/prenotazioni']);
+  }
+
+  getFileIcon(file: File): string {
+    if (file.type === 'application/pdf') return 'picture_as_pdf';
+    if (file.type.startsWith('image/')) return 'image';
+    return 'insert_drive_file';
+  }
+
+  formatSize(bytes: number): string {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / 1048576).toFixed(1) + ' MB';
   }
 
   isFormValid(): boolean {

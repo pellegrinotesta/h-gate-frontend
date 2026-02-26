@@ -112,4 +112,8 @@ export class ListaPazientiComponent extends ListBasePage<PazienteFiltri> {
     this.excelService.exportToExcel(data, 'pazienti');
   }
 
+  tornaIndietro(): void {
+    this.location.back();
+  }
+
 }
