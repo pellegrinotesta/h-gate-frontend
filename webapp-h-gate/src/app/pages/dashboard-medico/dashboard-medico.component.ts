@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DisponibilitaMedicoComponent } from '../../components/disponibilita-medico/disponibilita-medico.component';
 import { PrenotazioneService } from '../../services/prenotazione.service';
 import { RoutesEnum } from '../../shared/enums/routes.enum';
+import { TariffeDialogComponent } from '../../components/tariffe-dialog/tariffe-dialog.component';
 
 @Component({
   selector: 'app-dashboard-medico',
@@ -208,6 +209,14 @@ export class DashboardMedicoComponent extends BasePageComponent {
 
   annullaAppuntamento(id: number): void {
     console.log('Annulla appuntamento ID:', id);
+  }
+
+  apriGestioneTariffe(): void {
+    this.dialog.open(TariffeDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      disableClose: false,
+    });
   }
 
   iniziaVisita(id: number): void {

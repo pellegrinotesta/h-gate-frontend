@@ -1,0 +1,201 @@
+.tariffe-dialog {
+    min-width: 700px;
+
+    @media (max-width: 768px) {
+        min-width: unset;
+    }
+}
+
+.dialog-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem 0;
+    gap: 12px;
+}
+
+.dialog-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dialog-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1565c0, #42a5f5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon {
+        color: white;
+        font-size: 1.2rem;
+        // width: 1.2rem;
+        // height: 1.2rem;
+    }
+}
+
+h2[mat-dialog-title] {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a2332;
+    margin: 0;
+}
+
+.dialog-subtitle {
+    font-size: 0.78rem;
+    color: #888;
+    margin: 2px 0 0;
+}
+
+.form-panel {
+    background: #f4f7fb;
+    border: 1px solid #dde3ee;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1a2332;
+    margin-bottom: 1rem;
+
+    mat-icon {
+        font-size: 1.1rem;
+        width: 1.1rem;
+        height: 1.1rem;
+        color: #1565c0;
+    }
+}
+
+.checkbox-hint {
+    font-size: 0.75rem;
+    color: #888;
+    margin-left: 4px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dde3ee;
+}
+
+.tariffe-list {
+
+    mat-table,
+    table {
+        width: 100%;
+    }
+}
+
+.cell-visita {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.visita-nome {
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: #1a2332;
+}
+
+.badge-prima {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(21, 101, 192, 0.1);
+    color: #1565c0;
+    width: fit-content;
+}
+
+.costo-value {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #2e7d32;
+}
+
+.durata-value {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    color: #555;
+
+    mat-icon {
+        font-size: 0.9rem;
+        width: 0.9rem;
+        height: 0.9rem;
+    }
+}
+
+.icon-yes {
+    color: #2e7d32;
+    font-size: 1.1rem;
+}
+
+.icon-no {
+    color: #ccc;
+    font-size: 1.1rem;
+}
+
+.cell-azioni {
+    display: flex;
+    gap: 4px;
+}
+
+.row-inattiva {
+    opacity: 0.5;
+}
+
+.loading-state {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    padding: 2rem;
+    color: #888;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2.5rem;
+    color: #aaa;
+
+    mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        display: block;
+        margin: 0 auto 12px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .empty-hint {
+        font-size: 0.78rem;
+        color: #bbb;
+        margin-top: 4px;
+    }
+}
+
+td.mat-column-primaVisita {
+    text-align: center;
+}

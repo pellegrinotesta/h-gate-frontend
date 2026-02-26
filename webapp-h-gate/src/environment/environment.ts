@@ -19,7 +19,8 @@ export const environment = {
         referto: `${apiUrl}/referto`,
         percorsoTerapeutico: `${apiUrl}/percorsi-terapeutici`,
         valutazioni: `${apiUrl}/valutazioni`,
-        allegato: `${apiUrl}/allegati`
+        allegato: `${apiUrl}/allegati`,
+        tariffe: `${apiUrl}/tariffe`
     },
     jwt: {
         encryptionKey: 'Qs23RBNF330ms00n',

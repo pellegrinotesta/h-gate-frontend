@@ -256,17 +256,10 @@ export class CartellaClinicaComponent extends BasePageComponent {
   scaricaAllegato(allegato: Allegato): void {
     this.allegatoService.downloadAllegato(allegato.id).subscribe({
       next: (blob: Blob) => {
-        // Creiamo un URL temporaneo per il blob ricevuto
         const url = window.URL.createObjectURL(blob);
-
-        // Creiamo un elemento <a> invisibile per forzare il download
         const link = document.createElement('a');
         link.href = url;
-
-        // Usiamo il nome del file originale o uno di fallback
         link.download = allegato.nomeFile || `allegato-${allegato.id}`;
-
-        // Simuliamo il click e puliamo la memoria
         link.click();
         window.URL.revokeObjectURL(url);
         link.remove();

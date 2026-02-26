@@ -178,14 +178,11 @@
                                 <button mat-button color="primary" [routerLink]="['/prenotazioni', app.id]">
                                     Dettagli
                                 </button>
-                                @if(app.stato !== 'CONFERMATA') {
-                                <button mat-button (click)="modificaPrenotazione(app.id)">
-                                    Modifica
-                                </button>
-                                }
+                                @if(app.stato === 'IN_ATTESA') {
                                 <button mat-button color="warn" (click)="annullaPrenotazione(app.id)">
                                     Annulla
                                 </button>
+                                }
                             </div>
                         </div>
                     </div>

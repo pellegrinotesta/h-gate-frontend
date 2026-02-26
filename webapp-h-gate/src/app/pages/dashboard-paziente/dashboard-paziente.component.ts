@@ -17,6 +17,8 @@ import { PazienteService } from '../../services/paziente.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Paziente } from '../../models/paziente.model';
 import { AddPatientDialogComponent } from '../../components/add-patient-dialog/add-patient-dialog.component';
+import { AnnullaPrenotazioneDialogComponent } from '../../components/annulla-prenotazione-dialog/annulla-prenotazione-dialog.component';
+import { PrenotazioneService } from '../../services/prenotazione.service';
 
 @Component({
   selector: 'app-dashboard-paziente',
@@ -39,13 +41,14 @@ export class DashboardPazienteComponent extends BasePageComponent {
   private dashboardService = inject(DashboardService);
   private pazienteService = inject(PazienteService);
   private dialog = inject(MatDialog);
+  private prenotazioneService = inject(PrenotazioneService);
 
   // Lista di tutti i minori del tutore
   minori = signal<Paziente[]>([]);
-  
+
   // Minore attualmente selezionato
   minoreSelezionato = signal<Paziente | null>(null);
-  
+
   // Dati del minore selezionato
   stats = signal<StatCard[]>([]);
   prossimiAppuntamenti = signal<PrenotazioneDettagliata[]>([]);
@@ -57,11 +60,11 @@ export class DashboardPazienteComponent extends BasePageComponent {
 
   loadMinori(): void {
     this.isLoading = true;
-    
+
     this.pazienteService.getPazientiByTutore().subscribe({
       next: (res) => {
         this.minori.set(res.data || []);
-        
+
         // Seleziona automaticamente il primo minore se presente
         if (res.data && res.data.length > 0) {
           this.minoreSelezionato.set(res.data[0]);
@@ -86,7 +89,7 @@ export class DashboardPazienteComponent extends BasePageComponent {
 
   loadDashboardMinore(pazienteId: number): void {
     this.isLoading = true;
-    
+
     this.dashboardService.dashboardPaziente().subscribe({
       next: (res) => {
         this.prossimiAppuntamenti.set(res.data.prenotazioni || []);
@@ -109,13 +112,13 @@ export class DashboardPazienteComponent extends BasePageComponent {
             change: '+2 nuovi',
             trend: 'up'
           },
-        /*  {
-            title: 'Medici Seguiti',
-            value: res.data.mediciSeguiti || 0,
-            icon: 'local_hospital',
-            color: 'warning',
-            change: 'Attivi'
-          }, */
+          /*  {
+              title: 'Medici Seguiti',
+              value: res.data.mediciSeguiti || 0,
+              icon: 'local_hospital',
+              color: 'warning',
+              change: 'Attivi'
+            }, */
           {
             title: 'Visite Totali',
             value: res.data.visiteTotali || 0,
@@ -169,16 +172,29 @@ export class DashboardPazienteComponent extends BasePageComponent {
     return labels[stato] || stato;
   }
 
-  modificaPrenotazione(id: number): void {
-    // TODO: Implementa modifica prenotazione
-    console.log('Modifica prenotazione:', id);
-  }
-
   annullaPrenotazione(id: number): void {
-    // TODO: Implementa annullamento prenotazione
-    if (confirm('Sei sicuro di voler annullare questa prenotazione?')) {
-      console.log('Annulla prenotazione:', id);
-    }
+    const ref = this.dialog.open(AnnullaPrenotazioneDialogComponent, {
+      data: {
+        prenotazioneId: id,
+        pazienteNome: `${this.minoreSelezionato()?.nome} ${this.minoreSelezionato()?.cognome}`
+      }
+    });
+
+    ref.afterClosed().subscribe(motivo => {
+      if (!motivo) return;
+      this.prenotazioneService.annullaPrenotazione(id, motivo).subscribe({
+        next: () => {
+          this.snackBar.openSnackBar('Prenotazione annullata', 'Chiudi');
+          this.loadDashboardMinore(this.minoreSelezionato()!.id);
+        },
+        error: (err) => {
+          this.snackBar.openSnackBar(
+            err.error?.message ?? 'Errore durante l\'annullamento', 'Chiudi'
+          );
+        }
+      });
+    });
+
   }
 
   getEta(dataNascita: Date): number {
