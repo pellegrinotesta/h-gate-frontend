@@ -344,7 +344,7 @@ export class FormConfigs {
         { name: 'dataAnnullamento', label: 'Data cancellazione', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true, condition: (data) => data?.stato === 'ANNULLATA' || data?.stato === 'NON_PRESENTATO' },
         { name: 'annullataDa', label: 'Cancellato da', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true, condition: (data) => data?.stato === 'ANNULLATA' || data?.stato === 'NON_PRESENTATO' },
         { name: 'promemoriaInviato', label: 'Promemoria inviato', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true },
-        { name: 'confermaInviata', label: 'Conferma prenotazione', type: 'checkbox', initialValue: false, colClass: 'col-md-2' },
+        { name: 'confermaInviata', label: 'Conferma prenotazione', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonlyCondition: (data) => data?.stato === 'COMPLETATA' || data?.stato === 'CONFERMATA' || data?.stato === 'ANNULLATA' },
         { name: 'isPrimaVisita', label: 'Prima visita', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true },
         { name: 'isUrgente', label: 'Visita urgente', type: 'checkbox', initialValue: false, colClass: 'col-md-2', readonly: true }
 

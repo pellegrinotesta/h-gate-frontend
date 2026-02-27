@@ -157,7 +157,7 @@
 
                     @if(refertoSelezionato()?.id === referto.id) {
                     <div class="record-body">
-                        <app-generic-form [fields]="refertiFields" [initialData]="refertoSelezionato()"
+                        <app-generic-form [fields]="refertiFields" [initialData]="refertoSelezionatoFlat"
                             [editMode]="false" [showButtons]="false">
                         </app-generic-form>
                     </div>

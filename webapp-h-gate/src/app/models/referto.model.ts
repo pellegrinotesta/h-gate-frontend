@@ -11,6 +11,7 @@ export interface Referto {
     diagnosi: string;
     hasAllegati: boolean;
     isFirmato?: boolean;
+    parametriVitali?: ParametriVitali;
 }
 
 export interface RefertoCreate {

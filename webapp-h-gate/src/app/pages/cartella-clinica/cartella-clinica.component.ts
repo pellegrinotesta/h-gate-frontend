@@ -58,6 +58,8 @@ export class CartellaClinicaComponent extends BasePageComponent {
   percorsi = signal<PercorsoTerapeutico[]>([]);
   allegati = signal<Allegato[]>([]);
 
+  referto: Referto | null = null;
+
   refertoSelezionato = signal<Referto | null>(null);
   valutazioneSelezionata = signal<ValutazionePsicologica | null>(null);
   percorsoSelezionato = signal<PercorsoTerapeutico | null>(null);
@@ -124,6 +126,16 @@ export class CartellaClinicaComponent extends BasePageComponent {
     if (['JPG', 'JPEG', 'PNG'].includes(tipoFile)) return 'image';
     return 'attach_file';
   }
+
+  get refertoSelezionatoFlat(): Referto | null {
+    const r = this.refertoSelezionato();
+    if (!r) return null;
+    return {
+      ...r,
+      ...r.parametriVitali
+    };
+  }
+
 
   selezionaReferto(referto: Referto): void {
     this.refertoSelezionato.set(this.refertoSelezionato()?.id === referto.id ? null : referto);

@@ -34,7 +34,7 @@
 @if(prenotazioneData?.referto) {
 <app-generic-card [title]="titleReferto">
     <div card-body>
-        <app-generic-form [fields]="refertoFormItems" [initialData]="prenotazioneData?.referto"></app-generic-form>
+        <app-generic-form [fields]="refertoFormItems" [initialData]="refertoData"></app-generic-form>
     </div>
 </app-generic-card>
 }

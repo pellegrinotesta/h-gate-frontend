@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RefertoDialogComponent } from '../../components/referto-dialog/referto-dialog.component';
 import { Allegato } from '../../models/allegato.model';
 import { AllegatoService } from '../../services/allegato.service';
+import { Referto } from '../../models/referto.model';
 
 @Component({
   selector: 'app-dettaglio-prenotazione',
@@ -54,6 +55,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
   refertoFormItems: FormItem[] = FormConfigs.FORM_REFERTO_FIELDS;
 
   prenotazioneData: Prenotazione | null = null;
+  refertoData: Referto | null = null;
   allegati = signal<Allegato[]>([]);
   dataOraOriginale: string | null = null;
 
@@ -91,17 +93,20 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
 
           dataOra: this.datePipe.transform(
             prenotazione.dataOra,
-            'dd/MM/yyyy HH:mm'
+            'dd/MM/yyyy HH:mm',
+            'UTC'
           ) ?? '',
 
           dataOraFine: this.datePipe.transform(
             prenotazione.dataOraFine,
-            'dd/MM/yyyy HH:mm'
+            'dd/MM/yyyy HH:mm',
+            'UTC'
           ) ?? '',
 
           dataAnnullamento: this.datePipe.transform(
             prenotazione.dataAnnullamento,
-            'dd/MM/yyyy HH:mm'
+            'dd/MM/yyyy HH:mm',
+            'UTC'
           ) ?? '',
 
           pazienteNomeCompleto: `${prenotazione.paziente?.nome} ${prenotazione.paziente?.cognome}`,
@@ -110,6 +115,12 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
           diagnosi: prenotazione.referto?.diagnosi,
           annullataDa: `${prenotazione.annullataDa?.nome ?? ''} ${prenotazione.annullataDa?.cognome ?? ''}`.trim() as any
         };
+
+        const referto = prenotazione.referto;
+        this.refertoData = referto ? {
+          ...referto,
+          ...referto.parametriVitali
+        } : null;
 
         this.title = `Prenotazione`;
         this.subtitle = `${prenotazione.numeroPrenotazione}`;
@@ -166,30 +177,45 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
     this.isLoading = true;
 
     const updateDTO: any = {
-      id: this.prenotazioneId()
+      id: this.prenotazioneId(),
+      noteMedico: updatedData.noteMedico,
+      diagnosi: updatedData.diagnosi,
+      confermaInviata: updatedData.confermaInviata
     };
-
-    updateDTO.noteMedico = updatedData.noteMedico;
-    updateDTO.diagnosi = updatedData.diagnosi;
 
     this.prenotazioneService.update(this.prenotazioneId()!, updateDTO).subscribe({
       next: (response) => {
         if (response) {
-          this.snackBar.openSnackBar('Prenotazione aggiornata con successo', 'Chiudi');
-          this.editMode = false;
-          this.loadPrenotazione(this.prenotazioneId()!);
-        } else {
-          this.snackBar.openSnackBar('Errore durante il salvataggio', 'Chiudi');
-          this.isLoading = false;
+          if (updatedData.confermaInviata && this.prenotazioneData?.stato === 'IN_ATTESA') {
+            this.confermaPrenotazione();
+          } else {
+            this.snackBar.openSnackBar('Prenotazione aggiornata con successo', 'Chiudi');
+            this.editMode = false;
+            this.loadPrenotazione(this.prenotazioneId()!);
+          }
         }
       },
       error: (error) => {
-        console.error('Errore salvataggio prenotazione:', error);
+        console.error('Errore salvataggio:', error);
         this.snackBar.openSnackBar('Errore durante il salvataggio', 'Chiudi');
         this.isLoading = false;
       }
     });
+  }
 
+  private confermaPrenotazione(): void {
+    this.prenotazioneService.confermaPrenotazione(this.prenotazioneId()!).subscribe({
+      next: () => {
+        this.snackBar.openSnackBar('Prenotazione confermata con successo', 'Chiudi');
+        this.editMode = false;
+        this.loadPrenotazione(this.prenotazioneId()!);
+      },
+      error: (error) => {
+        const msg = error?.error?.message ?? 'Errore durante la conferma';
+        this.snackBar.openSnackBar(msg, 'Chiudi');
+        this.isLoading = false;
+      }
+    });
   }
 
   isVisitaCompletabile(): boolean {

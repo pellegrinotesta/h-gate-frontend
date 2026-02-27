@@ -107,12 +107,6 @@
                         <div>
                             <p class="stat-title mb-2">{{stat.title}}</p>
                             <h2 class="stat-value mb-1">{{stat.value}}</h2>
-                            @if(stat.change) {
-                            <span class="stat-change" [class.positive]="stat.trend === 'up'">
-                                <mat-icon>{{stat.trend === 'up' ? 'trending_up' : 'trending_down' }}</mat-icon>
-                                {{stat.change}}
-                            </span>
-                            }
                         </div>
                         <div class="stat-icon">
                             <mat-icon>{{stat.icon}}</mat-icon>
