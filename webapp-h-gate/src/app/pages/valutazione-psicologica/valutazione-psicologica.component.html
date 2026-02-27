@@ -36,7 +36,7 @@
     <!-- Contenuto -->
     <div class="clinical-content">
 
-        <!-- Punteggi card (solo lettura e se presenti) -->
+        <!-- Punteggi card (solo lettura) -->
         @if(!isNew() && !editMode() && punteggiEntries.length > 0) {
         <div class="punteggi-card">
             <div class="punteggi-header">
@@ -57,10 +57,26 @@
         <!-- Form -->
         <app-generic-card [title]="isNew() ? 'Compila i dati della valutazione' : 'Dettaglio valutazione'">
             <div card-body>
-                <app-generic-form [fields]="formFields()" [initialData]="valutazione()" [editMode]="editMode()"
-                    [showButtons]="editMode()" [cancellable]="!isNew()" submitButtonText="Salva valutazione"
-                    cancelButtonText="Annulla" (submit)="onSubmit($event)" (cancel)="annullaModifica()">
+
+                <app-generic-form #genericForm [fields]="formFields()" [initialData]="valutazione()"
+                    [editMode]="editMode()" [showButtons]="false" (cancel)="annullaModifica()">
                 </app-generic-form>
+
+                <!-- Bottoni -->
+                @if(editMode()) {
+                <div class="d-flex justify-content-end gap-2 mt-3 pe-3">
+                    @if(!isNew()) {
+                    <button mat-stroked-button color="warn" type="button" (click)="annullaModifica()">
+                        Annulla
+                    </button>
+                    }
+                    <button mat-flat-button color="primary" type="button" (click)="submitForm()">
+                        <mat-icon>save</mat-icon>
+                        Salva valutazione
+                    </button>
+                </div>
+                }
+
             </div>
         </app-generic-card>
 

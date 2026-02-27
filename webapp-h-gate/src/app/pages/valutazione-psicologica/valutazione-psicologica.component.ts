@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal, ViewChild } from '@angular/core';
 import { LoaderComponent } from '../../components/loader/loader.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +33,8 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
   private route = inject(ActivatedRoute);
   private valutazioneService = inject(ValutazionePsicologicaService);
 
+  @ViewChild('genericForm') genericForm!: GenericFormComponent;
+
   pazienteId = input<number>();
 
   valutazione = signal<ValutazionePsicologica | null>(null);
@@ -56,13 +58,25 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
     }
   }
 
+
   loadValutazione(id: number): void {
     this.isLoading = true;
     this.valutazioneService.get(id).subscribe({
       next: (res: any) => {
         const v = res.data ?? res;
+
+        // Converti JSON punteggi → array per il GenericForm (type: 'array')
+        if (v.punteggi) {
+          try {
+            const obj = JSON.parse(v.punteggi);
+            v.punteggi = Object.entries(obj).map(([nome, valore]) => ({ nome, valore }));
+          } catch {
+            v.punteggi = [];
+          }
+        }
+
         this.valutazione.set(v);
-        this.parsePunteggi(v.punteggi);
+        this.parsePunteggi(res.data?.punteggi ?? res.punteggi);
         this.formFields.set(FormConfigs.FORM_VALUTAZIONE_READ_FIELDS);
         this.isLoading = false;
       },
@@ -73,8 +87,17 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
     });
   }
 
-  private parsePunteggi(punteggiJson: string | null): void {
-    if (!punteggiJson) return;
+  private parsePunteggi(punteggiJson: string | any[] | null): void {
+    if (!punteggiJson) { this.punteggiParsed.set(null); return; }
+
+    // Se è già un array (dopo la conversione), converti in oggetto per il display
+    if (Array.isArray(punteggiJson)) {
+      const obj: Record<string, any> = {};
+      punteggiJson.forEach((r: any) => { if (r.nome) obj[r.nome] = r.valore; });
+      this.punteggiParsed.set(Object.keys(obj).length > 0 ? obj : null);
+      return;
+    }
+
     try {
       this.punteggiParsed.set(JSON.parse(punteggiJson));
     } catch {
@@ -92,30 +115,45 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
     this.formFields.set(FormConfigs.FORM_VALUTAZIONE_READ_FIELDS);
   }
 
+  submitForm(): void {
+    if (!this.genericForm.isFormValid()) {
+      this.genericForm['form'].markAllAsTouched();
+      return;
+    }
+    this.onSubmit(this.genericForm.getFormValue());
+  }
+
   onSubmit(formValue: any): void {
     const pazienteId = this.valutazione()?.pazienteId
       ?? this.pazienteId()
       ?? +(this.route.snapshot.paramMap.get('id') ?? 0);
 
-    // Valida JSON punteggi se presente
-    if (formValue.punteggi) {
-      try {
-        JSON.parse(formValue.punteggi);
-      } catch {
-        this.snackBar.openSnackBar('Formato punteggi non valido (deve essere JSON)', 'Chiudi', SNACKBAR.WARN);
-        return;
-      }
-    }
+    // Converti array righe → JSON
+    const righe: any[] = formValue.punteggi ?? [];
+    const punteggiObj: Record<string, any> = {};
+    righe.forEach((r: any) => {
+      if (r?.nome?.trim()) punteggiObj[r.nome.trim()] = r.valore;
+    });
+    const punteggi = Object.keys(punteggiObj).length > 0
+      ? JSON.stringify(punteggiObj)
+      : null;
 
-    const dto = { ...formValue, pazienteId };
+    const dto = { ...formValue, pazienteId, punteggi };
 
     if (this.isNew()) {
       this.valutazioneService.crea(dto).subscribe({
         next: (res: any) => {
           const v = res.data ?? res;
           this.snackBar.openSnackBar('Valutazione creata con successo', 'Chiudi', SNACKBAR.SUCCESS);
-          this.valutazione.set(v);
           this.parsePunteggi(v.punteggi);
+          // Converti per il display
+          if (v.punteggi) {
+            try {
+              const obj = JSON.parse(v.punteggi);
+              v.punteggi = Object.entries(obj).map(([nome, valore]) => ({ nome, valore }));
+            } catch { v.punteggi = []; }
+          }
+          this.valutazione.set(v);
           this.isNew.set(false);
           this.editMode.set(false);
           this.formFields.set(FormConfigs.FORM_VALUTAZIONE_READ_FIELDS);
@@ -127,8 +165,14 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
         next: (res: any) => {
           const v = res.data ?? res;
           this.snackBar.openSnackBar('Valutazione aggiornata', 'Chiudi', SNACKBAR.SUCCESS);
-          this.valutazione.set(v);
           this.parsePunteggi(v.punteggi);
+          if (v.punteggi) {
+            try {
+              const obj = JSON.parse(v.punteggi);
+              v.punteggi = Object.entries(obj).map(([nome, valore]) => ({ nome, valore }));
+            } catch { v.punteggi = []; }
+          }
+          this.valutazione.set(v);
           this.editMode.set(false);
           this.formFields.set(FormConfigs.FORM_VALUTAZIONE_READ_FIELDS);
         },
@@ -157,5 +201,4 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
   tornaIndietro(): void {
     this.location.back();
   }
-
 }

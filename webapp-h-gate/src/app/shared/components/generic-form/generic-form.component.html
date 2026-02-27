@@ -58,7 +58,7 @@
                 @for (control of getControls(item.name); track control; let i = $index) {
                 <div class="d-flex flex-row align-items-center gap-2">
                     @if (item.array[0].controls) {
-                    <div [formGroupName]="i" class="d-flex flex-row flex-wrap gap-2 border-bottom pb-2">
+                    <div [formGroupName]="i" class="d-flex flex-row flex-wrap gap-2 flex-grow-1">
                         @for (child of item.array[0].controls; track child.name) {
                         <ng-container
                             *ngTemplateOutlet="renderItem; context: { item: child, controlName: child.name, parentGroup: parentGroup.get(item.name).at(i) }">
@@ -67,13 +67,15 @@
                     </div>
                     }
                     @else {
-                    <mat-form-field appearance="outline" class="w-100">
+                    <mat-form-field appearance="outline" class="flex-grow-1">
                         <mat-label>{{ item.array[0].label }}</mat-label>
                         <input matInput [formControlName]="i" [type]="item.array[0].type || 'text'">
                     </mat-form-field>
                     }
-                    <button mat-icon-button color="warn" type="button"
-                        (click)="removeArrayItem(item, i)"><mat-icon>delete</mat-icon></button>
+                    <button mat-icon-button color="warn" type="button" (click)="removeArrayItem(item, i)"
+                        style="margin-bottom: 1.25em;">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                 </div>
                 }
             </div>
@@ -83,7 +85,7 @@
         @else {
         @switch (item.type) {
         @case ('checkbox') {
-        <mat-checkbox [formControlName]="item.name" [disabled]="item.readonly || item.disabled" class="mb-3">
+        <mat-checkbox [formControlName]="item.name" class="mb-3">
             {{ item.label }}
         </mat-checkbox>
         }
@@ -111,7 +113,7 @@
         @case ('select') {
         <mat-form-field appearance="outline" class="w-100">
             <mat-label>{{ item.label }}</mat-label>
-            <mat-select [formControlName]="item.name" [disabled]="item.readonly || item.disabled">
+            <mat-select [formControlName]="item.name">
                 @for (opt of item.options; track opt.value) {
                 <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
                 }

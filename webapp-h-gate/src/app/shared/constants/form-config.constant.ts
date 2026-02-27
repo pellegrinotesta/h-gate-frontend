@@ -434,7 +434,7 @@ export class FormConfigs {
         },
         {
             name: 'titolo',
-            label: 'Titolo percorso *',
+            label: 'Titolo percorso',
             type: 'text',
             colClass: 'col-md-8',
             validators: [Validators.required]
@@ -524,7 +524,7 @@ export class FormConfigs {
         },
         {
             name: 'tipoTest',
-            label: 'Tipo di test *',
+            label: 'Tipo di test',
             type: 'select',
             colClass: 'col-md-6',
             validators: [Validators.required],
@@ -549,10 +549,31 @@ export class FormConfigs {
         },
         {
             name: 'punteggi',
-            label: 'Punteggi (formato JSON, es: {"QI totale": 95, "Memoria": 88})',
-            type: 'textarea',
-            rows: 3,
-            colClass: 'col-12'
+            label: 'Punteggi test',
+            type: 'array',
+            colClass: 'col-12',
+            array: [
+                {
+                    name: 'riga',
+                    label: 'Punteggio',
+                    controls: [
+                        {
+                            name: 'nome',
+                            label: 'Nome punteggio',
+                            type: 'text',
+                            colClass: 'col-md-6',
+                            placeholder: 'Es: QI totale, Memoria...'
+                        },
+                        {
+                            name: 'valore',
+                            label: 'Valore',
+                            type: 'number',
+                            colClass: 'col-md-4',
+                            placeholder: 'Es: 95'
+                        }
+                    ]
+                }
+            ]
         },
         {
             name: 'section-interpretazione',
@@ -563,7 +584,7 @@ export class FormConfigs {
         },
         {
             name: 'interpretazione',
-            label: 'Interpretazione e osservazioni cliniche *',
+            label: 'Interpretazione e osservazioni cliniche',
             type: 'textarea',
             rows: 6,
             colClass: 'col-12',

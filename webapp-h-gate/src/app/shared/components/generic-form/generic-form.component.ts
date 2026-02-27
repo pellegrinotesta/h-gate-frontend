@@ -92,6 +92,13 @@ export class GenericFormComponent implements OnInit {
 
     this.fields.forEach(field => {
       if (field.type === 'section-header') return;
+
+      // ← Gestisci il tipo array
+      if (field.type === 'array') {
+        formConfig[field.name] = this.fb.array([]);
+        return;
+      }
+
       const control = this.fb.control(
         field.initialValue ?? '',
         field.validators || []
@@ -127,14 +134,31 @@ export class GenericFormComponent implements OnInit {
   private patchForm(data: any): void {
     if (!data) return;
 
-    const patchData: { [key: string]: any } = {};
     this.fields.forEach(field => {
-      if (data.hasOwnProperty(field.name)) {
-        patchData[field.name] = data[field.name];
-      }
-    });
+      if (!data.hasOwnProperty(field.name)) return;
 
-    this.form.patchValue(patchData);
+      // ← Gestisci il tipo array
+      if (field.type === 'array') {
+        const formArray = this.form.get(field.name) as FormArray;
+        while (formArray.length) formArray.removeAt(0);
+
+        const items: any[] = data[field.name] ?? [];
+        items.forEach(item => {
+          if (field.array?.[0]?.controls) {
+            const groupConfig: any = {};
+            field.array[0].controls.forEach(ctrl => {
+              groupConfig[ctrl.name] = [item[ctrl.name] ?? '', ctrl.validators || []];
+            });
+            formArray.push(this.fb.group(groupConfig));
+          } else {
+            formArray.push(this.fb.control(item, []));
+          }
+        });
+        return;
+      }
+
+      this.form.patchValue({ [field.name]: data[field.name] });
+    });
   }
 
   getErrorMessage(fieldName: string): string {
