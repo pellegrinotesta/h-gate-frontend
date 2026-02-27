@@ -407,7 +407,7 @@ export class AgendaMedicoComponent extends BasePageComponent {
 
   apriCartellaClinica(pazienteId: number): void {
     // Navigare a cartella clinica
-    this.router.navigate(['/pazienti', pazienteId]);
+    this.router.navigate(['/referti', pazienteId]);
   }
 
   creaReferto(agendaId: number): void {

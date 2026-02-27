@@ -33,6 +33,12 @@ export const ITEMS_MENU: MenuSection[] = [
                 tooltip: 'Prenotazioni'
             },
             {
+                title: 'Agenda',
+                link: RoutesEnum.AGENDA,
+                permission: ROLE_VISIBILITY.AGENDA,
+                tooltip: 'Agenda'
+            },
+            {
                 title: 'Pazienti',
                 link: RoutesEnum.PAZIENTE,
                 permission: ROLE_VISIBILITY.PAZIENTI_LIST,

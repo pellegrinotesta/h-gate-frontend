@@ -219,14 +219,6 @@ export class DashboardMedicoComponent extends BasePageComponent {
     });
   }
 
-  iniziaVisita(id: number): void {
-    // Implementare logica inizio visita
-  }
-
-  creaReferto(prenotazioneId: number): void {
-    // Navigare a creazione referto
-  }
-
   apriCartellaClinica(pazienteId: number): void {
     // Navigare a cartella clinica paziente
   }

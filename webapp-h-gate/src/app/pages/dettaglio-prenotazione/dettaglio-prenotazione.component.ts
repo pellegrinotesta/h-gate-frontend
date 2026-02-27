@@ -55,6 +55,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
 
   prenotazioneData: Prenotazione | null = null;
   allegati = signal<Allegato[]>([]);
+  dataOraOriginale: string | null = null;
 
   constructor() {
     super();
@@ -83,6 +84,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
     this.prenotazioneService.getById(id).subscribe({
       next: (response) => {
         const prenotazione = response.data;
+        this.dataOraOriginale = prenotazione.dataOra;
 
         this.prenotazioneData = {
           ...prenotazione,
@@ -189,6 +191,23 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
     });
 
   }
+
+  isVisitaCompletabile(): boolean {
+    if (this.prenotazioneData?.stato !== 'CONFERMATA') return false;
+    const dataVisita = new Date(this.dataOraOriginale!);
+    const oggi = new Date();
+    oggi.setHours(0, 0, 0, 0);
+    dataVisita.setHours(0, 0, 0, 0);
+    return oggi >= dataVisita;
+  }
+
+  isVisitaInRitardo(): boolean {
+    if (!this.dataOraOriginale) return false;
+    const dataVisita = new Date(this.dataOraOriginale);
+    const diffGiorni = (new Date().getTime() - dataVisita.getTime()) / (1000 * 60 * 60 * 24);
+    return diffGiorni > 2;
+  }
+
 
   private completaPrenotazione(): void {
     this.prenotazioneService.completaPrenotazione(this.prenotazioneId()!).subscribe({

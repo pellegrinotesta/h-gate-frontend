@@ -23,6 +23,9 @@ import { ValutazionePsicologicaService } from '../../services/valutazione-psicol
 import { RoutesEnum } from '../../shared/enums/routes.enum';
 import { AllegatoService } from '../../services/allegato.service';
 import { Allegato } from '../../models/allegato.model';
+import { AuthService } from '../../shared/services/auth/auth.service';
+import { AuthenticatedUser } from '../../models/authenticated-user.model';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-cartella-clinica',
@@ -47,6 +50,7 @@ export class CartellaClinicaComponent extends BasePageComponent {
   readonly percorsoService = inject(PercorsoTerapeuticoService);
   readonly valutazioniService = inject(ValutazionePsicologicaService);
   readonly allegatoService = inject(AllegatoService);
+  readonly authService = inject(AuthService);
 
   paziente = signal<Paziente | null>(null);
   referti = signal<Referto[]>([]);
@@ -68,6 +72,18 @@ export class CartellaClinicaComponent extends BasePageComponent {
   valutazioneFields: FormItem[] = FormConfigs.FORM_VALUTAZIONE_PSICOLOGICA_FIELDS;
   percorsoFields: FormItem[] = FormConfigs.FORM_PERCORSO_TERAPEUTICO_FIELDS;
 
+  userRole = '';
+  isMedico = false;
+
+  constructor() {
+    super();
+    const user = this.authService.getStoredUsed();
+    if (user?.authentication) {
+      const decoded = jwtDecode<AuthenticatedUser>(user.authentication);
+      this.userRole = decoded.authorities[0] || '';
+      this.isMedico = this.userRole === 'MEDICO';
+    }
+  }
 
   override ngOnInit(): void {
     if (this.pazienteId()) {

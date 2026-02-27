@@ -106,9 +106,6 @@
                                 <button mat-button color="primary" (click)="apriCartellaClinica(app.paziente?.id!)">
                                     Cartella
                                 </button>
-                                <button mat-button (click)="creaReferto(app.id)">
-                                    Referto
-                                </button>
                                 }
                             </div>
                         </div>
@@ -253,10 +250,6 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="d-grid gap-2">
-                        <button mat-raised-button color="primary" routerLink="/referti/nuovo">
-                            <mat-icon>note_add</mat-icon>
-                            Nuovo referto
-                        </button>
                         <button mat-raised-button routerLink="/pazienti">
                             <mat-icon>people</mat-icon>
                             I miei pazienti

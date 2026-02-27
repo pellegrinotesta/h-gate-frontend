@@ -16,7 +16,7 @@
                 <p class="text-muted mb-0 small">Visualizza e gestisci tutti i tuoi appuntamenti</p>
             </div>
             <div class="col-12 col-md-6 text-md-end">
-                <button mat-raised-button color="primary" routerLink="/dashboard" class="w-100 w-md-auto">
+                <button mat-raised-button color="primary" routerLink="/dashboard-medico" class="w-100 w-md-auto">
                     <mat-icon>dashboard</mat-icon>
                     Torna alla Dashboard
                 </button>
@@ -283,18 +283,13 @@
                                     }
                                 </div>
                                 <div class="d-flex flex-row flex-md-column gap-2 w-100 w-md-auto">
-                                    @if(app.stato !== 'NON_PRESENTATO' && app.stato !== 'IN_ATTESA') {
+
                                     <button mat-raised-button color="primary"
                                         (click)="apriCartellaClinica(app.pazienteId)" class="flex-fill flex-md-grow-0">
                                         <mat-icon>person</mat-icon>
                                         <span class="d-none d-md-inline ms-1">Cartella</span>
                                     </button>
-                                    <button mat-raised-button (click)="creaReferto(app.id!)"
-                                        class="flex-fill flex-md-grow-0">
-                                        <mat-icon>note_add</mat-icon>
-                                        <span class="d-none d-md-inline ms-1">Referto</span>
-                                    </button>
-                                    }
+
                                     <button mat-raised-button color="accent" (click)="apriDettaglioAppuntamento(app)"
                                         class="flex-fill flex-md-grow-0">
                                         <mat-icon>edit</mat-icon>

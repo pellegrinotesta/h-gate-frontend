@@ -31,13 +31,9 @@ import { RoutesEnum } from '../../shared/enums/routes.enum';
 export class MenuComponent {
 
   private authFacade = inject(AuthFacadeService);
-  private router = inject(Router);
 
   menuItems: MenuItem[] = [];
   isTutore = false;
-
-
-  readonly minoreSelezionato = signal<Paziente | null>(null);
 
   ngOnInit(): void {
     this.authFacade.getUser().subscribe(user => {

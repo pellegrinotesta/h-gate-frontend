@@ -11,19 +11,13 @@
 
     @if(isMedico && prenotazioneData?.stato !== 'NON_PRESENTATO') {
     <ng-container card-actions>
-        @if(!hasReferto) {
-        <button mat-raised-button color="primary" (click)="apriReferto()"
-            matTooltip="Compila il referto per questa visita" [matTooltipPosition]="'left'" class="me-2">
+        @if(isMedico && !hasReferto && isVisitaCompletabile()) {
+        <button mat-raised-button [color]="isVisitaInRitardo() ? 'warn' : 'primary'" (click)="apriReferto()"
+            [matTooltip]="isVisitaInRitardo() ? 'Attenzione: visita non completata da più di 2 giorni' : 'Completa visita'">
             <mat-icon>task_alt</mat-icon>
-            Completa visita
+            {{ isVisitaInRitardo() ? 'Completa visita (in ritardo)' : 'Completa visita' }}
         </button>
-        } @else {
-        <mat-chip class="chip-referto-presente me-2" (click)="apriReferto()">
-            <mat-icon class="tiny-icon me-1">check_circle</mat-icon>
-            Referto presente
-        </mat-chip>
-        }
-
+        } 
         <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Modifica prenotazione" [matTooltipPosition]="'left'"
             (click)="edit()">edit</mat-icon>
     </ng-container>
