@@ -622,4 +622,18 @@ export class FormConfigs {
         { name: 'interpretazione', label: 'Interpretazione', type: 'textarea', rows: 6, colClass: 'col-12', readonly: true },
     ];
 
+    static readonly FORM_MED_SEARCH_FIELDS: FormItem[] = [
+        {name: 'nomeCompleto', label: 'Nome Medico', type: 'text', colClass: 'col-md-4'},
+        {name: 'specializzazione', label: 'Specializzazione', type: 'text', colClass: 'col-md-4'},
+        {name: 'citta', label: 'Città', type: 'text', colClass: 'col-md-4'},
+        {name: 'provincia', label: 'Provincia', type: 'text', colClass: 'col-md-4'}
+    ];
+
+      static readonly FORM_REFERTO_SEARCH_FIELDS: FormItem[] = [
+        {name: 'nomeMedico', label: 'Nome Medico', type: 'text', colClass: 'col-md-4'},
+        {name: 'dataEmissione', label: 'Data Emissione', type: 'date', colClass: 'col-md-4'},
+        {name: 'tipoReferto', label: 'Tipo Referto', type: 'text', colClass: 'col-md-4'}
+    ];
+
+
 }

@@ -30,6 +30,14 @@ export const ROLE_VISIBILITY = {
     // Group.ADMIN,
     Group.MEDICO
   ],
+  MEDICI_LIST: [
+    Group.ADMIN,
+    Group.TUTORE
+  ],
+  REFERTI_LIST: [
+    Group.MEDICO,
+    Group.TUTORE
+  ],
   CARTELLA_CLINICA: [
     Group.TUTORE,
     Group.MEDICO

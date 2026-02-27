@@ -71,6 +71,12 @@ export const routes: Routes = [
                 path: RoutesEnum.REFERTO,
                 children: [
                     {
+                        path: '',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.REFERTI_LIST },
+                        loadComponent: () => import('./pages/lista-referti/lista-referti.component').then(m => m.ListaRefertiComponent)
+                    },
+                    {
                         path: ':pazienteId',
                         canActivate: [roleGuard],
                         data: { roles: ROLE_VISIBILITY.REFERTO },
@@ -99,7 +105,7 @@ export const routes: Routes = [
                         canActivate: [roleGuard],
                         data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
                         loadComponent: () => import('./pages/percorso-terapeutico/percorso-terapeutico.component').then(m => m.PercorsoTerapeuticoComponent)
-                    }, 
+                    },
                     {
                         path: ':id/percorsi/:percorsoId',
                         canActivate: [roleGuard],
@@ -118,6 +124,17 @@ export const routes: Routes = [
                         data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
                         loadComponent: () => import('./pages/valutazione-psicologica/valutazione-psicologica.component').then(m => m.ValutazionePsicologicaComponent)
                     }
+                ]
+            },
+            {
+                path: RoutesEnum.MEDICO,
+                children: [
+                    {
+                        path: '',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.MEDICI_LIST },
+                        loadComponent: () => import('./pages/lista-medici/lista-medici.component').then(m => m.ListaMediciComponent)
+                    },
                 ]
             }
 

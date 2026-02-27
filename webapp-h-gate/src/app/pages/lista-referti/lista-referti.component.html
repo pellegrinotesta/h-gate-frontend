@@ -1,0 +1,22 @@
+@if(isLoading) {
+<app-loader></app-loader>
+}
+@else {
+<div class="d-flex justify-content-between mt-2">
+    <button mat-button class="btn btn-link button-back" type="button" (click)="tornaIndietro()">
+        <i class="bi bi-arrow-left"></i>&nbsp;Indietro
+    </button>
+</div>
+<app-generic-card [title]="title">
+    <div card-body>
+        <app-generic-form [fields]="formItems" [editMode]="true" [cancellable]="false" [submitButtonText]="'Cerca'"
+            [resetable]="true" (submit)="onSearch($event)" (reset)="onReset()">
+        </app-generic-form>
+        <app-generic-table class="m-3" [data]="data.results" [size]="size" [totalElements]="data.count"
+            [columns]="columns" (changePage)="onChangePage($event)"
+            (pageSizeChanged)="onPageSizeChanged($event)">
+        </app-generic-table>
+    </div>
+</app-generic-card>
+
+}
