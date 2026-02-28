@@ -16,7 +16,11 @@ export const environment = {
         agenda: `${apiUrl}/agenda`,
         notifiche: `${apiUrl}/notifiche`,
         disponibilita: `${apiUrl}/disponibilita/medico`,
-        referto: `${apiUrl}/referto`
+        referto: `${apiUrl}/referto`,
+        percorsoTerapeutico: `${apiUrl}/percorsi-terapeutici`,
+        valutazioni: `${apiUrl}/valutazioni`,
+        allegato: `${apiUrl}/allegati`,
+        tariffe: `${apiUrl}/tariffe`
     },
     jwt: {
         encryptionKey: 'Qs23RBNF330ms00n',

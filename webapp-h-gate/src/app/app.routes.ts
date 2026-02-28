@@ -70,8 +70,72 @@ export const routes: Routes = [
             {
                 path: RoutesEnum.REFERTO,
                 children: [
+                    {
+                        path: '',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.REFERTI_LIST },
+                        loadComponent: () => import('./pages/lista-referti/lista-referti.component').then(m => m.ListaRefertiComponent)
+                    },
+                    {
+                        path: ':pazienteId',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.REFERTO },
+                        loadComponent: () => import('./pages/cartella-clinica/cartella-clinica.component').then(m => m.CartellaClinicaComponent)
+                    }
                 ]
-                
+
+            },
+            {
+                path: RoutesEnum.PAZIENTE,
+                children: [
+                    {
+                        path: '',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.PAZIENTI_LIST },
+                        loadComponent: () => import('./pages/lista-pazienti/lista-pazienti.component').then(m => m.ListaPazientiComponent)
+                    },
+                    {
+                        path: ':id',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/cartella-clinica/cartella-clinica.component').then(m => m.CartellaClinicaComponent)
+                    },
+                    {
+                        path: ':id/percorsi/nuovo',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/percorso-terapeutico/percorso-terapeutico.component').then(m => m.PercorsoTerapeuticoComponent)
+                    },
+                    {
+                        path: ':id/percorsi/:percorsoId',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/percorso-terapeutico/percorso-terapeutico.component').then(m => m.PercorsoTerapeuticoComponent)
+                    },
+                    {
+                        path: ':id/valutazioni/nuova',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/valutazione-psicologica/valutazione-psicologica.component').then(m => m.ValutazionePsicologicaComponent)
+                    },
+                    {
+                        path: ':id/valutazioni/:valutazioneId',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.CARTELLA_CLINICA },
+                        loadComponent: () => import('./pages/valutazione-psicologica/valutazione-psicologica.component').then(m => m.ValutazionePsicologicaComponent)
+                    }
+                ]
+            },
+            {
+                path: RoutesEnum.MEDICO,
+                children: [
+                    {
+                        path: '',
+                        canActivate: [roleGuard],
+                        data: { roles: ROLE_VISIBILITY.MEDICI_LIST },
+                        loadComponent: () => import('./pages/lista-medici/lista-medici.component').then(m => m.ListaMediciComponent)
+                    },
+                ]
             }
 
         ]

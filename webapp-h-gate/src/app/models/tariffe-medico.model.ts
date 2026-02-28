@@ -7,6 +7,6 @@ export interface TariffeMedico {
     costo: number;
     isPrimaVisita: boolean;
     durataMinuti: number;
-    isAttivo: boolean;
+    isAttiva: boolean;
     createdAt: string;
 }

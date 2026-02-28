@@ -8,5 +8,7 @@ export enum RoutesEnum {
   PRENOTAZIONI = 'prenotazioni',
   AGENDA = 'agenda',
   REFERTO = 'referti',
+  PAZIENTE = 'pazienti',
+  MEDICO = 'medici',
 
 }

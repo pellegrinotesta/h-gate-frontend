@@ -4,28 +4,24 @@
 @else {
 <div class="d-flex justify-content-between mt-2">
     <button mat-button class="btn btn-link button-back" type="button" (click)="goBack()">
-        <i class="bi bi-arrow-left"></i>&nbsp;Back
+        <i class="bi bi-arrow-left"></i>&nbsp;Indietro
     </button>
 </div>
 <app-generic-card [title]="title" [subtitle]="subtitle">
-    @if(isMedico) {
-    <ng-container card-actions>
-        @if(!hasReferto) {
-        <button mat-raised-button color="primary" (click)="apriReferto()"
-            matTooltip="Compila il referto per questa visita" [matTooltipPosition]="'left'" class="me-2">
-            <mat-icon>task_alt</mat-icon>
-            Completa visita
-        </button>
-        } @else {
-        <mat-chip class="chip-referto-presente me-2" (click)="apriReferto()">
-            <mat-icon class="tiny-icon me-1">check_circle</mat-icon>
-            Referto presente
-        </mat-chip>
-        }
 
+    @if(isMedico && prenotazioneData?.stato !== 'NON_PRESENTATO') {
+    <ng-container card-actions>
+        @if(isMedico && !hasReferto && isVisitaCompletabile()) {
+        <button mat-raised-button [color]="isVisitaInRitardo() ? 'warn' : 'primary'" (click)="apriReferto()"
+            [matTooltip]="isVisitaInRitardo() ? 'Attenzione: visita non completata da più di 2 giorni' : 'Completa visita'">
+            <mat-icon>task_alt</mat-icon>
+            {{ isVisitaInRitardo() ? 'Completa visita (in ritardo)' : 'Completa visita' }}
+        </button>
+        } 
         <mat-icon class="pointer" #tooltip="matTooltip" matTooltip="Modifica prenotazione" [matTooltipPosition]="'left'"
             (click)="edit()">edit</mat-icon>
     </ng-container>
+
     }
     <div card-body>
         <app-generic-form [fields]="formItems" [initialData]="prenotazioneData" [editMode]="editMode"
@@ -38,7 +34,30 @@
 @if(prenotazioneData?.referto) {
 <app-generic-card [title]="titleReferto">
     <div card-body>
-        <app-generic-form [fields]="refertoFormItems" [initialData]="prenotazioneData?.referto"></app-generic-form>
+        <app-generic-form [fields]="refertoFormItems" [initialData]="refertoData"></app-generic-form>
+    </div>
+</app-generic-card>
+}
+
+@if(allegati().length > 0) {
+<app-generic-card title="Allegati">
+    <div card-body>
+        <div class="list-group list-group-flush">
+            @for(allegato of allegati(); track allegato.id) {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <mat-icon class="me-3 text-secondary">description</mat-icon>
+                    <div>
+                        <div class="fw-bold">{{ allegato.nomeFile }}</div>
+                    </div>
+                </div>
+                <button mat-icon-button color="primary" (click)="downloadAllegato(allegato.id)"
+                    matTooltip="Scarica allegato">
+                    <mat-icon>download</mat-icon>
+                </button>
+            </div>
+            }
+        </div>
     </div>
 </app-generic-card>
 }

@@ -12,6 +12,7 @@ export const environment = {
     registration: `${apiUrl}/registration`,
     paziente: `${apiUrl}/paziente`,
     dashboard: `${apiUrl}/dashboard`,
+    tariffe: `${apiUrl}/tariffe`,
   },
   jwt: {
     encryptionKey: 'Qs23RBNF330ms00n',

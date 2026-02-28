@@ -20,7 +20,10 @@ export class PrenotazioneService extends HttpBaseService<Prenotazione> {
   }
 
   annullaPrenotazione(id: number, motivo: string): Observable<ResponseDTO<Prenotazione>> {
-    return this.request<ResponseDTO<Prenotazione>>(`/${id}`, METHODS.PUT, { motivo });
+    return this.request<ResponseDTO<Prenotazione>>(`/${id}/annulla`, METHODS.PUT, {
+      prenotazioneId: id,
+      motivo: motivo
+    });
   }
 
   getSlotDisponibili(medicoId: number, data: string): Observable<ResponseDTO<SlotDisponibili>> {

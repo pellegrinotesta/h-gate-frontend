@@ -1,0 +1,666 @@
+// Palette clinica
+:host {
+    --clinical-cream: #f8f6f1;
+    --clinical-border: #d4c9b0;
+    --clinical-dark: #1a2332;
+    --clinical-blue: #1565c0;
+    --clinical-blue-light: #e3f2fd;
+    --clinical-red: #c62828;
+    --clinical-green: #2e7d32;
+    --clinical-orange: #e65100;
+    --clinical-gold: #b8860b;
+    --section-num-bg: #1565c0;
+}
+
+.cartella-container {
+    min-height: 100vh;
+    background: var(--clinical-cream);
+    font-family: 'Georgia', serif;
+}
+
+// ===== TOOLBAR =====
+.cartella-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.625rem 1.25rem;
+    background: var(--clinical-dark);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.back-btn {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.toolbar-spacer {
+    flex: 1;
+}
+
+.toolbar-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Georgia', serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
+    mat-icon {
+        font-size: 1.1rem;
+        width: 1.1rem;
+        height: 1.1rem;
+        color: #90caf9;
+    }
+}
+
+.btn-export {
+    color: #90caf9 !important;
+    border-color: rgba(144, 202, 249, 0.4) !important;
+    font-family: 'Georgia', serif;
+    font-size: 0.8rem !important;
+
+    &:hover {
+        background: rgba(144, 202, 249, 0.1) !important;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+    }
+
+    mat-icon {
+        font-size: 1rem;
+        width: 1rem;
+        height: 1rem;
+    }
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// ===== CONTENUTO PDF =====
+.cartella-pdf-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+// ===== INTESTAZIONE DOCUMENTO =====
+.cartella-intestazione {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: white;
+    border: 2px solid var(--clinical-dark);
+    border-radius: 4px;
+    margin-bottom: 2rem;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+}
+
+.intestazione-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    width: 48px;
+    height: 48px;
+    background: var(--clinical-dark);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+        color: white;
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+.brand-nome {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--clinical-dark);
+    margin: 0;
+    letter-spacing: 0.05em;
+}
+
+.brand-sub {
+    font-size: 0.7rem;
+    color: #666;
+    margin: 0;
+    font-style: italic;
+}
+
+.intestazione-titolo {
+    text-align: center;
+
+    h1 {
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        color: var(--clinical-dark);
+        margin: 0 0 4px;
+        text-transform: uppercase;
+        border-bottom: 3px double var(--clinical-dark);
+        padding-bottom: 4px;
+    }
+}
+
+.intestazione-sub {
+    font-size: 0.65rem;
+    color: #999;
+    margin: 0;
+    font-style: italic;
+}
+
+.intestazione-meta {
+    text-align: right;
+
+    .meta-row {
+        font-size: 0.75rem;
+        color: #555;
+        margin-bottom: 2px;
+
+        span {
+            font-weight: 700;
+            color: var(--clinical-dark);
+        }
+    }
+}
+
+// ===== SEZIONE =====
+.cartella-sezione {
+    background: white;
+    border: 1px solid var(--clinical-border);
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.sezione-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(to right, var(--clinical-dark), #2a3f5f);
+    border-bottom: 3px solid var(--clinical-gold);
+}
+
+.sezione-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.sezione-numero {
+    width: 36px;
+    height: 36px;
+    background: var(--clinical-gold);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-family: 'Georgia', serif;
+    flex-shrink: 0;
+}
+
+.sezione-titolo {
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Georgia', serif;
+}
+
+.sezione-sub {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 2px 0 0;
+    font-style: italic;
+}
+
+.paziente-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid var(--clinical-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Georgia', serif;
+}
+
+// ===== ANAGRAFICA QUICK =====
+.anagrafica-quick {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0;
+    border-bottom: 1px solid var(--clinical-border);
+}
+
+.quick-item {
+    padding: 0.875rem 1.25rem;
+    border-right: 1px solid var(--clinical-border);
+
+    &:last-child {
+        border-right: none;
+    }
+}
+
+.quick-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #999;
+    margin-bottom: 4px;
+    font-family: system-ui, sans-serif;
+}
+
+.quick-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--clinical-dark);
+    font-family: 'Georgia', serif;
+
+    &.mono {
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+    }
+}
+
+// ===== ALERT CLINICI =====
+.alert-clinici {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-bottom: 1px solid var(--clinical-border);
+}
+
+.alert-item {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 0.875rem 1.25rem;
+    border-right: 1px solid var(--clinical-border);
+
+    &:last-child {
+        border-right: none;
+    }
+
+    mat-icon {
+        font-size: 1.2rem;
+        width: 1.2rem;
+        height: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    &--allergie {
+        background: #fff8f2;
+
+        mat-icon {
+            color: var(--clinical-red);
+        }
+
+        .alert-label {
+            color: var(--clinical-red);
+        }
+    }
+
+    &--patologie {
+        background: #f3f8ff;
+
+        mat-icon {
+            color: var(--clinical-blue);
+        }
+
+        .alert-label {
+            color: var(--clinical-blue);
+        }
+    }
+}
+
+.alert-label {
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 3px;
+    font-family: system-ui, sans-serif;
+}
+
+.alert-text {
+    font-size: 0.82rem;
+    color: #444;
+    margin: 0;
+    line-height: 1.4;
+}
+
+// ===== FORM AREA =====
+.sezione-form {
+    padding: 1rem 1rem 0;
+}
+
+// ===== RECORD LIST (referti, valutazioni, percorsi) =====
+.record-list {
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.record-item {
+    border: 1px solid var(--clinical-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.record-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0.875rem 1rem;
+    cursor: pointer;
+    background: #fafaf8;
+    transition: background 0.15s;
+    justify-content: space-between;
+
+    &:hover {
+        background: #f0ede4;
+    }
+}
+
+.record-header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+.record-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+
+    &--referto {
+        background: var(--clinical-blue);
+    }
+
+    &--valutazione {
+        background: #7b1fa2;
+    }
+
+    &--attivo {
+        background: var(--clinical-green);
+    }
+
+    &--concluso {
+        background: #607d8b;
+    }
+
+    &--sospeso {
+        background: var(--clinical-orange);
+    }
+}
+
+.record-titolo {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--clinical-dark);
+    margin: 0 0 4px;
+    font-family: 'Georgia', serif;
+}
+
+.record-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+
+    span {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 0.72rem;
+        color: #777;
+        font-family: system-ui, sans-serif;
+
+        mat-icon {
+            font-size: 0.72rem;
+            width: 0.72rem;
+            height: 0.72rem;
+        }
+    }
+}
+
+.firmato-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    color: var(--clinical-green) !important;
+    font-weight: 700 !important;
+
+    mat-icon {
+        color: var(--clinical-green) !important;
+    }
+}
+
+.record-toggle-icon {
+    color: #aaa;
+    font-size: 1.2rem !important;
+    width: 1.2rem !important;
+    height: 1.2rem !important;
+    flex-shrink: 0;
+}
+
+.record-body {
+    padding: 0.5rem 1rem 1rem;
+    border-top: 1px solid var(--clinical-border);
+    background: white;
+}
+
+// ===== STATO BADGE =====
+.stato-badge {
+    font-size: 0.65rem !important;
+    font-weight: 800 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: system-ui, sans-serif !important;
+}
+
+.stato-attivo {
+    background: #e8f5e9;
+    color: var(--clinical-green);
+}
+
+.stato-concluso {
+    background: #eceff1;
+    color: #455a64;
+}
+
+.stato-sospeso {
+    background: #fff3e0;
+    color: var(--clinical-orange);
+}
+
+// ===== PROGRESS SEDUTE =====
+.sedute-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.progress-sedute {
+    flex: 1;
+    height: 4px !important;
+    border-radius: 2px;
+
+    ::ng-deep .mdc-linear-progress__bar-inner {
+        border-color: var(--clinical-blue) !important;
+    }
+}
+
+.sedute-label {
+    font-size: 0.68rem;
+    color: #888;
+    white-space: nowrap;
+    font-family: system-ui, sans-serif;
+}
+
+// ===== PUNTEGGI =====
+.punteggi-section {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #fafaf8;
+    border: 1px solid var(--clinical-border);
+    border-radius: 4px;
+}
+
+.punteggi-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #999;
+    margin-bottom: 8px;
+    font-family: system-ui, sans-serif;
+}
+
+.punteggi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+}
+
+.punteggio-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    background: white;
+    border: 1px solid var(--clinical-border);
+    border-radius: 3px;
+}
+
+.punteggio-key {
+    font-size: 0.72rem;
+    color: #666;
+    font-family: system-ui, sans-serif;
+}
+
+.punteggio-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--clinical-dark);
+    font-family: 'Georgia', serif;
+}
+
+// ===== EMPTY STATE =====
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    color: #bbb;
+
+    mat-icon {
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+        margin-bottom: 8px;
+    }
+
+    p {
+        font-size: 0.85rem;
+        margin: 0;
+        font-style: italic;
+    }
+}
+
+// ===== FOOTER DOCUMENTO =====
+.cartella-footer {
+    margin-top: 2rem;
+}
+
+.footer-line {
+    height: 2px;
+    background: linear-gradient(to right, var(--clinical-dark), var(--clinical-gold), var(--clinical-dark));
+    margin-bottom: 8px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0 4px;
+
+    span {
+        font-size: 0.65rem;
+        color: #999;
+        font-style: italic;
+        font-family: 'Georgia', serif;
+    }
+}
+
+// ===== PRINT =====
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .cartella-container {
+        background: white;
+    }
+
+    .cartella-pdf-content {
+        padding: 0;
+        max-width: 100%;
+    }
+}

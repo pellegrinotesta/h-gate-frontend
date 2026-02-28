@@ -107,12 +107,6 @@
                         <div>
                             <p class="stat-title mb-2">{{stat.title}}</p>
                             <h2 class="stat-value mb-1">{{stat.value}}</h2>
-                            @if(stat.change) {
-                            <span class="stat-change" [class.positive]="stat.trend === 'up'">
-                                <mat-icon>{{stat.trend === 'up' ? 'trending_up' : 'trending_down' }}</mat-icon>
-                                {{stat.change}}
-                            </span>
-                            }
                         </div>
                         <div class="stat-icon">
                             <mat-icon>{{stat.icon}}</mat-icon>
@@ -178,14 +172,11 @@
                                 <button mat-button color="primary" [routerLink]="['/prenotazioni', app.id]">
                                     Dettagli
                                 </button>
-                                @if(app.stato !== 'CONFERMATA') {
-                                <button mat-button (click)="modificaPrenotazione(app.id)">
-                                    Modifica
-                                </button>
-                                }
+                                @if(app.stato === 'IN_ATTESA') {
                                 <button mat-button color="warn" (click)="annullaPrenotazione(app.id)">
                                     Annulla
                                 </button>
+                                }
                             </div>
                         </div>
                     </div>
@@ -227,8 +218,7 @@
                     </div>
                     }
                     }
-                    <button mat-stroked-button class="w-100 mt-2" [routerLink]="['/referti']"
-                        [queryParams]="{pazienteId: minoreSelezionato()!.id}">
+                    <button mat-stroked-button class="w-100 mt-2" [routerLink]="['/referti']">
                         Vedi tutti i referti
                     </button>
                 </mat-card-content>
@@ -248,16 +238,16 @@
                             <mat-icon>search</mat-icon>
                             Cerca medico
                         </button>
-                        <button mat-raised-button [routerLink]="['/referti']"
+                        <button mat-raised-button [routerLink]="['/pazienti', minoreSelezionato()!.id]"
                             [queryParams]="{pazienteId: minoreSelezionato()!.id}">
                             <mat-icon>description</mat-icon>
-                            Referti di {{ minoreSelezionato()!.nome }}
+                            Cartella clinica di {{ minoreSelezionato()!.nome }}
                         </button>
                         <button mat-raised-button [routerLink]="['/pazienti', minoreSelezionato()!.id]">
                             <mat-icon>edit</mat-icon>
                             Modifica profilo minore
                         </button>
-                        <button mat-raised-button [routerLink]="['/storico']"
+                        <button mat-raised-button [routerLink]="['/prenotazioni']"
                             [queryParams]="{pazienteId: minoreSelezionato()!.id}">
                             <mat-icon>history</mat-icon>
                             Storico visite

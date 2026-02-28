@@ -8,7 +8,7 @@
             [matTooltipPosition]="'left'" (click)="addNew()">add</mat-icon>
     </ng-container>
     <div card-body>
-        <app-generic-form [fields]="formItems" [editMode]="true" [submitButtonText]="'Cerca'" [resetable]="true"
+        <app-generic-form [fields]="formItems" [editMode]="true" [cancellable]="false" [submitButtonText]="'Cerca'" [resetable]="true"
             (submit)="onSearch($event)" (reset)="onReset()">
         </app-generic-form>
         <app-generic-table [data]="data.results" [size]="size" [totalElements]="data.count" [columns]="columns"

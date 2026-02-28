@@ -19,6 +19,7 @@ export abstract class HttpBaseService<M extends BaseModel> extends HttpRequestBa
     get(id: number | string): Observable<M> {
         return this.request<M>(id.toString(), METHODS.GET);
     }
+    
     getAll(params?: any): Observable<M[]> {
         return this.request<M[]>('', METHODS.GET, {}, params);
     }
@@ -35,7 +36,7 @@ export abstract class HttpBaseService<M extends BaseModel> extends HttpRequestBa
         return this.request<M>(id.toString(), METHODS.PATCH, model);
     }
     delete(id: number | string): Observable<M | void> {
-        return this.request<M>(id.toString(), METHODS.DELETE);
+        return this.request<M>('/' + id.toString(), METHODS.DELETE);
     }
     find<S>(criteria?: { [key: string]: any; }): Observable<S> {
         return this.request<S>('search', METHODS.POST, criteria);
