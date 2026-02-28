@@ -37,7 +37,6 @@ export class DashboardAdminComponent extends BasePageComponent implements OnInit
 
   // Signals
   kpiData = signal<KpiData | null>(null);
-  mediciDaVerificare = signal<MedicoDaVerificare[]>([]);
   recentActivity = signal<AttivitaRecente[]>([]);
 
   // ==================== CONFIGURAZIONE GRAFICI ====================
@@ -437,17 +436,6 @@ export class DashboardAdminComponent extends BasePageComponent implements OnInit
         }
       });
 
-    this.dashboardService.getMediciDaVerificare()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          this.mediciDaVerificare.set(response.data);
-        },
-        error: (error) => {
-          console.error('Errore caricamento medici:', error);
-        }
-      });
-
     this.dashboardService.getDashboardCompleta()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
@@ -460,6 +448,13 @@ export class DashboardAdminComponent extends BasePageComponent implements OnInit
           this.isLoading = false
         }
       });
+  }
+
+  hasChartData(data: ChartData<any>): boolean {
+    if (!data?.datasets?.length) return false;
+    return data.datasets.some(ds =>
+      ds.data?.some((v: any) => v !== null && v !== undefined && v > 0)
+    );
   }
 
   viewDocuments(medicoId: number): void {

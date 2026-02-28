@@ -1,9 +1,10 @@
 @if(isLoading) {
 <app-loader></app-loader>
-}
-@else {
+} @else {
+
 <div class="dashboard-container">
-    <!-- Welcome Card -->
+
+    <!-- ==================== WELCOME BANNER ==================== -->
     <div class="welcome-card-admin mb-4">
         <div class="row align-items-center">
             <div class="col-md-8">
@@ -11,24 +12,18 @@
                 <p class="mb-0">Panoramica completa con grafici interattivi</p>
                 @if(kpiData()) {
                 <p class="mb-0 small mt-2 opacity-75">
-                    Ultimo aggiornamento: {{kpiData()!.ultimoAggiornamento | date: 'dd/MM/yyyy HH:mm'}}
+                    Ultimo aggiornamento: {{ kpiData()!.ultimoAggiornamento | date:'dd/MM/yyyy HH:mm' }}
                 </p>
                 }
-            </div>
-            <div class="col-md-4 text-end">
-                <button mat-raised-button routerLink="/admin/settings">
-                    <mat-icon>settings</mat-icon>
-                    Impostazioni Sistema
-                </button>
             </div>
         </div>
     </div>
 
-    <!-- Statistics Cards -->
+    <!-- ==================== STAT CARDS ==================== -->
     <div class="row mb-4">
         @for(stat of stats(); track stat.title) {
         <div class="col-md-3 mb-3">
-            <mat-card class="stat-card stat-{{stat.color}}">
+            <mat-card class="stat-card stat-{{ stat.color }}">
                 <mat-card-content>
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
@@ -51,11 +46,12 @@
         }
     </div>
 
-    <!-- ==================== SEZIONE GRAFICI PRINCIPALI ==================== -->
+    <!-- ==================== RIGA 1: LINE + DOUGHNUT ==================== -->
     <div class="row mb-4">
-        <!-- GRAFICO 1: Prenotazioni per Giorno (Line Chart) -->
+
+        <!-- GRAFICO 1: Andamento Prenotazioni Settimanali (Line) -->
         <div class="col-lg-8 mb-4">
-            <mat-card class="chart-card">
+            <mat-card class="chart-card h-100">
                 <mat-card-header>
                     <mat-card-title>
                         <mat-icon class="me-2">show_chart</mat-icon>
@@ -64,17 +60,24 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="chart-container">
+                        @if(hasChartData(prenotazioniLineChartData())) {
                         <canvas baseChart [data]="prenotazioniLineChartData()" [options]="prenotazioniLineChartOptions"
                             type="line">
                         </canvas>
+                        } @else {
+                        <div class="no-data-state">
+                            <mat-icon>show_chart</mat-icon>
+                            <p>Nessun dato disponibile</p>
+                        </div>
+                        }
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
 
-        <!-- GRAFICO 2: Distribuzione Pazienti per Età (Doughnut) -->
+        <!-- GRAFICO 2: Pazienti per Fascia d'Età (Doughnut) -->
         <div class="col-lg-4 mb-4">
-            <mat-card class="chart-card">
+            <mat-card class="chart-card h-100">
                 <mat-card-header>
                     <mat-card-title>
                         <mat-icon class="me-2">pie_chart</mat-icon>
@@ -83,19 +86,29 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="chart-container-square">
+                        @if(hasChartData(pazientiDoughnutChartData())) {
                         <canvas baseChart [data]="pazientiDoughnutChartData()" [options]="pazientiDoughnutChartOptions"
                             type="doughnut">
                         </canvas>
+                        } @else {
+                        <div class="no-data-state">
+                            <mat-icon>pie_chart</mat-icon>
+                            <p>Nessun dato disponibile</p>
+                        </div>
+                        }
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
+
     </div>
 
+    <!-- ==================== RIGA 2: BAR + PIE + DOUGHNUT ==================== -->
     <div class="row mb-4">
-        <!-- GRAFICO 3: Specializzazioni Medici (Bar Horizontale) -->
+
+        <!-- GRAFICO 3: Medici per Specializzazione (Bar Orizzontale) -->
         <div class="col-lg-6 mb-4">
-            <mat-card class="chart-card">
+            <mat-card class="chart-card h-100">
                 <mat-card-header>
                     <mat-card-title>
                         <mat-icon class="me-2">bar_chart</mat-icon>
@@ -104,17 +117,24 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="chart-container-medium">
+                        @if(hasChartData(specializzazioniBarChartData())) {
                         <canvas baseChart [data]="specializzazioniBarChartData()"
                             [options]="specializzazioniBarChartOptions" type="bar">
                         </canvas>
+                        } @else {
+                        <div class="no-data-state">
+                            <mat-icon>bar_chart</mat-icon>
+                            <p>Nessun dato disponibile</p>
+                        </div>
+                        }
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
 
-        <!-- GRAFICO 4: Percorsi Terapeutici (Pie Chart) -->
+        <!-- GRAFICO 4: Percorsi Terapeutici (Pie) -->
         <div class="col-lg-3 mb-4">
-            <mat-card class="chart-card">
+            <mat-card class="chart-card h-100">
                 <mat-card-header>
                     <mat-card-title>
                         <mat-icon class="me-2">donut_large</mat-icon>
@@ -123,8 +143,16 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="chart-container-square">
-                        <canvas baseChart [data]="percorsiPieChartData()" [options]="percorsiPieChartOptions" type="pie">
+                        @if(hasChartData(percorsiPieChartData())) {
+                        <canvas baseChart [data]="percorsiPieChartData()" [options]="percorsiPieChartOptions"
+                            type="pie">
                         </canvas>
+                        } @else {
+                        <div class="no-data-state">
+                            <mat-icon>donut_large</mat-icon>
+                            <p>Nessun dato disponibile</p>
+                        </div>
+                        }
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -132,7 +160,7 @@
 
         <!-- GRAFICO 5: Status Prenotazioni (Doughnut) -->
         <div class="col-lg-3 mb-4">
-            <mat-card class="chart-card">
+            <mat-card class="chart-card h-100">
                 <mat-card-header>
                     <mat-card-title>
                         <mat-icon class="me-2">assignment</mat-icon>
@@ -141,19 +169,29 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="chart-container-square">
-                        <canvas baseChart [data]="statusPrenotazioniDoughnutData()" [options]="pazientiDoughnutChartOptions"
-                            type="doughnut">
+                        @if(hasChartData(statusPrenotazioniDoughnutData())) {
+                        <canvas baseChart [data]="statusPrenotazioniDoughnutData()"
+                            [options]="pazientiDoughnutChartOptions" type="doughnut">
                         </canvas>
+                        } @else {
+                        <div class="no-data-state">
+                            <mat-icon>assignment</mat-icon>
+                            <p>Nessun dato disponibile</p>
+                        </div>
+                        }
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
+
     </div>
 
-    <!-- GRAFICO 6: Medici Radar Chart -->
+    <!-- ==================== RIGA 3: RADAR + KPI METRICHE ==================== -->
     <div class="row mb-4">
+
+        <!-- GRAFICO 6: Radar Medici -->
         <div class="col-lg-6 mb-4">
-            <mat-card class="chart-card">
+            <mat-card class="chart-card h-100">
                 <mat-card-header>
                     <mat-card-title>
                         <mat-icon class="me-2">radar</mat-icon>
@@ -162,17 +200,25 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="chart-container-medium">
-                        <canvas baseChart [data]="mediciRadarChartData()" [options]="mediciRadarChartOptions" type="radar">
+                        @if(hasChartData(mediciRadarChartData())) {
+                        <canvas baseChart [data]="mediciRadarChartData()" [options]="mediciRadarChartOptions"
+                            type="radar">
                         </canvas>
+                        } @else {
+                        <div class="no-data-state">
+                            <mat-icon>radar</mat-icon>
+                            <p>Nessun dato disponibile</p>
+                        </div>
+                        }
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
 
-        <!-- KPI Cards Dettagliate -->
+        <!-- KPI METRICHE CHIAVE -->
         <div class="col-lg-6 mb-4">
             @if(kpiData()) {
-            <mat-card class="stat-detail-card">
+            <mat-card class="stat-detail-card h-100">
                 <mat-card-header>
                     <mat-card-title>
                         <mat-icon class="me-2">insights</mat-icon>
@@ -181,136 +227,59 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="row">
+
                         <div class="col-6 mb-3">
                             <div class="kpi-box">
                                 <div class="kpi-icon text-primary">
                                     <mat-icon>star</mat-icon>
                                 </div>
-                                <div class="kpi-value">{{kpiData()!.ratingMedioMedici | number:'1.1-1'}}</div>
+                                <div class="kpi-value">{{ kpiData()!.ratingMedioMedici | number:'1.1-1' }}</div>
                                 <div class="kpi-label">Rating Medio Medici</div>
                             </div>
                         </div>
+
                         <div class="col-6 mb-3">
                             <div class="kpi-box">
                                 <div class="kpi-icon text-success">
                                     <mat-icon>trending_up</mat-icon>
                                 </div>
-                                <div class="kpi-value">{{kpiData()!.mediaSedutePerPercorso | number:'1.1-1'}}</div>
+                                <div class="kpi-value">{{ kpiData()!.mediaSedutePerPercorso | number:'1.1-1' }}</div>
                                 <div class="kpi-label">Media Sedute/Percorso</div>
                             </div>
                         </div>
+
                         <div class="col-6 mb-3">
                             <div class="kpi-box">
                                 <div class="kpi-icon text-warning">
                                     <mat-icon>notifications</mat-icon>
                                 </div>
-                                <div class="kpi-value">{{kpiData()!.notificheNonLette}}</div>
+                                <div class="kpi-value">{{ kpiData()!.notificheNonLette }}</div>
                                 <div class="kpi-label">Notifiche Non Lette</div>
                             </div>
                         </div>
+
                         <div class="col-6 mb-3">
                             <div class="kpi-box">
                                 <div class="kpi-icon" [class.text-success]="kpiData()!.trendPrenotazioniMese >= 0"
                                     [class.text-danger]="kpiData()!.trendPrenotazioniMese < 0">
-                                    <mat-icon>{{kpiData()!.trendPrenotazioniMese >= 0 ? 'arrow_upward' :
-                                        'arrow_downward'}}</mat-icon>
+                                    <mat-icon>
+                                        {{ kpiData()!.trendPrenotazioniMese >= 0 ? 'arrow_upward' : 'arrow_downward' }}
+                                    </mat-icon>
                                 </div>
-                                <div class="kpi-value">{{kpiData()!.trendPrenotazioniMese > 0 ? '+' :
-                                    ''}}{{kpiData()!.trendPrenotazioniMese}}</div>
+                                <div class="kpi-value">
+                                    {{ kpiData()!.trendPrenotazioniMese > 0 ? '+' : '' }}{{
+                                    kpiData()!.trendPrenotazioniMese }}
+                                </div>
                                 <div class="kpi-label">Trend Mensile</div>
                             </div>
                         </div>
+
                     </div>
                 </mat-card-content>
             </mat-card>
             }
         </div>
-    </div>
 
-    <!-- ==================== MEDICI DA VERIFICARE ==================== -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <mat-card>
-                <mat-card-header>
-                    <mat-card-title>
-                        <mat-icon class="me-2">verification</mat-icon>
-                        Medici da Verificare
-                        @if(mediciDaVerificare().length > 0) {
-                        <mat-chip class="ms-2 chip-alert">{{mediciDaVerificare().length}}</mat-chip>
-                        }
-                    </mat-card-title>
-                    <div class="spacer"></div>
-                    <button mat-button routerLink="/admin/medici">Vedi Tutti</button>
-                </mat-card-header>
-                <mat-card-content>
-                    @if(mediciDaVerificare().length === 0) {
-                    <div class="empty-state text-center py-5">
-                        <mat-icon class="empty-icon">verified</mat-icon>
-                        <p class="mt-3">Nessun medico in attesa di verifica</p>
-                    </div>
-                    }
-                    @else {
-                    @for(medico of mediciDaVerificare(); track medico.id) {
-                    <div class="verification-card mb-3">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div class="flex-grow-1">
-                                <h5 class="mb-1">Dr. {{medico.nome}} {{medico.cognome}}</h5>
-                                <p class="text-muted mb-2">{{medico.specializzazione}}</p>
-
-                                <div class="info-grid mb-3">
-                                    <div class="info-item">
-                                        <strong>Email:</strong>
-                                        <span>{{medico.email}}</span>
-                                    </div>
-                                    <div class="info-item">
-                                        <strong>Numero Albo:</strong>
-                                        <span>{{medico.numeroAlbo}}</span>
-                                    </div>
-                                    <div class="info-item">
-                                        <strong>Università:</strong>
-                                        <span>{{medico.universita || 'N/A'}}</span>
-                                    </div>
-                                    <div class="info-item">
-                                        <strong>Anno Laurea:</strong>
-                                        <span>{{medico.annoLaurea || 'N/A'}}</span>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex gap-2 mb-2">
-                                    <mat-chip class="chip-info">
-                                        <mat-icon class="chip-icon">schedule</mat-icon>
-                                        {{medico.createdAt | date: 'dd/MM/yyyy'}}
-                                    </mat-chip>
-                                    @if(medico.hasDocuments) {
-                                    <mat-chip class="chip-success">
-                                        <mat-icon class="chip-icon">attach_file</mat-icon>
-                                        Documenti caricati
-                                    </mat-chip>
-                                    }
-                                </div>
-                            </div>
-
-                            <div class="action-buttons">
-                                <button mat-button (click)="viewDocuments(medico.id)">
-                                    <mat-icon>visibility</mat-icon>
-                                    Documenti
-                                </button>
-                                <button mat-raised-button color="primary" (click)="approvaMedico(medico.id)">
-                                    <mat-icon>check_circle</mat-icon>
-                                    Approva
-                                </button>
-                                <button mat-raised-button color="warn" (click)="rifiutaMedico(medico.id)">
-                                    <mat-icon>cancel</mat-icon>
-                                    Rifiuta
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    }
-                    }
-                </mat-card-content>
-            </mat-card>
-        </div>
     </div>
 
     <!-- ==================== ATTIVITÀ RECENTI ==================== -->
@@ -324,14 +293,14 @@
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
+
                     @if(recentActivity().length === 0) {
                     <div class="empty-state text-center py-4">
                         <mat-icon class="empty-icon">history</mat-icon>
                         <p class="mt-3">Nessuna attività recente</p>
                     </div>
-                    }
-                    @else {
-                    @for (activity of recentActivity(); track activity.id) {
+                    } @else {
+                    @for(activity of recentActivity(); track activity.id) {
                     <div class="activity-item mb-3">
                         <div class="d-flex align-items-start">
                             <mat-icon class="activity-icon me-3" [class]="'text-' + activity.type">
@@ -339,15 +308,18 @@
                             </mat-icon>
                             <div class="flex-grow-1">
                                 <p class="mb-1"><strong>{{ activity.action }}</strong></p>
-                                <p class="mb-0 text-muted small">{{ activity.time | date: 'dd/MM/yyyy HH:mm' }}</p>
+                                <p class="mb-0 text-muted small">{{ activity.time | date:'dd/MM/yyyy HH:mm' }}</p>
                             </div>
                         </div>
                     </div>
                     }
                     }
+
                 </mat-card-content>
             </mat-card>
         </div>
     </div>
+
 </div>
+
 }

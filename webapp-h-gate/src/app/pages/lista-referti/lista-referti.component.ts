@@ -40,12 +40,9 @@ export class ListaRefertiComponent extends ListBasePage<RefertoFiltri> {
     super();
     this.formItems = FormConfigs.FORM_REFERTO_SEARCH_FIELDS;
   }
-
   private readonly fieldMap: { key: keyof RefertoFiltri; operator: string }[] = [
     { key: 'nomeMedico', operator: 'IS_LIKE' },
-    { key: 'tipoReferto', operator: 'IS_LIKE' },
-    { key: 'dataEmissione', operator: 'IS_LIKE' },
-
+    { key: 'tipoReferto', operator: 'IS_LIKE' }
   ];
 
   override goNextPage(): void {
