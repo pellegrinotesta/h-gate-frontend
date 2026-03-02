@@ -9,14 +9,14 @@ export class FormConfigs {
             label: 'Nome',
             type: 'text',
             validators: [Validators.required, Validators.minLength(2)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-4'
         },
         {
             name: 'cognome',
             label: 'Cognome',
             type: 'text',
             validators: [Validators.required, Validators.minLength(2)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-4'
         },
         {
             name: 'email',
@@ -72,49 +72,49 @@ export class FormConfigs {
             label: 'Nome',
             type: 'text',
             validators: [Validators.required, Validators.minLength(2)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-5'
         },
         {
             name: 'cognome',
             label: 'Cognome',
             type: 'text',
             validators: [Validators.required, Validators.minLength(2)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-5'
         },
         {
             name: 'email',
             label: 'Email',
             type: 'email',
             validators: [Validators.required, Validators.email],
-            colClass: 'col-md-6'
+            colClass: 'col-md-5'
         },
         {
             name: 'telefono',
             label: 'Telefono',
             type: 'tel',
             validators: [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-5'
         },
         {
             name: 'password',
             label: 'Password',
             type: 'password',
             validators: [Validators.required, Validators.minLength(8)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-5'
         },
         {
             name: 'confirmPassword',
             label: 'Conferma Password',
             type: 'password',
             validators: [Validators.required],
-            colClass: 'col-md-6'
+            colClass: 'col-md-5'
         },
         {
             name: 'dataNascita',
             label: 'Data di nascita',
             type: 'date',
             validators: [Validators.required],
-            colClass: 'col-md-6'
+            colClass: 'col-md-4'
         },
         {
             name: 'indirizzo',
@@ -135,14 +135,14 @@ export class FormConfigs {
             label: 'Provincia',
             type: 'text',
             validators: [Validators.required, Validators.maxLength(2)],
-            colClass: 'col-md-4'
+            colClass: 'col-md-2'
         },
         {
             name: 'cap',
             label: 'CAP',
             type: 'text',
             validators: [Validators.required, Validators.pattern(/^[0-9]{5}$/)],
-            colClass: 'col-md-4'
+            colClass: 'col-md-3'
         }
     ];
 
@@ -152,21 +152,21 @@ export class FormConfigs {
             label: 'Nome',
             type: 'text',
             validators: [Validators.required, Validators.minLength(2)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-5'
         },
         {
             name: 'cognome',
             label: 'Cognome',
             type: 'text',
             validators: [Validators.required, Validators.minLength(2)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-5'
         },
         {
             name: 'dataNascita',
             label: 'Data di nascita',
             type: 'date',
             validators: [Validators.required],
-            colClass: 'col-md-6'
+            colClass: 'col-md-4'
         },
         {
             name: 'codiceFiscale',
@@ -174,14 +174,14 @@ export class FormConfigs {
             type: 'text',
             validators: [Validators.required, Validators.minLength(16), Validators.maxLength(16)],
             maxLength: 16,
-            colClass: 'col-md-6'
+            colClass: 'col-md-5'
         },
         {
             name: 'citta',
             label: 'Città',
             type: 'text',
             validators: [Validators.required],
-            colClass: 'col-md-4'
+            colClass: 'col-md-3'
         },
         {
             name: 'sesso',
@@ -191,7 +191,7 @@ export class FormConfigs {
                 { value: 'M', label: 'Maschio' },
                 { value: 'F', label: 'Femmina' }
             ],
-            colClass: 'col-md-6'
+            colClass: 'col-md-3'
         },
 
     ]
@@ -212,7 +212,7 @@ export class FormConfigs {
                 { value: '0+', label: '0+' },
                 { value: '0-', label: '0-' }
             ],
-            colClass: 'col-md-6'
+            colClass: 'col-md-3'
         },
         {
             name: 'altezzaCm',
@@ -221,7 +221,7 @@ export class FormConfigs {
             validators: [Validators.min(50), Validators.max(250)],
             min: 50,
             max: 250,
-            colClass: 'col-md-6'
+            colClass: 'col-md-3'
         },
         {
             name: 'pesoKg',
@@ -230,7 +230,7 @@ export class FormConfigs {
             validators: [Validators.min(2), Validators.max(300)],
             min: 2,
             max: 300,
-            colClass: 'col-md-6'
+            colClass: 'col-md-3'
         },
         {
             name: 'allergie',
