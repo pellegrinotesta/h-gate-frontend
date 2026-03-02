@@ -23,46 +23,46 @@ export class FormConfigs {
             label: 'Email',
             type: 'email',
             validators: [Validators.required, Validators.email],
-            colClass: 'col-md-6'
+            colClass: 'col-md-3'
         },
         {
             name: 'telefono',
             label: 'Telefono',
             type: 'tel',
             validators: [Validators.pattern(/^\+?[0-9]{10,15}$/)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-3'
         },
         {
             name: 'dataNascita',
             label: 'Data di nascita',
             type: 'date',
-            colClass: 'col-md-6'
+            colClass: 'col-md-2'
         },
         {
             name: 'indirizzo',
             label: 'Indirizzo',
             type: 'text',
-            colClass: 'col-md-6'
+            colClass: 'col-md-4'
         },
         {
             name: 'citta',
             label: 'Città',
             type: 'text',
-            colClass: 'col-md-4'
+            colClass: 'col-md-3'
         },
         {
             name: 'provincia',
             label: 'Provincia',
             type: 'text',
             validators: [Validators.maxLength(2)],
-            colClass: 'col-md-4'
+            colClass: 'col-md-2'
         },
         {
             name: 'cap',
             label: 'CAP',
             type: 'text',
             validators: [Validators.pattern(/^[0-9]{5}$/)],
-            colClass: 'col-md-4'
+            colClass: 'col-md-3'
         }
     ];
 
@@ -310,24 +310,23 @@ export class FormConfigs {
             label: 'Password attuale',
             type: 'password',
             validators: [Validators.required],
-            colClass: 'col-md-6'
+            colClass: 'col-md-4'
         },
         {
             name: 'newPassword',
             label: 'Nuova password',
             type: 'password',
             validators: [Validators.required, Validators.minLength(8)],
-            colClass: 'col-md-6'
+            colClass: 'col-md-4'
         },
         {
             name: 'confirmPassword',
             label: 'Conferma password',
             type: 'password',
             validators: [Validators.required],
-            colClass: 'col-md-6'
+            colClass: 'col-md-4'
         }
-    ]
-
+    ];
     static readonly DETTAGLIO_PRENOTAZIONE_FIELDS: FormItem[] = [
         { name: 'numeroPrenotazione', label: 'Numero prenotazione', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true },
         { name: 'pazienteNomeCompleto', label: 'Paziente', type: 'text', initialValue: '', colClass: 'col-md-3', readonly: true },
@@ -623,16 +622,16 @@ export class FormConfigs {
     ];
 
     static readonly FORM_MED_SEARCH_FIELDS: FormItem[] = [
-        {name: 'nomeCompleto', label: 'Nome Medico', type: 'text'},
-        {name: 'specializzazione', label: 'Specializzazione', type: 'text'},
-        {name: 'citta', label: 'Città', type: 'text'},
-        {name: 'provincia', label: 'Provincia', type: 'text'}
+        { name: 'nomeCompleto', label: 'Nome Medico', type: 'text' },
+        { name: 'specializzazione', label: 'Specializzazione', type: 'text' },
+        { name: 'citta', label: 'Città', type: 'text' },
+        { name: 'provincia', label: 'Provincia', type: 'text' }
     ];
 
     static readonly FORM_REFERTO_SEARCH_FIELDS: FormItem[] = [
         { name: 'nomeMedico', label: 'Nome Medico', type: 'text' },
         { name: 'tipoReferto', label: 'Tipo Referto', type: 'text' }
-      ];
+    ];
 
 
 }
