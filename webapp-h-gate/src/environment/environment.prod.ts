@@ -12,7 +12,15 @@ export const environment = {
     registration: `${apiUrl}/registration`,
     paziente: `${apiUrl}/paziente`,
     dashboard: `${apiUrl}/dashboard`,
-    tariffe: `${apiUrl}/tariffe`,
+    prenotazione: `${apiUrl}/prenotazione`,
+    agenda: `${apiUrl}/agenda`,
+    notifiche: `${apiUrl}/notifiche`,
+    disponibilita: `${apiUrl}/disponibilita/medico`,
+    referto: `${apiUrl}/referto`,
+    percorsoTerapeutico: `${apiUrl}/percorsi-terapeutici`,
+    valutazioni: `${apiUrl}/valutazioni`,
+    allegato: `${apiUrl}/allegati`,
+    tariffe: `${apiUrl}/tariffe`
   },
   jwt: {
     encryptionKey: 'Qs23RBNF330ms00n',
