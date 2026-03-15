@@ -1,4 +1,4 @@
-export const apiUrl = 'http://localhost:8080';
+export const apiUrl = 'https://h-gate-backend.onrender.com';
 
 export const environment = {
   production: true,
