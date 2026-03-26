@@ -13,6 +13,7 @@ import { DisponibilitaMedicoComponent } from '../../components/disponibilita-med
 import { PrenotazioneService } from '../../services/prenotazione.service';
 import { RoutesEnum } from '../../shared/enums/routes.enum';
 import { TariffeDialogComponent } from '../../components/tariffe-dialog/tariffe-dialog.component';
+import { AnnullaPrenotazioneDialogComponent } from '../../components/annulla-prenotazione-dialog/annulla-prenotazione-dialog.component';
 
 @Component({
   selector: 'app-dashboard-medico',
@@ -207,8 +208,26 @@ export class DashboardMedicoComponent extends BasePageComponent {
     });
   }
 
-  annullaAppuntamento(id: number): void {
-    console.log('Annulla appuntamento ID:', id);
+  annullaAppuntamento(element: Prenotazione): void {
+    const dialogRef = this.dialog.open(AnnullaPrenotazioneDialogComponent, {
+      width: '500px',
+      data: { prenotazioneId: element.id, pazienteNome: element.paziente?.nome }
+    });
+
+    dialogRef.afterClosed().subscribe((motivo: string | null) => {
+      if (motivo) {
+        this.prenotazioneService.annullaPrenotazione(element.id, motivo).subscribe({
+          next: (res) => {
+            if (res.ok === false) {
+              this.snackBar.openSnackBar(res.message, 'Chiudi');
+            } else {
+              this.snackBar.openSnackBar('Operazione avvenuta con successo', 'Chiudi');
+              this.loadDashboardData();
+            }
+          }
+        });
+      }
+    });
   }
 
   apriGestioneTariffe(): void {
@@ -219,8 +238,12 @@ export class DashboardMedicoComponent extends BasePageComponent {
     });
   }
 
-  apriCartellaClinica(pazienteId: number): void {
-    // Navigare a cartella clinica paziente
+  apriCartellaClinica(pazienteId: number | undefined): void {
+    if (!pazienteId) {
+      this.snackBar.openSnackBar('Paziente non disponibile', 'Chiudi');
+      return;
+    }
+    this.router.navigate(['/referti', pazienteId]);
   }
 
   apriDettaglioPrenotazione(prenotazioneId: number): void {

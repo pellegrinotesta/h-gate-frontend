@@ -288,7 +288,6 @@ export class DashboardAdminComponent extends BasePageComponent implements OnInit
           label: 'Medici',
           data: [
             kpi.mediciAttivi,
-            kpi.mediciVerificati,
             kpi.mediciDisponibili,
             kpi.neuropsichiatri,
             kpi.psicologi,
@@ -353,7 +352,6 @@ export class DashboardAdminComponent extends BasePageComponent implements OnInit
         value: String(kpi.mediciAttivi),
         icon: 'local_hospital',
         color: 'success',
-        change: `${kpi.mediciVerificati} verificati`
       },
       {
         title: 'Prenotazioni Oggi',

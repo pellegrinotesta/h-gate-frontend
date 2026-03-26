@@ -21,6 +21,7 @@ import { PrenotazioneCreate, SlotDisponibile } from '../../models/prenotazione.m
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TariffeMedico } from '../../models/tariffe-medico.model';
 import { AllegatoService } from '../../services/allegato.service';
+import { RoutesEnum } from '../../shared/enums/routes.enum';
 
 @Component({
   selector: 'app-nuova-prenotazione',
@@ -231,7 +232,6 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
       pazienteId: this.pazienteForm.get('pazienteId')?.value,
       medicoId: this.medicoForm.get('medicoId')?.value,
       dataOra: this.dataOraForm.get('slot')?.value,
-      // Supponendo che il backend si aspetti la descrizione della prestazione
       tipoVisita: this.dettagliForm.get('tipoVisita')?.value,
       note: this.dettagliForm.get('note')?.value,
       isPrimaVisita: this.dettagliForm.get('isPrimaVisita')?.value
@@ -263,7 +263,7 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
     if (!input.files) return;
     const nuovi = Array.from(input.files);
     this.allegatiDaCaricare.update(curr => [...curr, ...nuovi]);
-    input.value = ''; // reset input per permettere ricaricamento stesso file
+    input.value = '';
   }
 
   rimuoviFile(index: number): void {
@@ -272,7 +272,7 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
 
   uploadAllegati(): void {
     if (!this.prenotazioneCreataId() || this.allegatiDaCaricare().length === 0) {
-      this.router.navigate(['/prenotazioni']);
+      window.location.href = '/prenotazioni';
       return;
     }
 
@@ -280,12 +280,10 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
     const formData = new FormData();
     this.allegatiDaCaricare().forEach(f => formData.append('files', f));
 
-    this.allegatoService.uploadAllegati(
-      this.prenotazioneCreataId()!, formData
-    ).subscribe({
+    this.allegatoService.uploadAllegati(this.prenotazioneCreataId()!, formData).subscribe({
       next: () => {
         this.snackBar.openSnackBar('Allegati caricati con successo', 'Chiudi');
-        this.router.navigate(['/prenotazioni']);
+        window.location.href = '/prenotazioni';
       },
       error: () => {
         this.snackBar.openSnackBar('Errore caricamento allegati', 'Chiudi');
@@ -295,7 +293,7 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
   }
 
   saltaAllegati(): void {
-    this.router.navigate(['/prenotazioni']);
+    window.location.href = '/prenotazioni';
   }
 
   getFileIcon(file: File): string {
@@ -335,13 +333,6 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
     const pad = (n: number) => n.toString().padStart(2, '0');
 
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-  }
-
-  private toLocalDateTimeString(date: Date): string {
-    const pad = (n: number) => n.toString().padStart(2, '0');
-
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
-      `T${pad(date.getHours())}:${pad(date.getMinutes())}:00`;
   }
 
 

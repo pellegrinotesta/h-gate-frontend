@@ -13,6 +13,11 @@ import { GenericCardComponent } from '../../shared/components/generic-card/gener
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
 import { GenericTableComponent } from '../../shared/components/generic-table/generic-table.component';
 import { SharedModule } from '../../shared/shared.module';
+import { TableAction } from '../../shared/models/table-action.model';
+import { RefertoAction } from '../../shared/constants/referto-table-action.constant';
+import { TableOperation } from '../../shared/models/table-operation.model';
+import { RoutesEnum } from '../../shared/enums/routes.enum';
+import { SNACKBAR } from '../../shared/enums/snackbar-class.enum';
 
 @Component({
   selector: 'app-lista-referti',
@@ -35,6 +40,7 @@ export class ListaRefertiComponent extends ListBasePage<RefertoFiltri> {
   title = 'Referti';
   refertiCaricati: Referto[] = [];
   columns: Column[] = RefertoTableColumn;
+  actions: TableAction[] = RefertoAction;
 
   constructor() {
     super();
@@ -44,6 +50,15 @@ export class ListaRefertiComponent extends ListBasePage<RefertoFiltri> {
     { key: 'nomeMedico', operator: 'IS_LIKE' },
     { key: 'tipoReferto', operator: 'IS_LIKE' }
   ];
+
+  onActionClick(ev: { action: TableAction, element: Referto }): void {
+    switch (ev.action.operation) {
+      case TableOperation.VIEW:
+        this.router.navigate([RoutesEnum.REFERTO, ev.element.id]);
+        break;
+      default: this.snackBar.openSnackBar('Operazione non disponibile', 'Chiudi', SNACKBAR.WARN);
+    }
+  }
 
   override goNextPage(): void {
     this.refertoService.goNextPage(this.data.next).subscribe(res => this.data = res.data);

@@ -9,7 +9,7 @@
         <div class="row align-items-center">
             <div class="col-md-5">
                 <h1 class="mb-2">Benvenuto </h1>
-                <p class="mb-0">Gestisci la salute dei tuoi bambini</p>
+                <p class="mb-0">Gestisci la salute dei tuoi minori</p>
             </div>
 
             <!-- Selezione Minore -->
@@ -243,7 +243,7 @@
                             <mat-icon>description</mat-icon>
                             Cartella clinica di {{ minoreSelezionato()!.nome }}
                         </button>
-                        <button mat-raised-button [routerLink]="['/pazienti', minoreSelezionato()!.id]">
+                        <button mat-raised-button [routerLink]="['/profile']">
                             <mat-icon>edit</mat-icon>
                             Modifica profilo minore
                         </button>

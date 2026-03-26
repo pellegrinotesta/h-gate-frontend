@@ -14,11 +14,11 @@ import { TableOperation } from '../../shared/models/table-operation.model';
 import { RoutesEnum } from '../../shared/enums/routes.enum';
 import { SNACKBAR } from '../../shared/enums/snackbar-class.enum';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
 import { GenericCardComponent } from '../../shared/components/generic-card/generic-card.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PrenotazioniAction } from '../../shared/constants/prenotazioni-table-action.constant';
+import { AnnullaPrenotazioneDialogComponent } from '../../components/annulla-prenotazione-dialog/annulla-prenotazione-dialog.component';
 
 
 @Component({
@@ -50,11 +50,22 @@ export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> 
     this.formItems = [
       { name: 'numeroPrenotazione', label: 'Numero Prenotazione', type: 'text', initialValue: '' },
       { name: 'tipoVisita', label: 'Tipo visita', type: 'text', initialValue: '' },
-      { name: 'stato', label: 'Stato', type: 'text', initialValue: '' },
+      {
+        name: 'stato', label: 'Stato', type: 'select', initialValue: '', options: [
+          { label: 'IN ATTESA', value: 'IN_ATTESA' },
+          { label: 'CONFERMATA', value: 'CONFERMATA' },
+          { label: 'ANNULLATA', value: 'ANNULLATA' },
+          { label: 'COMPLETATA', value: 'COMPLETATA' }
+        ]
+      },
       { name: 'pazienteNomeCompleto', label: 'Paziente', type: 'text', initialValue: '' },
       { name: 'tutoreNomeCompleto', label: 'Tutore', type: 'text', initialValue: '' },
       { name: 'medicoNomeCompleto', label: 'Medico', type: 'text', initialValue: '' },
     ]
+  }
+
+  override ngOnInit() {
+    this.executeSearch(this.size, this.currentFilter);
   }
 
   addNew(): void {
@@ -74,16 +85,22 @@ export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> 
   }
 
   onDeletePrenotazione(element: PrenotazioneDettagliata): void {
-    const dialogRef = this.matDialog.open(ConfirmDialogComponent, {
-      data: {
-        message: `Sei sicuro di voler eliminare la prenotazione ${element.numeroPrenotazione}?`,
-        subtitle: 'L\'operazione non può essere annullata.'
-      }
+    const dialogRef = this.matDialog.open(AnnullaPrenotazioneDialogComponent, {
+      width: '500px',
+      data: { prenotazioneId: element.id, pazienteNome: element.pazienteNome }
     });
-    dialogRef.afterClosed().subscribe((result: boolean) => {
-      if (result) {
-        this.prenotazioneService.delete(element.id).subscribe(res => {
-          this.executeSearch(this.size, this.currentFilter);
+
+    dialogRef.afterClosed().subscribe((motivo: string | null) => {
+      if (motivo) {
+        this.prenotazioneService.annullaPrenotazione(element.id, motivo).subscribe({
+          next: (res) => {
+            if (res.ok === false) {
+              this.snackBar.openSnackBar(res.message, 'Chiudi');
+            } else {
+              this.snackBar.openSnackBar('Operazione avvenuta con successo', 'Chiudi');
+              window.location.reload();
+            }
+          }
         });
       }
     });
@@ -110,7 +127,9 @@ export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> 
     this.prenotazioneService.searchAdvanced(
       { ...filter, page_size: pageSize ?? 10 },
       this.fieldMap
-    ).subscribe(res => this.data = res.data);
+    ).subscribe(res => {
+      this.data = { ...res.data };
+    });
   }
 
 }

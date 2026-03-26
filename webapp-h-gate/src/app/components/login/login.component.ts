@@ -83,10 +83,15 @@ export class LoginComponent extends FormBasePageComponent {
         this.isLoading = false
       }
       )
-    ).subscribe((user: AuthenticatedUser) => {
-      this.authService.storeUser(user);
-      this.router.navigate([RoutesEnum.PROFILE]);
-    })
+    ).subscribe({
+      next: (user: AuthenticatedUser) => {
+        this.authService.storeUser(user);
+        this.router.navigate([RoutesEnum.PROFILE]);
+      },
+      error: (err) => {
+       this.snackBar.openSnackBar("Errore nell'inserimento delle credenziali.", "Chiudi");
+      }
+    });
   }
 
   // onSubmitOtp() {

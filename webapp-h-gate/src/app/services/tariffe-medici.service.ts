@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpBaseService } from '../shared/services/base/http-base.service';
 import { TariffeMedico } from '../models/tariffe-medico.model';
-import { environment } from '../../environment/environment.prod';
+import { environment } from '../../environment/environment';
 import { METHODS } from '../shared/enums/methods.enum';
 import { ResponseDTO } from '../shared/models/response.model';
 import { Observable } from 'rxjs/internal/Observable';

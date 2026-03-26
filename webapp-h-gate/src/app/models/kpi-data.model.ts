@@ -12,7 +12,6 @@ export interface KpiData {
     
     // Medici
     mediciDisponibili: number;
-    mediciVerificati: number;
     mediciAttivi: number;
     neuropsichiatri: number;
     psicologi: number;

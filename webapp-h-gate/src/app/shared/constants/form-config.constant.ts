@@ -92,7 +92,11 @@ export class FormConfigs {
             name: 'telefono',
             label: 'Telefono',
             type: 'tel',
-            validators: [Validators.required, Validators.pattern(/^\+?[0-9]{10,15}$/)],
+            validators: [
+                Validators.required,
+                Validators.pattern(/^\+?[0-9\s\-]{10,15}$/),
+                Validators.maxLength(10)
+            ],
             colClass: 'col-md-5'
         },
         {

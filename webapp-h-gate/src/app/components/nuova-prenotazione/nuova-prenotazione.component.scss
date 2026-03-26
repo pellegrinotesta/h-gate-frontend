@@ -40,6 +40,19 @@
     }
 }
 
+.slots-grid mat-chip-option {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    gap: 6px; 
+    padding: 6px 12px;
+}
+
+.slots-grid mat-chip-option mat-icon {
+    font-size: 16px;
+    vertical-align: middle;
+}
+
 .riepilogo-card {
     border: 2px solid #4caf50;
 

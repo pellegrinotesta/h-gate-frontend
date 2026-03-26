@@ -170,8 +170,6 @@ export class RegisterComponent {
       }
     };
 
-    console.log('Payload registrazione tutore:', payload);
-
     const consentDialog = this.dialog.open(PrivacyContentDialogComponent, {
       width: '550px',
       disableClose: true,
@@ -212,7 +210,10 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading.set(false);
-        this.snackBar.openSnackBar('Errore durante la registrazione', 'Chiudi');
+
+        const errorMessage = err?.error?.message || 'Email già in uso.';
+
+        this.snackBar.openSnackBar(errorMessage, 'Chiudi');
       }
     });
 
