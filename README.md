@@ -1,6 +1,6 @@
 # H-Gate Web Client
 
-Dashboard reattiva per il personale medico e le famiglie, realizzata con **Angular 17**. Il progetto esplora le ultime innovazioni del framework per massimizzare le performance e la manutenibilità.
+Dashboard reattiva per il personale medico e le famiglie, realizzata con **Angular 19**. Il progetto esplora le ultime innovazioni del framework per massimizzare le performance e la manutenibilità.
 
 ## Highlights Tecnologici
 * **Reactive State Management:** Implementazione delle nuove **Signal API** per una gestione dello stato granulare e performante.
