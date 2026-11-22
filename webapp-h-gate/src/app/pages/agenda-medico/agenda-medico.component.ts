@@ -193,7 +193,6 @@ export class AgendaMedicoComponent extends BasePageComponent {
     for (let i = 0; i < 42; i++) {
       const data = new Date(inizioCalendario);
       data.setDate(data.getDate() + i);
-
       giorni.push({
         data: data,
         appuntamenti: this.getAppuntamentiPerGiorno(data),
@@ -201,7 +200,6 @@ export class AgendaMedicoComponent extends BasePageComponent {
         isMeseCorrente: data.getMonth() === mese
       });
     }
-
     this.giorniMese.set(giorni);
   }
 

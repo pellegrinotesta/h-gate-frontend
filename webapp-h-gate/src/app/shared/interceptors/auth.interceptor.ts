@@ -8,7 +8,7 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) 
 
     if (storedUser) {
         const user = JSON.parse(storedUser);
-        token = user.authentication;      // <── QUI il vero token criptato
+        token = user.authentication; 
     }
 
     const authReq = token
