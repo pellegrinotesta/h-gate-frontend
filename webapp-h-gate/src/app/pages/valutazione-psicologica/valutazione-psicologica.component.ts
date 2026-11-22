@@ -1,4 +1,5 @@
 import { Component, inject, input, signal, ViewChild } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { LoaderComponent } from '../../components/loader/loader.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -80,8 +81,8 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
         this.formFields.set(FormConfigs.FORM_VALUTAZIONE_READ_FIELDS);
         this.isLoading = false;
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore caricamento valutazione', 'Chiudi', SNACKBAR.DANGER);
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore caricamento valutazione'), 'Chiudi', SNACKBAR.DANGER);
         this.isLoading = false;
       }
     });
@@ -158,7 +159,7 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
           this.editMode.set(false);
           this.formFields.set(FormConfigs.FORM_VALUTAZIONE_READ_FIELDS);
         },
-        error: () => this.snackBar.openSnackBar('Errore durante il salvataggio', 'Chiudi', SNACKBAR.DANGER)
+        error: (err) => this.snackBar.openSnackBar(errorMessage(err, 'Errore durante il salvataggio'), 'Chiudi', SNACKBAR.DANGER)
       });
     } else {
       this.valutazioneService.aggiorna(this.valutazione()!.id!, dto).subscribe({
@@ -176,7 +177,7 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
           this.editMode.set(false);
           this.formFields.set(FormConfigs.FORM_VALUTAZIONE_READ_FIELDS);
         },
-        error: () => this.snackBar.openSnackBar('Errore durante l\'aggiornamento', 'Chiudi', SNACKBAR.DANGER)
+        error: (err) => this.snackBar.openSnackBar(errorMessage(err, 'Errore durante l\'aggiornamento'), 'Chiudi', SNACKBAR.DANGER)
       });
     }
   }
@@ -188,7 +189,7 @@ export class ValutazionePsicologicaComponent extends BasePageComponent {
         this.snackBar.openSnackBar('Valutazione eliminata', 'Chiudi', SNACKBAR.SUCCESS);
         this.location.back();
       },
-      error: () => this.snackBar.openSnackBar('Errore durante l\'eliminazione', 'Chiudi', SNACKBAR.DANGER)
+      error: (err) => this.snackBar.openSnackBar(errorMessage(err, 'Errore durante l\'eliminazione'), 'Chiudi', SNACKBAR.DANGER)
     });
   }
 

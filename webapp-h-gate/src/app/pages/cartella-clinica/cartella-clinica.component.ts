@@ -1,4 +1,5 @@
 import { Component, inject, input, signal } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { BasePageComponent } from '../../shared/components/base/base-page.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
@@ -296,7 +297,7 @@ export class CartellaClinicaComponent extends BasePageComponent {
       },
       error: (err) => {
         console.error('Errore durante il download:', err);
-        this.snackBar.openSnackBar('Errore nel download del file', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel download del file'), 'Chiudi');
       }
     });
   }

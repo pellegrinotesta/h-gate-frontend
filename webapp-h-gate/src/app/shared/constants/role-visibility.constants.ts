@@ -38,6 +38,9 @@ export const ROLE_VISIBILITY = {
     Group.MEDICO,
     Group.TUTORE
   ],
+  APPROVAZIONI: [
+    Group.ADMIN
+  ],
   CARTELLA_CLINICA: [
     Group.TUTORE,
     Group.MEDICO

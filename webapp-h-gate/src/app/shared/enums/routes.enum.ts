@@ -10,5 +10,6 @@ export enum RoutesEnum {
   REFERTO = 'referti',
   PAZIENTE = 'pazienti',
   MEDICO = 'medici',
+  APPROVAZIONI = 'approvazioni',
 
 }

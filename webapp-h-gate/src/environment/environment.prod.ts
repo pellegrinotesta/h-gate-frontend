@@ -20,10 +20,10 @@ export const environment = {
     percorsoTerapeutico: `${apiUrl}/percorsi-terapeutici`,
     valutazioni: `${apiUrl}/valutazioni`,
     allegato: `${apiUrl}/allegati`,
-    tariffe: `${apiUrl}/tariffe`
+    tariffe: `${apiUrl}/tariffe`,
+    approvazioni: `${apiUrl}/admin/approvazioni`
   },
   jwt: {
-    encryptionKey: 'Qs23RBNF330ms00n',
     allowedDomain: [apiUrl, apiUrl.replace('http://', '')],
     refresh: {
       minutesBeforeTokenExpiration: 8

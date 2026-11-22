@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { BasePageComponent } from '../../shared/components/base/base-page.component';
 import { DashboardService } from '../../services/dashboard.service';
 import { StatCard } from '../../models/stat-card.model';
@@ -62,7 +63,7 @@ export class DashboardMedicoComponent extends BasePageComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.snackBar.openSnackBar('Errore caricamento dashboard', err);
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore caricamento dashboard'), 'Chiudi');
       }
     });
   }
@@ -203,7 +204,7 @@ export class DashboardMedicoComponent extends BasePageComponent {
         }
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore conferma appuntamento', err);
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore conferma appuntamento'), 'Chiudi');
       }
     });
   }
@@ -224,7 +225,8 @@ export class DashboardMedicoComponent extends BasePageComponent {
               this.snackBar.openSnackBar('Operazione avvenuta con successo', 'Chiudi');
               this.loadDashboardData();
             }
-          }
+          },
+          error: (err) => this.snackBar.openSnackBar(errorMessage(err, "Errore durante l'annullamento"), 'Chiudi')
         });
       }
     });

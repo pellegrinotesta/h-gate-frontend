@@ -1,0 +1,189 @@
+.approvazioni-page {
+    padding: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+
+    @media (max-width: 600px) {
+        padding: 1rem;
+    }
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+
+    h1 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #1a2332;
+        margin: 0;
+    }
+
+    p {
+        margin: 2px 0 0;
+        color: #6b7280;
+        font-size: 0.88rem;
+    }
+}
+
+.spacer {
+    flex: 1;
+}
+
+.header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1565c0, #42a5f5);
+    flex-shrink: 0;
+
+    mat-icon {
+        color: white;
+    }
+}
+
+.tab-icon {
+    margin-right: 6px;
+    font-size: 1.15rem;
+    width: 1.15rem;
+    height: 1.15rem;
+}
+
+.badge {
+    margin-left: 8px;
+    background: #c62828;
+    color: white;
+    border-radius: 10px;
+    padding: 0 7px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 18px;
+}
+
+.tab-body {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.empty {
+    text-align: center;
+    color: #6b7280;
+    padding: 2.5rem 1rem;
+
+    mat-icon {
+        font-size: 2.2rem;
+        width: 2.2rem;
+        height: 2.2rem;
+        color: #2e7d32;
+    }
+}
+
+.richiesta-card {
+    display: flex;
+    gap: 16px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+
+    @media (max-width: 720px) {
+        flex-direction: column;
+    }
+}
+
+.card-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-weight: 700;
+    color: #1a2332;
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+}
+
+.freccia {
+    color: #9ca3af;
+    font-size: 1.1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.chip {
+    background: #e3f2fd;
+    color: #1565c0;
+    border-radius: 12px;
+    padding: 1px 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.dettagli {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 6px 16px;
+    margin: 0;
+
+    dt {
+        font-size: 0.72rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    dd {
+        margin: 0;
+        font-size: 0.88rem;
+        color: #1f2937;
+        overflow-wrap: anywhere;
+    }
+}
+
+.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.avviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 0.75rem 0 0;
+    font-size: 0.8rem;
+    color: #8a5a00;
+    background: #fff8e1;
+    border-radius: 6px;
+    padding: 6px 10px;
+
+    mat-icon {
+        font-size: 1rem;
+        width: 1rem;
+        height: 1rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+}
+
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+    min-width: 130px;
+
+    @media (max-width: 720px) {
+        flex-direction: row;
+    }
+}

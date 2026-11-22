@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { SharedModule } from '../../shared/shared.module';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -55,7 +56,7 @@ export class DisponibilitaMedicoComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore nel caricamento delle disponibilità', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel caricamento delle disponibilità'), 'Chiudi');
         this.isLoading.set(false);
       }
 
@@ -166,7 +167,7 @@ export class DisponibilitaMedicoComponent implements OnInit {
         this.isSaving.set(false);
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore salvataggio disponibilità', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore salvataggio disponibilità'), 'Chiudi');
         this.isSaving.set(false);
       }
     });
@@ -181,7 +182,7 @@ export class DisponibilitaMedicoComponent implements OnInit {
         this.snackBar.openSnackBar('Giorno disabilitato', 'Chiudi');
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore disabilitazione giorno', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore disabilitazione giorno'), 'Chiudi');
       }
     });
   }
@@ -202,7 +203,7 @@ export class DisponibilitaMedicoComponent implements OnInit {
         this.isSaving.set(false);
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore configurazione disponibilità standard', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore configurazione disponibilità standard'), 'Chiudi');
         this.isSaving.set(false);
       }
     });

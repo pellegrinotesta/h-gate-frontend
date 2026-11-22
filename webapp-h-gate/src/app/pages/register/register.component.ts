@@ -204,17 +204,8 @@ export class RegisterComponent {
     };
 
     this.registrationService.register(payload).subscribe({
-      next: () => {
-        this.isLoading.set(false);
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.isLoading.set(false);
-
-        const errorMessage = err?.error?.message || 'Email già in uso.';
-
-        this.snackBar.openSnackBar(errorMessage, 'Chiudi');
-      }
+      next: (res: any) => this.onRegistrato(res),
+      error: (err) => this.onErroreRegistrazione(err)
     });
 
 
@@ -222,15 +213,24 @@ export class RegisterComponent {
 
   private savePatient(payload: any): void {
     this.registrationService.register(payload).subscribe({
-      next: () => {
-        this.isLoading.set(false);
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.isLoading.set(false);
-        alert('Errore durante la registrazione');
-      }
+      next: (res: any) => this.onRegistrato(res),
+      error: (err) => this.onErroreRegistrazione(err)
     });
+  }
+
+  /** Il server indica se l'account è subito attivo o in attesa di approvazione della clinica. */
+  private onRegistrato(res: { message?: string } | null): void {
+    this.isLoading.set(false);
+    const msg = res?.message || 'Registrazione completata. Ora puoi accedere.';
+    this.snackBar.openSnackBar(msg, 'Chiudi');
+    this.router.navigate(['/login']);
+  }
+
+  private onErroreRegistrazione(err: unknown): void {
+    this.isLoading.set(false);
+    // TokenExpiredInterceptor restituisce il messaggio del server come stringa
+    const msg = typeof err === 'string' && err.trim() ? err : 'Errore durante la registrazione.';
+    this.snackBar.openSnackBar(msg, 'Chiudi');
   }
 
   goBack(): void {

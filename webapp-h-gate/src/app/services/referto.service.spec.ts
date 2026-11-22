@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { TEST_PROVIDERS } from '../../testing/test-providers';
 
 import { RefertoService } from './referto.service';
 
@@ -6,7 +7,7 @@ describe('RefertoService', () => {
   let service: RefertoService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ providers: TEST_PROVIDERS });
     service = TestBed.inject(RefertoService);
   });
 

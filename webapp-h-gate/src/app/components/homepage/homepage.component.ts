@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { SharedModule } from '../../shared/shared.module';
 import { BasePageComponent } from '../../shared/components/base/base-page.component';
 import { MenuComponent } from '../../components/menu/menu.component';
@@ -76,7 +77,7 @@ export class HomepageComponent extends BasePageComponent {
           this.snackBar.openSnackBar('Notifica segnata come letta', 'Chiudi');
         },
         error: (err) => {
-          this.snackBar.openSnackBar('Errore durante l\'aggiornamento della notifica', 'Chiudi');
+          this.snackBar.openSnackBar(errorMessage(err, 'Errore durante l\'aggiornamento della notifica'), 'Chiudi');
         }
       });
     }
@@ -96,7 +97,7 @@ export class HomepageComponent extends BasePageComponent {
         this.snackBar.openSnackBar('Tutte le notifiche sono state segnate come lette', 'Chiudi');
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore durante l\'aggiornamento', err);
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore durante l\'aggiornamento'), 'Chiudi');
       }
     });
   }

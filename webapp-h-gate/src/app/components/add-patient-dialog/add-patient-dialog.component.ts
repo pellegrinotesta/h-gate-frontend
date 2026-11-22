@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { errorMessage } from '../../shared/utils/error-message';
 import { Component, inject, signal, ViewChild, computed, effect } from '@angular/core';
 import { MatDialogModule, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
@@ -160,13 +161,24 @@ export class AddPatientDialogComponent {
     };
 
     this.pazienteService.createPaziente(payload).subscribe({
-      next: () => {
+      next: (res) => {
+        if (!res?.ok) {
+          this.snackBar.openSnackBar(res?.message || 'Errore nell\'aggiunta del paziente', 'Chiudi');
+          this.isSaving.set(false);
+          return;
+        }
+        if (!res.data) {
+          // Minore già registrato: creata una richiesta di associazione da verificare
+          this.snackBar.openSnackBar(res.message, 'Chiudi');
+          this.dialogRef.close(false);
+          return;
+        }
         this.snackBar.openSnackBar('Paziente aggiunto con successo', 'Chiudi');
         this.dialogRef.close(true);
       },
       error: (err) => {
         console.error('Errore creazione paziente:', err);
-        this.snackBar.openSnackBar('Errore nell\'aggiunta del paziente', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nell\'aggiunta del paziente'), 'Chiudi');
         this.isSaving.set(false);
       }
     });

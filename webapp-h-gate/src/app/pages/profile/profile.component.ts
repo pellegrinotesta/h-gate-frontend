@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { SharedModule } from '../../shared/shared.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -98,8 +99,8 @@ export class ProfileComponent extends BasePageComponent {
           }
         }
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore nel caricamento del profilo', 'Chiudi');
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel caricamento del profilo'), 'Chiudi');
         this.isLoading = false;
       }
     });
@@ -115,7 +116,7 @@ export class ProfileComponent extends BasePageComponent {
         this.isLoading = false;
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore nel recupero delle informazioni medico', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel recupero delle informazioni medico'), 'Chiudi');
         console.error(err);
         this.isLoading = false;
       }
@@ -134,7 +135,7 @@ export class ProfileComponent extends BasePageComponent {
         this.isLoading = false;
       },
       error: (err) => {
-        this.snackBar.openSnackBar('Errore nel recupero dei pazienti', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel recupero dei pazienti'), 'Chiudi');
         console.error(err);
         this.isLoading = false;
       }
@@ -159,8 +160,8 @@ export class ProfileComponent extends BasePageComponent {
         this.editModeTutore.set(false);
         this.loadProfile();
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel salvataggio'), 'Chiudi');
       }
     });
   }
@@ -195,8 +196,8 @@ export class ProfileComponent extends BasePageComponent {
         this.editModePaziente.set(false);
         this.loadPazienti();
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel salvataggio'), 'Chiudi');
       }
     });
   }
@@ -228,8 +229,8 @@ export class ProfileComponent extends BasePageComponent {
         this.selectedPaziente.set(null);
         this.loadPazienti();
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore nell\'eliminazione', 'Chiudi');
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nell\'eliminazione'), 'Chiudi');
       }
     });
   }
@@ -252,8 +253,8 @@ export class ProfileComponent extends BasePageComponent {
         this.editModeMedico.set(false);
         this.loadProfile();
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore nel salvataggio', 'Chiudi');
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel salvataggio'), 'Chiudi');
       }
     });
   }
@@ -265,8 +266,8 @@ export class ProfileComponent extends BasePageComponent {
       next: () => {
         this.snackBar.openSnackBar('Password cambiata con successo', 'Chiudi');
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore: verifica la password attuale', 'Chiudi');
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore: verifica la password attuale'), 'Chiudi');
       }
     });
   }

@@ -1,4 +1,5 @@
 import { Component, inject, input } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { SharedModule } from '../../shared/shared.module';
 import { LoaderComponent } from '../../components/loader/loader.component';
 import { PrenotazioneService } from '../../services/prenotazione.service';
@@ -100,7 +101,8 @@ export class PrenotazioniListComponent extends ListBasePage<PrenotazioneFiltri> 
               this.snackBar.openSnackBar('Operazione avvenuta con successo', 'Chiudi');
               window.location.reload();
             }
-          }
+          },
+          error: (err) => this.snackBar.openSnackBar(errorMessage(err, "Errore durante l'annullamento"), 'Chiudi')
         });
       }
     });

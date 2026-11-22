@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TEST_PROVIDERS } from '../../../testing/test-providers';
 
 import { MedicoFormComponent } from './medico-form.component';
 
@@ -8,6 +9,7 @@ describe('MedicoFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: TEST_PROVIDERS,
       imports: [MedicoFormComponent]
     })
     .compileComponents();

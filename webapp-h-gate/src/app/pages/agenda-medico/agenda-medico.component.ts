@@ -1,4 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -80,7 +81,7 @@ export class AgendaMedicoComponent extends BasePageComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.snackBar.openSnackBar('Errore caricamento agenda', err);
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore caricamento agenda'), 'Chiudi');
       }
     });
   }

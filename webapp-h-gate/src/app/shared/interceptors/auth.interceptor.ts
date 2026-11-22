@@ -1,15 +1,9 @@
-import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpHandlerFn, HttpRequest } from '@angular/common/http';
+import { readStoredUser } from '../services/auth/auth.service';
 
 export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) {
-
-    const storedUser = localStorage.getItem('encryptedUser');
-    let token: string | null = null;
-
-    if (storedUser) {
-        const user = JSON.parse(storedUser);
-        token = user.authentication; 
-    }
+    // readStoredUser() scarta automaticamente token non validi (es. vecchi token cifrati)
+    const token = readStoredUser()?.authentication;
 
     const authReq = token
         ? req.clone({

@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { errorMessage } from '../../shared/utils/error-message';
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -76,7 +77,7 @@ export class DashboardPazienteComponent extends BasePageComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.snackBar.openSnackBar('Errore nel caricamento dei minori', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel caricamento dei minori'), 'Chiudi');
         console.error(err);
       }
     });
@@ -132,7 +133,7 @@ export class DashboardPazienteComponent extends BasePageComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.snackBar.openSnackBar('Errore nel recupero dei dati', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel recupero dei dati'), 'Chiudi');
         console.error(err);
       }
     });

@@ -89,7 +89,9 @@ export class LoginComponent extends FormBasePageComponent {
         this.router.navigate([RoutesEnum.PROFILE]);
       },
       error: (err) => {
-       this.snackBar.openSnackBar("Errore nell'inserimento delle credenziali.", "Chiudi");
+        // TokenExpiredInterceptor restituisce il messaggio del server come stringa
+        const msg = typeof err === 'string' && err.trim() ? err : "Errore nell'inserimento delle credenziali.";
+        this.snackBar.openSnackBar(msg, "Chiudi");
       }
     });
   }

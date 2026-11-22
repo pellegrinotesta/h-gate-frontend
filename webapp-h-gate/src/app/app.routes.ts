@@ -127,6 +127,12 @@ export const routes: Routes = [
                 ]
             },
             {
+                path: RoutesEnum.APPROVAZIONI,
+                canActivate: [roleGuard],
+                data: { roles: ROLE_VISIBILITY.APPROVAZIONI },
+                loadComponent: () => import('./pages/approvazioni/approvazioni.component').then(m => m.ApprovazioniComponent)
+            },
+            {
                 path: RoutesEnum.MEDICO,
                 children: [
                     {

@@ -39,6 +39,12 @@ export const ITEMS_MENU: MenuSection[] = [
                 tooltip: 'Agenda'
             },
             {
+                title: 'Approvazioni',
+                link: RoutesEnum.APPROVAZIONI,
+                permission: ROLE_VISIBILITY.APPROVAZIONI,
+                tooltip: 'Approvazione specialisti e associazioni tutore-minore'
+            },
+            {
                 title: 'Pazienti',
                 link: RoutesEnum.PAZIENTE,
                 permission: ROLE_VISIBILITY.PAZIENTI_LIST,

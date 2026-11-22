@@ -1,0 +1,33 @@
+<div class="rifiuto-dialog">
+    <div class="dialog-header">
+        <div class="dialog-icon">
+            <mat-icon>block</mat-icon>
+        </div>
+        <div>
+            <h2 mat-dialog-title>{{ data.titolo }}</h2>
+            <p class="dialog-subtitle">L'interessato riceverà una email</p>
+        </div>
+    </div>
+
+    <mat-dialog-content>
+        <p class="descrizione">{{ data.descrizione }}</p>
+
+        <form [formGroup]="form">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Motivo (facoltativo)</mat-label>
+                <textarea matInput formControlName="motivo" rows="3"
+                    placeholder="Es. documentazione non sufficiente, numero di albo non verificabile..."></textarea>
+                <mat-hint align="end">{{ motivoLength }}/500</mat-hint>
+                <mat-error>Massimo 500 caratteri</mat-error>
+            </mat-form-field>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button type="button" (click)="annulla()">Annulla</button>
+        <button mat-flat-button color="warn" type="button" (click)="conferma()" [disabled]="form.invalid">
+            <mat-icon>block</mat-icon>
+            Rifiuta
+        </button>
+    </mat-dialog-actions>
+</div>

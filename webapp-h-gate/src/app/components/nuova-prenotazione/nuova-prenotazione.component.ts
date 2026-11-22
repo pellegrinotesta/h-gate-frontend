@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { errorMessage } from '../../shared/utils/error-message';
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -114,9 +115,9 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
         this.minori.set(response.data || []);
         this.isLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
-        this.snackBar.openSnackBar('Errore nel caricamento dei pazienti', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel caricamento dei pazienti'), 'Chiudi');
       }
     })
   }
@@ -126,8 +127,8 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
       next: (response) => {
         this.medici.set(response.data || []);
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore nel caricamento dei medici', 'Chiudi');
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel caricamento dei medici'), 'Chiudi');
       }
     })
   }
@@ -137,8 +138,8 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
       next: (response) => {
         this.tipoVisita.set(response.data || []);
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore nel caricamento delle prestazioni', 'Chiudi');
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel caricamento delle prestazioni'), 'Chiudi');
       }
     });
   }
@@ -194,9 +195,7 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
         }
       },
       error: (err) => {
-        this.snackBar.openSnackBar(
-          'Errore nel caricamento degli slot disponibili',
-          'Chiudi'
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nel caricamento degli slot disponibili'), 'Chiudi'
         );
         this.slotsDisponibili.set([]);
         this.orariMedico = null;
@@ -251,9 +250,9 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
         }
 
       },
-      error: () => {
+      error: (err) => {
         this.isSaving.set(false);
-        this.snackBar.openSnackBar('Errore nella creazione della prenotazione', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore nella creazione della prenotazione'), 'Chiudi');
       }
     })
   }
@@ -285,8 +284,8 @@ export class NuovaPrenotazioneComponent extends BasePageComponent implements OnI
         this.snackBar.openSnackBar('Allegati caricati con successo', 'Chiudi');
         window.location.href = '/prenotazioni';
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore caricamento allegati', 'Chiudi');
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore caricamento allegati'), 'Chiudi');
         this.isUploadingAllegati.set(false);
       }
     });

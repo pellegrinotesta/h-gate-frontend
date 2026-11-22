@@ -1,4 +1,5 @@
 import { Component, inject, input, signal } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { BasePageComponent } from '../../shared/components/base/base-page.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -67,8 +68,8 @@ export class PercorsoTerapeuticoComponent extends BasePageComponent {
         this.formFields.set(FormConfigs.FORM_PERCORSO_READ_FIELDS);
         this.isLoading = false;
       },
-      error: () => {
-        this.snackBar.openSnackBar('Errore caricamento percorso', 'Chiudi', SNACKBAR.DANGER);
+      error: (err) => {
+        this.snackBar.openSnackBar(errorMessage(err, 'Errore caricamento percorso'), 'Chiudi', SNACKBAR.DANGER);
         this.isLoading = false;
       }
     });
@@ -100,7 +101,7 @@ export class PercorsoTerapeuticoComponent extends BasePageComponent {
           this.editMode.set(false);
           this.formFields.set(FormConfigs.FORM_PERCORSO_READ_FIELDS);
         },
-        error: () => this.snackBar.openSnackBar('Errore durante il salvataggio', 'Chiudi', SNACKBAR.DANGER)
+        error: (err) => this.snackBar.openSnackBar(errorMessage(err, 'Errore durante il salvataggio'), 'Chiudi', SNACKBAR.DANGER)
       });
     } else {
       this.percorsoService.aggiorna(this.percorso()!.id!, dto).subscribe({
@@ -110,7 +111,7 @@ export class PercorsoTerapeuticoComponent extends BasePageComponent {
           this.editMode.set(false);
           this.formFields.set(FormConfigs.FORM_PERCORSO_READ_FIELDS);
         },
-        error: () => this.snackBar.openSnackBar('Errore durante l\'aggiornamento', 'Chiudi', SNACKBAR.DANGER)
+        error: (err) => this.snackBar.openSnackBar(errorMessage(err, 'Errore durante l\'aggiornamento'), 'Chiudi', SNACKBAR.DANGER)
       });
     }
   }
@@ -122,7 +123,7 @@ export class PercorsoTerapeuticoComponent extends BasePageComponent {
         this.snackBar.openSnackBar('Percorso eliminato', 'Chiudi', SNACKBAR.SUCCESS);
         this.location.back();
       },
-      error: () => this.snackBar.openSnackBar('Errore durante l\'eliminazione', 'Chiudi', SNACKBAR.DANGER)
+      error: (err) => this.snackBar.openSnackBar(errorMessage(err, 'Errore durante l\'eliminazione'), 'Chiudi', SNACKBAR.DANGER)
     });
   }
 

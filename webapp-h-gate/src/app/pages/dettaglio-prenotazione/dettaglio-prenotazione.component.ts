@@ -1,4 +1,5 @@
 import { Component, inject, input, signal, Signal } from '@angular/core';
+import { errorMessage } from '../../shared/utils/error-message';
 import { GenericFormComponent } from '../../shared/components/generic-form/generic-form.component';
 import { LoaderComponent } from '../../components/loader/loader.component';
 import { GenericCardComponent } from '../../shared/components/generic-card/generic-card.component';
@@ -129,7 +130,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
       },
       error: (error) => {
         console.error('Errore caricamento prenotazione:', error);
-        this.snackBar.openSnackBar('Errore nel caricamento', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(error, 'Errore nel caricamento'), 'Chiudi');
         this.isLoading = false;
       }
     });
@@ -142,7 +143,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
       },
       error: (error) => {
         console.error('Errore caricamento allegati:', error);
-        this.snackBar.openSnackBar('Errore nel caricamento allegati', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(error, 'Errore nel caricamento allegati'), 'Chiudi');
       }
     });
   }
@@ -155,7 +156,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
       },
       error: (error) => {
         console.error('Errore download allegato:', error);
-        this.snackBar.openSnackBar('Errore nel download allegato', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(error, 'Errore nel download allegato'), 'Chiudi');
       }
     });
   }
@@ -197,7 +198,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
       },
       error: (error) => {
         console.error('Errore salvataggio:', error);
-        this.snackBar.openSnackBar('Errore durante il salvataggio', 'Chiudi');
+        this.snackBar.openSnackBar(errorMessage(error, 'Errore durante il salvataggio'), 'Chiudi');
         this.isLoading = false;
       }
     });
@@ -211,7 +212,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
         this.loadPrenotazione(this.prenotazioneId()!);
       },
       error: (error) => {
-        const msg = error?.error?.message ?? 'Errore durante la conferma';
+        const msg = errorMessage(error, 'Errore durante la conferma');
         this.snackBar.openSnackBar(msg, 'Chiudi');
         this.isLoading = false;
       }
@@ -246,7 +247,7 @@ export class DettaglioPrenotazioneComponent extends BasePageComponent {
         }
       },
       error: (error) => {
-        const msg = error?.error?.message ?? 'Errore durante il completamento';
+        const msg = errorMessage(error, 'Errore durante il completamento');
         this.snackBar.openSnackBar(msg, 'Chiudi');
       }
     });

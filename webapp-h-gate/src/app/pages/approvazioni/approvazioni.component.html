@@ -1,0 +1,135 @@
+<div class="approvazioni-page">
+
+    <div class="page-header">
+        <div class="header-icon">
+            <mat-icon>verified_user</mat-icon>
+        </div>
+        <div>
+            <h1>Approvazioni</h1>
+            <p>Verifica i nuovi specialisti e le richieste dei tutori prima di dare accesso ai dati clinici.</p>
+        </div>
+        <span class="spacer"></span>
+        <button mat-stroked-button (click)="carica()" [disabled]="caricamento()">
+            <mat-icon>refresh</mat-icon>
+            Aggiorna
+        </button>
+    </div>
+
+    @if (caricamento()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <mat-tab-group animationDuration="0ms" class="tabs">
+
+        <!-- ============ MEDICI ============ -->
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">medical_services</mat-icon>
+                Specialisti
+                @if (medici().length) {
+                <span class="badge">{{ medici().length }}</span>
+                }
+            </ng-template>
+
+            <div class="tab-body">
+                @if (!caricamento() && medici().length === 0) {
+                <div class="empty">
+                    <mat-icon>task_alt</mat-icon>
+                    <p>Nessuno specialista in attesa di approvazione.</p>
+                </div>
+                }
+
+                @for (m of medici(); track m.medicoId) {
+                <div class="richiesta-card">
+                    <div class="card-main">
+                        <div class="card-title">
+                            Dott. {{ m.nome }} {{ m.cognome }}
+                            <span class="chip">{{ m.specializzazione }}</span>
+                        </div>
+                        <dl class="dettagli">
+                            <div><dt>N. albo</dt><dd>{{ m.numeroAlbo || '—' }}</dd></div>
+                            <div><dt>Email</dt><dd>{{ m.email }}</dd></div>
+                            <div><dt>Telefono</dt><dd>{{ m.telefono || '—' }}</dd></div>
+                            <div><dt>Università</dt><dd>{{ m.universita || '—' }}{{ m.annoLaurea ? ' (' + m.annoLaurea + ')' : '' }}</dd></div>
+                            <div><dt>Registrato il</dt><dd>{{ m.dataRegistrazione ? (m.dataRegistrazione | date:'dd/MM/yyyy HH:mm') : '—' }}</dd></div>
+                        </dl>
+                    </div>
+                    <div class="card-actions">
+                        <button mat-flat-button color="primary" (click)="approvaMedico(m)"
+                            [disabled]="inLavorazione() === 'm' + m.medicoId">
+                            <mat-icon>check</mat-icon>
+                            Approva
+                        </button>
+                        <button mat-stroked-button color="warn" (click)="rifiutaMedico(m)"
+                            [disabled]="inLavorazione() === 'm' + m.medicoId">
+                            <mat-icon>block</mat-icon>
+                            Rifiuta
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+        </mat-tab>
+
+        <!-- ============ ASSOCIAZIONI ============ -->
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">family_restroom</mat-icon>
+                Associazioni tutore–minore
+                @if (richieste().length) {
+                <span class="badge">{{ richieste().length }}</span>
+                }
+            </ng-template>
+
+            <div class="tab-body">
+                @if (!caricamento() && richieste().length === 0) {
+                <div class="empty">
+                    <mat-icon>task_alt</mat-icon>
+                    <p>Nessuna richiesta di associazione in attesa.</p>
+                </div>
+                }
+
+                @for (r of richieste(); track r.id) {
+                <div class="richiesta-card">
+                    <div class="card-main">
+                        <div class="card-title">
+                            {{ r.tutoreNome }} {{ r.tutoreCognome }}
+                            <span class="chip">{{ r.relazione }}</span>
+                            <mat-icon class="freccia">arrow_forward</mat-icon>
+                            {{ r.pazienteNome }} {{ r.pazienteCognome }}
+                        </div>
+                        <dl class="dettagli">
+                            <div><dt>Email tutore</dt><dd>{{ r.tutoreEmail }}</dd></div>
+                            <div><dt>Telefono tutore</dt><dd>{{ r.tutoreTelefono || '—' }}</dd></div>
+                            <div><dt>CF minore</dt><dd class="mono">{{ r.pazienteCodiceFiscale }}</dd></div>
+                            <div><dt>Nascita minore</dt><dd>{{ r.pazienteDataNascita ? (r.pazienteDataNascita | date:'dd/MM/yyyy') : '—' }}</dd></div>
+                            <div><dt>Richiesta del</dt><dd>{{ r.createdAt | date:'dd/MM/yyyy HH:mm' }}</dd></div>
+                            <div>
+                                <dt>Tutori attuali</dt>
+                                <dd>{{ r.tutoriAttuali.length ? r.tutoriAttuali.join(', ') : 'nessuno' }}</dd>
+                            </div>
+                        </dl>
+                        <p class="avviso">
+                            <mat-icon>info</mat-icon>
+                            Prima di approvare verifica un documento d'identità del richiedente e il titolo
+                            (genitore o tutore legale). Puoi contattare i tutori attuali per conferma.
+                        </p>
+                    </div>
+                    <div class="card-actions">
+                        <button mat-flat-button color="primary" (click)="approvaAssociazione(r)"
+                            [disabled]="inLavorazione() === 'a' + r.id">
+                            <mat-icon>check</mat-icon>
+                            Approva
+                        </button>
+                        <button mat-stroked-button color="warn" (click)="rifiutaAssociazione(r)"
+                            [disabled]="inLavorazione() === 'a' + r.id">
+                            <mat-icon>block</mat-icon>
+                            Rifiuta
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

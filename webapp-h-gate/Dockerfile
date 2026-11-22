@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:19-alpine AS build
+FROM node:22-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
@@ -9,22 +9,15 @@ RUN npm config set fetch-retry-mintimeout 20000 && \
     npm ci
 
 COPY . .
-RUN npm run build -- --configuration production
+# "docker" usa environment.docker.ts: API su /api tramite il proxy nginx
+ARG BUILD_CONFIGURATION=docker
+RUN npm run build -- --configuration ${BUILD_CONFIGURATION}
 
 # Stage 2: Serve con Nginx
-FROM nginx:alpine
+FROM nginx:1.27-alpine
 
 COPY --from=build /app/dist/webapp-h-gate/browser /usr/share/nginx/html
-
-# Configurazione nginx per Angular (gestisce il routing lato client)
-RUN echo 'server { \
-    listen 80; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    location / { \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 

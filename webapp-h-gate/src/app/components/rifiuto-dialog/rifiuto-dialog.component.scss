@@ -1,0 +1,52 @@
+.rifiuto-dialog {
+    min-width: 440px;
+
+    @media (max-width: 600px) {
+        min-width: unset;
+    }
+}
+
+.dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1.25rem 1.5rem 0;
+}
+
+.dialog-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #c62828, #ef5350);
+
+    mat-icon {
+        color: white;
+        font-size: 1.2rem;
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+}
+
+h2[mat-dialog-title] {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1a2332;
+    margin: 0;
+    padding: 0;
+}
+
+.dialog-subtitle {
+    font-size: 0.78rem;
+    color: #888;
+    margin: 2px 0 0;
+}
+
+.descrizione {
+    font-size: 0.9rem;
+    color: #444;
+    margin-bottom: 1rem;
+}
