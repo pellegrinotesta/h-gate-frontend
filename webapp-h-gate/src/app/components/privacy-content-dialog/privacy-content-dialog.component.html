@@ -8,10 +8,12 @@
                 <small class="text-muted d-block">Minore</small>
                 <strong class="fs-6">{{ data.minoreName }}</strong>
             </div>
+            @if (data.codiceFiscale) {
             <div class="text-end">
                 <small class="text-muted d-block">CF</small>
                 <strong class="font-monospace">{{ data.codiceFiscale }}</strong>
             </div>
+            }
         </div>
     </div>
 

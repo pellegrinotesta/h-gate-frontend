@@ -1,0 +1,90 @@
+<div class="registro-page">
+    <div class="page-header">
+        <div class="header-icon"><mat-icon>manage_search</mat-icon></div>
+        <div>
+            <h1>Registro accessi</h1>
+            <p>Ogni consultazione e modifica dei dati clinici, compresi gli accessi negati. Il registro non è modificabile.</p>
+        </div>
+    </div>
+
+    <form class="filtri" (ngSubmit)="cerca()">
+        <mat-form-field appearance="outline">
+            <mat-label>Utente (email)</mat-label>
+            <input matInput name="email" [(ngModel)]="filtri.email">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Codice fiscale paziente</mat-label>
+            <input matInput name="cf" [(ngModel)]="filtri.codiceFiscale" maxlength="16" class="mono">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Azione</mat-label>
+            <mat-select name="azione" [(ngModel)]="filtri.azione">
+                <mat-option value="">Tutte</mat-option>
+                @for (a of elencoAzioni; track a) {
+                <mat-option [value]="a">{{ azioni[a] }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Esito</mat-label>
+            <mat-select name="esito" [(ngModel)]="filtri.esito">
+                <mat-option value="">Tutti</mat-option>
+                <mat-option value="OK">Riuscito</mat-option>
+                <mat-option value="NEGATO">Negato</mat-option>
+                <mat-option value="ERRORE">Errore</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Dal</mat-label>
+            <input matInput type="date" name="da" [(ngModel)]="filtri.da">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Al</mat-label>
+            <input matInput type="date" name="a" [(ngModel)]="filtri.a">
+        </mat-form-field>
+        <div class="filtri-azioni">
+            <button mat-flat-button color="primary" type="submit"><mat-icon>search</mat-icon> Cerca</button>
+            <button mat-button type="button" (click)="azzera()">Azzera</button>
+        </div>
+    </form>
+
+    @if (caricamento()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <div class="tabella-wrap">
+        <table class="tabella">
+            <thead>
+                <tr>
+                    <th>Data e ora</th><th>Utente</th><th>Azione</th><th>Dato</th><th>Paziente</th><th>Esito</th><th>IP</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (r of righe(); track r.id) {
+                <tr [class.negato]="r.esito === 'NEGATO'" [class.errore]="r.esito === 'ERRORE'">
+                    <td class="nowrap">{{ r.dataEvento | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                    <td>
+                        {{ r.utenteNome || r.userEmail || '—' }}
+                        @if (r.utenteNome) { <div class="muted small">{{ r.userEmail }}</div> }
+                        @if (r.ruoli) { <div class="muted small">{{ r.ruoli }}</div> }
+                    </td>
+                    <td>{{ azioni[r.azione] || r.azione }}</td>
+                    <td [matTooltip]="(r.httpMethod || '') + ' ' + (r.path || '')">
+                        {{ risorse[r.risorsaTipo || ''] || r.risorsaTipo || '—' }}{{ r.risorsaId ? ' #' + r.risorsaId : '' }}
+                    </td>
+                    <td>{{ r.pazienteNome || '—' }}</td>
+                    <td><span [class]="'esito esito--' + r.esito">{{ r.esito }}</span></td>
+                    <td class="mono small">{{ r.ipAddress || '—' }}</td>
+                </tr>
+                }
+                @if (!caricamento() && righe().length === 0) {
+                <tr><td colspan="7" class="muted vuoto">Nessun evento trovato con questi filtri.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <mat-paginator [length]="totale()" [pageIndex]="pagina()" [pageSize]="dimensione()"
+        [pageSizeOptions]="[25, 50, 100, 200]" (page)="cambiaPagina($event)" showFirstLastButtons>
+    </mat-paginator>
+</div>

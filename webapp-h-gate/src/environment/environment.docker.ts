@@ -22,7 +22,9 @@ export const environment = {
     valutazioni: `${apiUrl}/valutazioni`,
     allegato: `${apiUrl}/allegati`,
     tariffe: `${apiUrl}/tariffe`,
-    approvazioni: `${apiUrl}/admin/approvazioni`
+    approvazioni: `${apiUrl}/admin/approvazioni`,
+    consensi: `${apiUrl}/consensi`,
+    audit: `${apiUrl}/admin/audit`
   },
   jwt: {
     allowedDomain: [apiUrl, apiUrl.replace('http://', '')],

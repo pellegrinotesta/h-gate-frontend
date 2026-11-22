@@ -1,0 +1,113 @@
+<div class="privacy-page">
+    <div class="page-header">
+        <div class="header-icon"><mat-icon>shield</mat-icon></div>
+        <div>
+            <h1>Privacy e consensi</h1>
+            <p>Gestisci il consenso al trattamento dei dati dei tuoi minori e controlla chi li ha consultati.</p>
+        </div>
+    </div>
+
+    @if (caricamento()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    @if (!caricamento() && minori().length === 0) {
+    <p class="empty">Nessun minore associato al tuo account.</p>
+    }
+
+    <mat-accordion multi>
+        @for (m of minori(); track m.pazienteId) {
+        <mat-expansion-panel (opened)="apriDettaglio(m)">
+            <mat-expansion-panel-header>
+                <mat-panel-title>{{ m.pazienteNome }} {{ m.pazienteCognome }}</mat-panel-title>
+                <mat-panel-description>
+                    @if (!m.attivo) {
+                    <span class="stato stato--revocato"><mat-icon>block</mat-icon> Consenso revocato</span>
+                    } @else if (!m.aggiornato) {
+                    <span class="stato stato--aggiornare"><mat-icon>update</mat-icon> Da confermare</span>
+                    } @else {
+                    <span class="stato stato--ok"><mat-icon>check_circle</mat-icon> Consenso attivo</span>
+                    }
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="sezione">
+                @if (m.attivo && !m.aggiornato) {
+                <p class="avviso">
+                    <mat-icon>info</mat-icon>
+                    L'informativa privacy è stata aggiornata (versione {{ m.versioneCorrente }}).
+                    Leggila e conferma il consenso.
+                </p>
+                }
+                <p class="riepilogo">
+                    @if (m.dataEvento) {
+                    Ultimo aggiornamento: {{ m.dataEvento | date:'dd/MM/yyyy HH:mm' }}
+                    @if (m.espressoDa) { da {{ m.espressoDa }} }
+                    @if (m.versioneConsenso) { · informativa {{ m.versioneConsenso }} }
+                    } @else {
+                    Nessun consenso registrato.
+                    }
+                </p>
+                <div class="azioni">
+                    @if (!m.attivo || !m.aggiornato) {
+                    <button mat-flat-button color="primary" (click)="concedi(m)" [disabled]="inLavorazione() === m.pazienteId">
+                        <mat-icon>task_alt</mat-icon>
+                        {{ m.attivo ? 'Leggi e conferma' : 'Presta il consenso' }}
+                    </button>
+                    }
+                    @if (m.attivo) {
+                    <button mat-stroked-button color="warn" (click)="revoca(m)" [disabled]="inLavorazione() === m.pazienteId">
+                        <mat-icon>no_accounts</mat-icon>
+                        Revoca consenso
+                    </button>
+                    }
+                </div>
+            </div>
+
+            @if (dettagli()[m.pazienteId]?.storico?.length) {
+            <div class="sezione">
+                <h3>Storico dei consensi</h3>
+                <ul class="storico">
+                    @for (e of dettagli()[m.pazienteId]!.storico!; track e.id) {
+                    <li>
+                        <span [class]="e.concesso ? 'pill pill--ok' : 'pill pill--no'">{{ e.concesso ? 'Concesso' : 'Revocato' }}</span>
+                        {{ e.dataEvento | date:'dd/MM/yyyy HH:mm' }}
+                        @if (e.espressoDa) { · {{ e.espressoDa }} }
+                        · informativa {{ e.versioneInformativa }}
+                        @if (e.note) { <em>— {{ e.note }}</em> }
+                    </li>
+                    }
+                </ul>
+            </div>
+            }
+
+            <div class="sezione">
+                <h3>Chi ha consultato i dati</h3>
+                @if (accessi()[m.pazienteId] === undefined) {
+                <p class="muted">Caricamento…</p>
+                } @else if (accessi()[m.pazienteId]!.length === 0) {
+                <p class="muted">Nessun accesso da parte di altri utenti.</p>
+                } @else {
+                <div class="tabella-wrap">
+                    <table class="tabella">
+                        <thead>
+                            <tr><th>Data</th><th>Chi</th><th>Cosa</th><th>Dato</th></tr>
+                        </thead>
+                        <tbody>
+                            @for (a of accessi()[m.pazienteId]!; track $index) {
+                            <tr [class.negato]="a.esito !== 'OK'">
+                                <td>{{ a.dataEvento | date:'dd/MM/yyyy HH:mm' }}</td>
+                                <td>{{ a.utente }} <span class="muted">({{ a.ruolo }})</span></td>
+                                <td>{{ azioni[a.azione] }}{{ a.esito === 'NEGATO' ? ' (negato)' : '' }}</td>
+                                <td>{{ risorse[a.risorsaTipo] || a.risorsaTipo }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                }
+            </div>
+        </mat-expansion-panel>
+        }
+    </mat-accordion>
+</div>

@@ -11,5 +11,7 @@ export enum RoutesEnum {
   PAZIENTE = 'pazienti',
   MEDICO = 'medici',
   APPROVAZIONI = 'approvazioni',
+  PRIVACY = 'privacy',
+  REGISTRO_ACCESSI = 'registro-accessi',
 
 }

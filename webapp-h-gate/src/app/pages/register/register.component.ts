@@ -181,7 +181,10 @@ export class RegisterComponent {
 
     consentDialog.afterClosed().subscribe((accepted: boolean) => {
       if (accepted) {
-        this.savePatient(payload);
+        // Il consenso esplicito viene registrato dal server (con data, versione dell'informativa e IP)
+        this.savePatient({ ...payload, minore: { ...payload.minore, consensoPrivacy: true } });
+      } else {
+        this.isLoading.set(false);
       }
     });
 

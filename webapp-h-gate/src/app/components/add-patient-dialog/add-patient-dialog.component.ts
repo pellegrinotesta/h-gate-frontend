@@ -156,8 +156,8 @@ export class AddPatientDialogComponent {
     const payload = {
       ...this.formDataStep1(),
       ...this.formDataStep2(),
-      consensoPrivacy: true,
-      dataConsenso: new Date().toISOString()
+      // La data del consenso la registra il server
+      consensoPrivacy: true
     };
 
     this.pazienteService.createPaziente(payload).subscribe({

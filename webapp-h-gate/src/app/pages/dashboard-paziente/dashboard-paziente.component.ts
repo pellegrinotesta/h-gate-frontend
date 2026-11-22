@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { ConsensiBannerComponent } from '../../components/consensi-banner/consensi-banner.component';
 import { errorMessage } from '../../shared/utils/error-message';
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +25,7 @@ import { PrenotazioneService } from '../../services/prenotazione.service';
 @Component({
   selector: 'app-dashboard-paziente',
   imports: [
+    ConsensiBannerComponent,
     CommonModule,
     RouterModule,
     MatCardModule,

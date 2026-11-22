@@ -133,6 +133,18 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/approvazioni/approvazioni.component').then(m => m.ApprovazioniComponent)
             },
             {
+                path: RoutesEnum.REGISTRO_ACCESSI,
+                canActivate: [roleGuard],
+                data: { roles: ROLE_VISIBILITY.REGISTRO_ACCESSI },
+                loadComponent: () => import('./pages/registro-accessi/registro-accessi.component').then(m => m.RegistroAccessiComponent)
+            },
+            {
+                path: RoutesEnum.PRIVACY,
+                canActivate: [roleGuard],
+                data: { roles: ROLE_VISIBILITY.PRIVACY },
+                loadComponent: () => import('./pages/privacy/privacy.component').then(m => m.PrivacyComponent)
+            },
+            {
                 path: RoutesEnum.MEDICO,
                 children: [
                     {

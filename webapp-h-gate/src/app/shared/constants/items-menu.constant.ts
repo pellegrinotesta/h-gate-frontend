@@ -45,6 +45,18 @@ export const ITEMS_MENU: MenuSection[] = [
                 tooltip: 'Approvazione specialisti e associazioni tutore-minore'
             },
             {
+                title: 'Registro accessi',
+                link: RoutesEnum.REGISTRO_ACCESSI,
+                permission: ROLE_VISIBILITY.REGISTRO_ACCESSI,
+                tooltip: 'Chi ha consultato o modificato i dati clinici'
+            },
+            {
+                title: 'Privacy e consensi',
+                link: RoutesEnum.PRIVACY,
+                permission: ROLE_VISIBILITY.PRIVACY,
+                tooltip: 'Consensi al trattamento dei dati e accessi ai dati dei minori'
+            },
+            {
                 title: 'Pazienti',
                 link: RoutesEnum.PAZIENTE,
                 permission: ROLE_VISIBILITY.PAZIENTI_LIST,

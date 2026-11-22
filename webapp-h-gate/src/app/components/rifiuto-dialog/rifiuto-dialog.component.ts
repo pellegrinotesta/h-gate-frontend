@@ -9,6 +9,12 @@ import { MatInputModule } from '@angular/material/input';
 export interface RifiutoDialogData {
   titolo: string;
   descrizione: string;
+  /** Testo del pulsante di conferma (default "Rifiuta") */
+  confermaLabel?: string;
+  /** Sottotitolo (default "L'interessato riceverà una email") */
+  sottotitolo?: string;
+  /** Icona Material (default "block") */
+  icona?: string;
 }
 
 /** Chiede conferma del rifiuto e un motivo facoltativo, inviato all'interessato via email. */
