@@ -1,60 +1,44 @@
 .h-gate-card {
     position: relative;
-    background-color: #fff;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px var(--sharow-card);
-    margin-bottom: 30px;
+    background-color: var(--hg-surface);
+    border: 1px solid var(--hg-border);
+    border-radius: var(--hg-radius);
+    box-shadow: var(--hg-shadow-xs);
+    padding: 24px;
+    margin-bottom: 24px;
 
-    transition: box-shadow 0.3s ease;
-
-    &:hover {
-        box-shadow: 0 4px 12px var(--sharow-card);
-    }
-
-    label {
-        font-weight: 500;
-    }
+    label { font-weight: 500; }
 
     .h-gate-card-header {
         width: 100%;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         display: flex;
         justify-content: space-between;
-        align-items: start;
+        align-items: flex-start;
+        gap: 16px;
 
         .title-h-gate-card {
             white-space: unset;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 0;
         }
 
         .subtitle-h-gate-card {
-            font-weight: lighter;
+            font-weight: 400;
+            font-size: 14px;
+            color: var(--hg-text-2);
+            margin: 4px 0 0;
         }
     }
 
     .actions-h-gate-card {
         mat-icon {
             cursor: pointer;
+            color: var(--hg-text-2);
         }
     }
-}
 
-.h-gate-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 0;
-    background-color: var(--h-gate-blu);
-    animation: fillBorder 1.5s ease-out forwards;
-}
-
-@keyframes fillBorder {
-    from {
-        height: 0;
-    }
-
-    to {
-        height: 100%;
-    }
+    @media (max-width: 600px) { padding: 18px 16px; }
 }

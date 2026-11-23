@@ -16,7 +16,7 @@ import { FormConfigs } from '../../shared/constants/form-config.constant';
 import { ValutazionePsicologica } from '../../models/valutazione-psicologica.model';
 import { PercorsoTerapeutico } from '../../models/percorso-terapeutico.model';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { forkJoin } from 'rxjs';
+import { forkJoin, catchError, of, Observable } from 'rxjs';
 import { PazienteService } from '../../services/paziente.service';
 import { RefertoService } from '../../services/referto.service';
 import { PercorsoTerapeuticoService } from '../../services/percorso-terapeutico.service';
@@ -76,6 +76,8 @@ export class CartellaClinicaComponent extends BasePageComponent {
   percorsoFields: FormItem[] = FormConfigs.FORM_PERCORSO_TERAPEUTICO_FIELDS;
 
   userRole = '';
+  /** Utente che genera la stampa (email dal token), riportato sul documento */
+  stampatoDa = '';
   isMedico = false;
 
   constructor() {
@@ -85,6 +87,7 @@ export class CartellaClinicaComponent extends BasePageComponent {
       const decoded = jwtDecode<AuthenticatedUser>(user.authentication);
       this.userRole = decoded.authorities[0] || '';
       this.isMedico = this.userRole === 'MEDICO';
+      this.stampatoDa = decoded.sub ?? '';
     }
   }
 
@@ -96,19 +99,21 @@ export class CartellaClinicaComponent extends BasePageComponent {
 
   loadCartellaClinica(pazienteId: number) {
     this.isLoading = true;
+    // Ogni sezione fallisce in modo indipendente: se il backend nega una parte
+    // (es. i percorsi a un tutore) il resto della cartella viene comunque mostrato.
     forkJoin({
-      paziente: this.pazientiService.getById(pazienteId),
-      referti: this.refertoService.listaRefertiPaziente(pazienteId),
-      percorsi: this.percorsoService.percorsoTerapeuticoPazienteAndMedico(pazienteId),
-      valutazioni: this.valutazioniService.valutazioniPsicologichePazienteAndMedico(pazienteId),
-      allegati: this.allegatoService.getByPazienteId(pazienteId)
+      paziente: this.pazientiService.getById(pazienteId).pipe(catchError(err => this.sezioneNonDisponibile(err, null))),
+      referti: this.refertoService.listaRefertiPaziente(pazienteId).pipe(catchError(err => this.sezioneNonDisponibile(err, []))),
+      percorsi: this.percorsoService.percorsoTerapeuticoPazienteAndMedico(pazienteId).pipe(catchError(err => this.sezioneNonDisponibile(err, []))),
+      valutazioni: this.valutazioniService.valutazioniPsicologichePazienteAndMedico(pazienteId).pipe(catchError(err => this.sezioneNonDisponibile(err, []))),
+      allegati: this.allegatoService.getByPazienteId(pazienteId).pipe(catchError(err => this.sezioneNonDisponibile(err, [])))
     }).subscribe({
       next: ({ paziente, referti, percorsi, valutazioni, allegati }) => {
         this.paziente.set(paziente.data);
-        this.referti.set(referti.data);
-        this.percorsi.set(percorsi.data);
-        this.valutazioni.set(valutazioni.data);
-        this.allegati.set(allegati.data);
+        this.referti.set(referti.data ?? []);
+        this.percorsi.set(percorsi.data ?? []);
+        this.valutazioni.set(valutazioni.data ?? []);
+        this.allegati.set(allegati.data ?? []);
         this.isLoading = false;
       },
       error: (error) => {
@@ -116,6 +121,50 @@ export class CartellaClinicaComponent extends BasePageComponent {
         this.isLoading = false;
       }
     });
+  }
+
+  /** Numero di cartella a 6 cifre per l'intestazione di stampa */
+  get numeroCartella(): string {
+    return String(this.paziente()?.id ?? 0).padStart(6, '0');
+  }
+
+  sessoEsteso(sesso: string | null | undefined): string {
+    if (sesso === 'M') return 'Maschile';
+    if (sesso === 'F') return 'Femminile';
+    return sesso || '—';
+  }
+
+  formatDimensione(bytes: number | null | undefined): string {
+    if (!bytes) return '—';
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  /** Parametri vitali del referto in forma leggibile, solo quelli presenti */
+  parametriVitaliTesto(r: Referto): string {
+    const p = r.parametriVitali;
+    if (!p) return '';
+    const parti: string[] = [];
+    if (p.pressioneSistolica && p.pressioneDiastolica) parti.push(`PA ${p.pressioneSistolica}/${p.pressioneDiastolica} mmHg`);
+    if (p.frequenzaCardiaca) parti.push(`FC ${p.frequenzaCardiaca} bpm`);
+    if (p.temperatura) parti.push(`T ${p.temperatura} °C`);
+    if (p.saturazione) parti.push(`SpO₂ ${p.saturazione}%`);
+    if (p.peso) parti.push(`Peso ${p.peso} kg`);
+    if (p.altezza) parti.push(`Altezza ${p.altezza} cm`);
+    return parti.join(' · ');
+  }
+
+  /** Valore di ripiego per una sezione che il backend non restituisce (es. accesso negato). */
+  private sezioneNonDisponibile(err: unknown, fallback: any): Observable<any> {
+    console.warn('Sezione della cartella clinica non disponibile:', err);
+    return of({ data: fallback });
+  }
+
+  /** True se il campo clinico contiene un'informazione reale (non vuoto né "nessuna"/"-"). */
+  haValore(testo: string | null | undefined): boolean {
+    const t = (testo ?? '').trim().toLowerCase();
+    return t !== '' && !['nessuna', 'nessuno', 'no', '-', '—', 'n.d.', 'nd'].includes(t);
   }
 
   getAllegatiPerPrenotazione(prenotazioneId: number): Allegato[] {
@@ -276,6 +325,10 @@ export class CartellaClinicaComponent extends BasePageComponent {
   creaNuovaValutazionePsicologica(): void {
     const route = RoutesEnum.PAZIENTE + `/${this.paziente()?.id}/valutazioni/nuova`;
     this.router.navigate([route]);
+  }
+
+  stampa(): void {
+    window.print();
   }
 
   tornaIndietro(): void {

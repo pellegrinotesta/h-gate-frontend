@@ -1,36 +1,64 @@
-<div class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg navbar-dark w-100 shadow-sm" style="background-color: #006699;">
-        <div class="container-fluid">
-            <img src="/assets/logo.png" alt="Logo H-GATE" width="60" class="me-3">
-            <app-menu></app-menu>
+<div class="app-shell" [class.sidebar-open]="sidebarOpen">
 
-            <div class="ms-auto d-flex align-items-center">
-                <!-- NOTIFICHE -->
-                <button mat-icon-button [matMenuTriggerFor]="notificheMenu" [matBadge]="conteggioNonLette || 0"
-                    [matBadgeHidden]="!conteggioNonLette || conteggioNonLette === 0" matBadgeColor="warn"
-                    matBadgeSize="small" aria-label="Notifiche" class="notification-button">
-                    <mat-icon style="color: #fff;">notifications</mat-icon>
-                </button>
-
-                <!-- USER INFO -->
-                @if(me) {
-                <div class="user-info text-start small d-none d-md-block" style="color: #fff;">
-                    <div class="fw-semibold">{{me.nome}} {{me.cognome}}</div>
-                    <div class="opacity-75">{{me.email}}</div>
-                </div>
-                }
-
-                <!-- USER MENU -->
-                <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="Menu utente">
-                    <mat-icon style="color: #fff;">account_circle</mat-icon>
-                </button>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" aria-label="Barra laterale">
+        <div class="brand">
+            <img src="/assets/logo-mark.svg" alt="" class="brand-logo">
+            <div class="brand-text">
+                <span class="brand-name">H-Gate</span>
+                <span class="brand-sub">Neuropsichiatria infantile</span>
             </div>
         </div>
-    </nav>
 
-    <main class="flex-grow-1 container my-5">
-        <router-outlet></router-outlet>
-    </main>
+        <app-menu class="sidebar-nav" (navigate)="sidebarOpen = false"></app-menu>
+
+        <div class="sidebar-foot">
+            <mat-icon class="material-icons-outlined">lock</mat-icon>
+            <span>Area riservata · dati protetti</span>
+        </div>
+    </aside>
+
+    <div class="sidebar-backdrop" (click)="sidebarOpen = false"></div>
+
+    <!-- AREA PRINCIPALE -->
+    <div class="main-area">
+        <header class="topbar">
+            <button mat-icon-button class="menu-toggle" (click)="sidebarOpen = !sidebarOpen" aria-label="Apri menu">
+                <mat-icon>menu</mat-icon>
+            </button>
+
+            <div class="page-title">
+                <span class="crumb">H-Gate</span>
+                <mat-icon class="crumb-sep">chevron_right</mat-icon>
+                <span class="current">{{ pageTitle }}</span>
+            </div>
+
+            <div class="topbar-actions">
+                <button mat-icon-button [matMenuTriggerFor]="notificheMenu" [matBadge]="conteggioNonLette || 0"
+                    [matBadgeHidden]="!conteggioNonLette || conteggioNonLette === 0" matBadgeSize="small"
+                    aria-label="Notifiche" class="topbar-icon-btn">
+                    <mat-icon class="material-icons-outlined">notifications</mat-icon>
+                </button>
+
+                <span class="topbar-divider"></span>
+
+                <button class="topbar-user" [matMenuTriggerFor]="userMenu" aria-label="Menu utente">
+                    <div class="avatar">{{ initials }}</div>
+                    @if(me) {
+                    <div class="topbar-user-text d-none d-md-flex">
+                        <span class="name">{{ me.nome }} {{ me.cognome }}</span>
+                        <span class="role">{{ roleLabel }}</span>
+                    </div>
+                    }
+                    <mat-icon class="chev d-none d-md-inline-block">expand_more</mat-icon>
+                </button>
+            </div>
+        </header>
+
+        <main class="content hg-page-enter">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
 </div>
 
 <!-- MENU NOTIFICHE MODERNO -->
@@ -102,13 +130,22 @@
 </mat-menu>
 
 <!-- MENU UTENTE -->
-<mat-menu #userMenu="matMenu">
+<mat-menu #userMenu="matMenu" xPosition="before" class="user-menu-panel">
+    @if(me) {
+    <div class="user-menu-header">
+        <div class="avatar avatar-lg">{{ initials }}</div>
+        <div class="min-w-0">
+            <div class="fw-semibold text-truncate">{{ me.nome }} {{ me.cognome }}</div>
+            <div class="small text-muted text-truncate">{{ me.email }}</div>
+        </div>
+    </div>
+    }
     <button mat-menu-item routerLink="/profile">
-        <mat-icon>person</mat-icon>
-        Profilo
+        <mat-icon class="material-icons-outlined">person</mat-icon>
+        Il mio profilo
     </button>
     <button mat-menu-item (click)="onLogout()">
         <mat-icon>logout</mat-icon>
-        Logout
+        Esci
     </button>
 </mat-menu>

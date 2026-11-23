@@ -8,9 +8,9 @@
         <div class="row align-items-center g-3">
             <div class="col-12 col-md-6">
                 <h1 class="d-flex align-items-center mb-2 fs-3 fs-md-2">
-                    <mat-icon class="me-2 text-success d-none d-md-inline-block"
+                    <mat-icon class="me-2 text-primary d-none d-md-inline-block"
                         style="font-size: 2.5rem; width: 2.5rem; height: 2.5rem;">calendar_month</mat-icon>
-                    <mat-icon class="me-2 text-success d-md-none">calendar_month</mat-icon>
+                    <mat-icon class="me-2 text-primary d-md-none">calendar_month</mat-icon>
                     <span class="fw-bold">Agenda Completa</span>
                 </h1>
                 <p class="text-muted mb-0 small">Visualizza e gestisci tutti i tuoi appuntamenti</p>
@@ -32,9 +32,9 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <p class="text-secondary small fw-semibold mb-1">Oggi</p>
-                            <h3 class="fw-bold text-success mb-0 fs-1 fs-md-2">{{ appuntamentiOggi() }}</h3>
+                            <h3 class="fw-bold text-primary mb-0 fs-1 fs-md-2">{{ appuntamentiOggi() }}</h3>
                         </div>
-                        <mat-icon class="stat-icon-large text-success">today</mat-icon>
+                        <mat-icon class="stat-icon-large text-primary">today</mat-icon>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -45,9 +45,9 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <p class="text-secondary small fw-semibold mb-1">Questa settimana</p>
-                            <h3 class="fw-bold text-success mb-0 fs-1 fs-md-2">{{ appuntamentiSettimana() }}</h3>
+                            <h3 class="fw-bold text-primary mb-0 fs-1 fs-md-2">{{ appuntamentiSettimana() }}</h3>
                         </div>
-                        <mat-icon class="stat-icon-large text-success">date_range</mat-icon>
+                        <mat-icon class="stat-icon-large text-primary">date_range</mat-icon>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -58,9 +58,9 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <div>
                             <p class="text-secondary small fw-semibold mb-1">Totali</p>
-                            <h3 class="fw-bold text-success mb-0 fs-1 fs-md-2">{{ totaleAppuntamenti() }}</h3>
+                            <h3 class="fw-bold text-primary mb-0 fs-1 fs-md-2">{{ totaleAppuntamenti() }}</h3>
                         </div>
-                        <mat-icon class="stat-icon-large text-success">event</mat-icon>
+                        <mat-icon class="stat-icon-large text-primary">event</mat-icon>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -151,8 +151,8 @@
                     <div class="appuntamento-mini bg-light rounded mb-2 p-2"
                         [class.evidenziato]="appuntamentoEvidenziato() === app.id"
                         (click)="apriDettaglioAppuntamento(app)">
-                        <div class="small fw-bold text-success">{{ app.inizio | date: 'HH:mm' }}</div>
-                        <div class="small fw-bold text-success">{{ app.stato}}</div>
+                        <div class="small fw-bold text-primary">{{ app.inizio | date: 'HH:mm' }}</div>
+                        <div class="small fw-bold text-primary">{{ app.stato}}</div>
                         <div class="small fw-semibold text-truncate">{{ app.pazienteNome }}</div>
                         <div class="small text-secondary text-truncate">{{ app.tipoVisita }}</div>
                         @if(app.isPrimaVisita) {

@@ -1,53 +1,72 @@
-<div class="d-flex flex-column min-vh-100 bg-light">
-    <nav class="navbar navbar-dark shadow-sm" style="background-color: #006699;">
-        <div class="container-fluid">
-            <span class="navbar-brand fw-bold d-flex align-items-center">
-                <img src="/assets/logo.svg" alt="Logo H-GATE" width="50" class="me-2" />
-            </span>
+<div class="auth-page">
+
+    <!-- Pannello brand -->
+    <aside class="auth-brand hg-hero">
+        <div class="brand-row">
+            <img src="/assets/logo-mark.svg" alt="" class="brand-mark">
+            <span class="brand-name">H-Gate</span>
         </div>
-    </nav>
-    <main class="flex-grow-1 d-flex justify-content-center align-items-center">
-        <div class="card shadow p-4" style="width: 400px;">
 
-            <!-- Step 1: Email e Password -->
+        <div class="brand-copy">
+            <h1>Il percorso di cura dei più piccoli, in un unico posto.</h1>
+            <p>Prenotazioni, cartella clinica, referti e consensi per famiglie e specialisti di neuropsichiatria infantile.</p>
 
-            <div>
-                <h3 class="text-center mb-4" style="color: #006699;">Accesso al Portale</h3>
-                <form [formGroup]="loginForm" (ngSubmit)="onSubmitCredentials()">
-                    <mat-form-field appearance="outline" class="w-100 mb-3">
-                        <mat-label>Email</mat-label>
-                        <input matInput type="email" formControlName="email" required />
-                        @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-                        <mat-error>Email non valida</mat-error>
-                        }
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" class="w-100 mb-4">
-                        <mat-label>Password</mat-label>
-                        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
-                            required />
-                        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
-                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-                        </button>
-                        @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-                        <mat-error>Campo obbligatorio</mat-error>
-                        }
-                    </mat-form-field>
-                    <button mat-flat-button color="primary" class="w-100 mb-3"
-                        [disabled]="loginForm.invalid || isLoading">
-                        @if(isLoading) {
-                        <span class="spinner-border spinner-border-sm me-2"></span>
-                        }
-                        Avanti
+            <ul class="brand-points">
+                <li><mat-icon class="material-icons-outlined">event_available</mat-icon> Visite e agenda sempre aggiornate</li>
+                <li><mat-icon class="material-icons-outlined">description</mat-icon> Referti e percorsi terapeutici condivisi</li>
+                <li><mat-icon class="material-icons-outlined">verified_user</mat-icon> Dati clinici protetti e accessi tracciati</li>
+            </ul>
+        </div>
+
+        <span class="brand-foot">© {{ year }} H-Gate · Area riservata</span>
+    </aside>
+
+    <!-- Form -->
+    <main class="auth-main">
+        <div class="auth-card">
+            <img src="/assets/logo-mark.svg" alt="H-Gate" class="mobile-mark">
+            <h2>Accedi</h2>
+            <p class="subtitle">Inserisci le tue credenziali per entrare nel portale.</p>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmitCredentials()">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Email</mat-label>
+                    <mat-icon matPrefix class="material-icons-outlined field-icon">mail</mat-icon>
+                    <input matInput type="email" formControlName="email" autocomplete="username" required />
+                    @if(loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                    <mat-error>Email non valida</mat-error>
+                    }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Password</mat-label>
+                    <mat-icon matPrefix class="material-icons-outlined field-icon">lock</mat-icon>
+                    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+                        autocomplete="current-password" required />
+                    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button"
+                        [attr.aria-label]="hidePassword ? 'Mostra password' : 'Nascondi password'">
+                        <mat-icon class="material-icons-outlined">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
                     </button>
-                    <p class="text-center">
-                        <a routerLink="/register" class="text-muted small">Registrati qui</a>
-                    </p>
-                    <!-- <div class="text-center">
-                        <a href="#" class="text-muted small">Hai dimenticato la password?</a>
-                    </div> -->
-                </form>
-            </div>
+                    @if(loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                    <mat-error>Campo obbligatorio</mat-error>
+                    }
+                </mat-form-field>
 
+                <button mat-flat-button color="primary" class="w-100 submit-btn" type="submit"
+                    [disabled]="loginForm.invalid || isLoading">
+                    @if(isLoading) {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    Accedi
+                </button>
+            </form>
+
+            <div class="divider"><span>oppure</span></div>
+
+            <p class="register-hint">
+                Non hai ancora un account?
+                <a routerLink="/register">Registrati</a>
+            </p>
 
             <!-- Step 2: OTP -->
             <!-- @if(showOtpForm) {
@@ -101,11 +120,6 @@
                 </form>
             </div>
             } -->
-
-
         </div>
     </main>
-    <footer class="text-center py-3 small text-muted border-top bg-white">
-        © 2025 H-GATE - Area Riservata
-    </footer>
 </div>

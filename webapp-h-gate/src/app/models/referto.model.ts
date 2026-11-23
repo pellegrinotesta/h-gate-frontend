@@ -12,6 +12,16 @@ export interface Referto {
     hasAllegati: boolean;
     isFirmato?: boolean;
     parametriVitali?: ParametriVitali;
+    // Campi restituiti dal backend (RefertoDTO), usati nella cartella e nella stampa
+    uuid?: string;
+    anamnesi?: string;
+    esameObiettivo?: string;
+    terapia?: string;
+    prescrizioni?: string;
+    noteMediche?: string;
+    esamiRichiesti?: string;
+    prossimoControllo?: string;
+    dataFirma?: string;
 }
 
 export interface RefertoCreate {

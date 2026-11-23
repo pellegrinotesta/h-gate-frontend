@@ -4,7 +4,8 @@ import { SharedModule } from '../../shared/shared.module';
 import { BasePageComponent } from '../../shared/components/base/base-page.component';
 import { MenuComponent } from '../../components/menu/menu.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, RouterLink, RouterOutlet } from '@angular/router';
+import { filter, takeUntil } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { AuthService } from '../../shared/services/auth/auth.service';
@@ -13,6 +14,26 @@ import { UserService } from '../../services/user.service';
 
 import { Notifica, TipoNotificaIcons } from '../../models/notifica.model';
 import { NotificheService } from '../../shared/services/notifiche.service';
+import { AuthFacadeService } from '../../shared/services/auth/auth-facade.service';
+import { ITEMS_MENU } from '../../shared/constants/items-menu.constant';
+
+/** Titoli per le pagine che non sono voci di menu */
+const TITOLI_EXTRA: { prefix: string; title: string }[] = [
+  { prefix: '/profile', title: 'Il mio profilo' },
+  { prefix: '/prenotazioni/nuova', title: 'Nuova prenotazione' },
+  { prefix: '/prenotazioni/', title: 'Dettaglio prenotazione' },
+  { prefix: '/referti/', title: 'Cartella clinica' },
+  { prefix: '/referti', title: 'Referti' },
+  { prefix: '/medici', title: 'Specialisti' },
+  { prefix: '/pazienti/', title: 'Cartella clinica' },
+];
+
+const ETICHETTE_RUOLO: Record<string, string> = {
+  ADMIN: 'Amministratore',
+  MEDICO: 'Specialista',
+  TUTORE: 'Tutore',
+  PAZIENTE: 'Paziente',
+};
 
 @Component({
   selector: 'app-homepage',
@@ -33,7 +54,17 @@ export class HomepageComponent extends BasePageComponent {
 
   readonly notificaService = inject(NotificheService);
 
+  private readonly authFacade = inject(AuthFacadeService);
+
   me: User | undefined;
+  roleLabel = '';
+  pageTitle = '';
+  sidebarOpen = false;
+
+  get initials(): string {
+    if (!this.me) return '';
+    return `${this.me.nome?.[0] ?? ''}${this.me.cognome?.[0] ?? ''}`.toUpperCase();
+  }
 
   // Accessor per i signal delle notifiche
   get notificheNonLette() {
@@ -50,6 +81,25 @@ export class HomepageComponent extends BasePageComponent {
   ) {
     super();
     this.loadUserData();
+    this.authFacade.getUser().subscribe(user => {
+      const ruolo = (user?.authorities ?? []).find(a => ETICHETTE_RUOLO[a]);
+      this.roleLabel = ruolo ? ETICHETTE_RUOLO[ruolo] : '';
+    });
+    this.updateTitle(this.router.url);
+    this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd), takeUntil(this.onDestroy$))
+      .subscribe(e => {
+        this.updateTitle((e as NavigationEnd).urlAfterRedirects);
+        this.sidebarOpen = false;
+      });
+  }
+
+  private updateTitle(url: string): void {
+    const path = url.split('?')[0];
+    const extra = TITOLI_EXTRA.find(t => path.startsWith(t.prefix));
+    if (extra) { this.pageTitle = extra.title; return; }
+    const voce = ITEMS_MENU.flatMap(s => s.items).find(i => i.link && path.startsWith('/' + i.link));
+    this.pageTitle = voce?.title ?? 'Home';
   }
 
   loadUserData() {

@@ -1,114 +1,540 @@
+/* =====================================================================
+   H-GATE — Design system globale
+   Token di colore, tipografia e override di Angular Material (M3) e Bootstrap.
+   ===================================================================== */
+
 :root {
-    --background-color: white;
-    --text-color: black;
-    --disabled-text-color: rgba(0, 0, 0, 0.284);
-    --shadow: rgba(0, 0, 0, 0.10);
-    --sharow-card: rgba(0, 0, 0, 0.10);
-    --element-border: #fdfdfd51;
-    --divider-color: rgba(0, 0, 0, 0.10);
-    --h-gate-black: #000000ab;
-    --h-gate-blu: #006699;
+    /* ---------- Palette brand ---------- */
+    --hg-primary: #0a66a8;
+    --hg-primary-hover: #08578f;
+    --hg-primary-strong: #0b3f66;
+    --hg-primary-soft: #e8f1fa;
+    --hg-primary-soft-2: #d3e5f5;
+    --hg-accent: #14b8a6;
+
+    /* ---------- Neutri ---------- */
+    --hg-bg: #f4f6fa;
+    --hg-surface: #ffffff;
+    --hg-surface-2: #f8fafc;
+    --hg-border: #e4e9f0;
+    --hg-border-strong: #cfd8e3;
+    --hg-text: #0f1b2d;
+    --hg-text-2: #475569;
+    --hg-text-3: #8492a6;
+
+    /* ---------- Stato ---------- */
+    --hg-success: #15803d;
+    --hg-success-soft: #e7f6ec;
+    --hg-warning: #b45309;
+    --hg-warning-soft: #fef4e2;
+    --hg-danger: #c62828;
+    --hg-danger-soft: #fdecec;
+    --hg-info: #0369a1;
+    --hg-info-soft: #e6f3fb;
+
+    /* ---------- Forma, ombre, font ---------- */
+    --hg-radius-sm: 8px;
+    --hg-radius: 12px;
+    --hg-radius-lg: 16px;
+    --hg-shadow-xs: 0 1px 2px rgba(15, 27, 45, .05);
+    --hg-shadow-sm: 0 1px 3px rgba(15, 27, 45, .06), 0 1px 2px rgba(15, 27, 45, .04);
+    --hg-shadow-md: 0 6px 20px -4px rgba(15, 27, 45, .10), 0 2px 6px rgba(15, 27, 45, .04);
+    --hg-shadow-lg: 0 18px 40px -12px rgba(15, 27, 45, .22);
+    --hg-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --hg-sidebar-w: 256px;
+    --hg-topbar-h: 64px;
+
+    /* ---------- Compatibilità con le variabili già usate nei componenti ---------- */
+    --background-color: var(--hg-surface);
+    --text-color: var(--hg-text);
+    --disabled-text-color: rgba(15, 27, 45, .32);
+    --shadow: rgba(15, 27, 45, .08);
+    --sharow-card: rgba(15, 27, 45, .08);
+    --divider-color: var(--hg-border);
+    --h-gate-blu: var(--hg-primary);
+    --h-gate-black: var(--hg-text);
     --h-gate-red-darker: #971e22;
     --h-gate-red-light: #e51e250a;
 
-    // toolbar
-    --mat-toolbar-container-background-color: transparent;
-    --mat-toolbar-standard-height: 64px;
-    --mat-toolbar-container-text-color: var(--text-color);
-    // divider
-    --mat-divider-color: var(--divider-color);
-    // menu
-    --mat-menu-container-color: var(--background-color);
-    --mat-select-panel-background-color: var(--background-color);
-    --mat-menu-item-icon-color: var(--text-color);
-    // form field
-    --mat-form-field-filled-container-color: var(--text-color);
-    --mat-form-field-outlined-caret-color: var(--text-color);
-    --mat-form-field-filled-focus-label-text-color: var(--text-color);
-    --mat-form-field-outlined-focus-label-text-color: var(--text-color);
-    --mat-form-field-outlined-outline-color: var(--text-color);
-    --mat-form-field-outlined-focus-outline-color: var(--text-color);
-    --mat-form-field-outlined-input-text-color: var(--text-color);
-    --mat-form-field-outlined-label-text-color: var(--text-color);
-    --mat-form-field-outlined-hover-label-text-color: var(--text-color);
-    --mat-form-field-outlined-hover-outline-color: var(--text-color);
-    // select
-    --mat-select-enabled-arrow-color: var(--text-color);
-    --mat-select-focused-arrow-color: var(--text-color);
-    --mat-select-panel-background-color: var(--background-color);
-    --mat-option-selected-state-layer-color: #ffffffaa;
-    --mat-option-selected-state-label-text-color: var(--text-color);
-    --mat-option-focus-state-layer-color: var(--background-color);
-    // autocomplete
-    --mat-autocomplete-background-color: var(--background-color);
-    // table
-    --mat-table-background-color: var(--background-color);
-    --mat-paginator-container-background-color: var(--background-color);
-    --mat-table-header-container-height: 42px;
-    --mat-table-row-item-container-height: 42px;
-    //paginator
-    --mat-paginator-container-text-color: var(--text-color);
-    --mat-paginator-container-background-color: var(--background-color);
-    --mat-paginator-enabled-icon-color: var(--text-color);
-    --mat-paginator-disabled-icon-color: var(--disabled-text-color);
-    // spinner
-    --mat-progress-spinner-active-indicator-color: var(--h-gate-blu);
-    // button
-    --mat-icon-button-disabled-icon-color: var(--disabled-text-color);
-    --mat-button-protected-label-text-color: var(--h-gate-blu);
-    --mat-button-text-label-text-color: var(--h-gate-blu);
-    // badge
-    --mat-badge-legacy-container-size: 12px;
-    --mat-badge-container-size: 12px;
-    --mat-badge-line-height: 11px;
-    --mat-badge-text-size: 10px;
-    --mat-badge-container-padding: 0px;
-    --mat-badge-background-color: rgb(255, 195, 117);
-    --mat-badge-container-overlap-offset: -18px;
-    --mat-badge-text-color: var(--text-color);
-    // dialod
-    --mat-dialog-container-min-width: 45vw;
-    --mat-dialog-container-shape: 0px;
-    --mat-dialog-container-color: var(--background-color);
-    // expantion-panel
-    --mat-expansion-container-shape: 0px;
-    --mat-expansion-container-background-color: var(--background-color);
-    --mat-expansion-header-text-size: calc(1.1rem + .6vw);
-    --mat-expansion-header-text-weight: 500;
-    --mat-expansion-header-text-line-height: 1.2;
-    --mat-expansion-header-text-color: var(--text-color);
-    --mat-expansion-header-indicator-color: var(--text-color);
-    // icon
-    --mat-icon-button-icon-color: var(--text-color);
-    --mat-icon-button-disabled-icon-color: var(--disabled-text-color);
-    // tree
-    --mat-tree-container-background-color: var(--background-color);
-    --mat-tree-node-min-height: 40px;
-    --mat-tree-node-text-color: var(--text-color);
-    // stepper
-    --mat-stepper-container-color: var(--background-color);
-    --mat-stepper-header-selected-state-icon-background-color: var(--h-gate-blu);
-    --mat-stepper-header-edit-state-icon-background-color: var(--h-gate-red-darker);
-    --mat-stepper-header-done-state-icon-background-color: var(--h-gate-red-darker);
-    --mat-stepper-header-label-text-color: var(--text-color);
-    --mat-tree-node-text-color: var(--text-color);
-    // checkbox
-    --mat-checkbox-selected-icon-color: var(--h-gate-blu);
-    --mat-checkbox-selected-icon-color: var(--h-gate-blu);
-    // snackbar
-    --mat-snack-bar-supporting-text-size: 18px;
-    --mat-snack-bar-button-color: white;
-    --mat-snack-bar-supporting-text-color: white;
+    /* ---------- Bootstrap ---------- */
+    --bs-body-font-family: var(--hg-font);
+    --bs-body-bg: var(--hg-bg);
+    --bs-body-color: var(--hg-text);
+    --bs-primary: var(--hg-primary);
+    --bs-primary-rgb: 10, 102, 168;
+    --bs-link-color: var(--hg-primary);
+    --bs-link-color-rgb: 10, 102, 168;
+    --bs-link-hover-color: var(--hg-primary-hover);
+    --bs-border-color: var(--hg-border);
+    --bs-border-radius: var(--hg-radius-sm);
+    --bs-border-radius-lg: var(--hg-radius);
+    --bs-secondary-color: var(--hg-text-2);
+}
 
-      // ACTION BUTTONS - Aggiungi queste
-    --mat-icon-button-state-layer-color: transparent;
-    --mat-icon-button-ripple-color: rgba(139, 92, 246, 0.1);
-    --mat-icon-button-hover-state-layer-opacity: 0.08;
-    
-    // TABLE ACTIONS - Personalizzazione colonna azioni
-    --table-action-column-width: 100px;
-    --table-action-button-size: 36px;
-    --table-action-hover-bg: rgba(0, 0, 0, 0.04);
-    --table-action-icon-color: rgba(0, 0, 0, 0.54);
-    --table-action-hover-icon-color: var(--h-gate-blu);
+/* =====================================================================
+   Angular Material — token di sistema M3 (sovrascrivono il tema azure-blue)
+   ===================================================================== */
+html {
+    --mat-sys-primary: var(--hg-primary);
+    --mat-sys-on-primary: #ffffff;
+    --mat-sys-primary-container: var(--hg-primary-soft-2);
+    --mat-sys-on-primary-container: #062c49;
+    --mat-sys-secondary-container: var(--hg-primary-soft);
+    --mat-sys-on-secondary-container: #0b3f66;
+    --mat-sys-tertiary: var(--hg-accent);
+    --mat-sys-error: var(--hg-danger);
+
+    --mat-sys-background: var(--hg-bg);
+    --mat-sys-on-background: var(--hg-text);
+    --mat-sys-surface: var(--hg-surface);
+    --mat-sys-on-surface: var(--hg-text);
+    --mat-sys-on-surface-variant: var(--hg-text-2);
+    --mat-sys-surface-variant: var(--hg-surface-2);
+    --mat-sys-surface-container-lowest: #ffffff;
+    --mat-sys-surface-container-low: #ffffff;
+    --mat-sys-surface-container: #ffffff;
+    --mat-sys-surface-container-high: #ffffff;
+    --mat-sys-surface-container-highest: #eef2f7;
+    --mat-sys-surface-tint: transparent;
+    --mat-sys-outline: var(--hg-border-strong);
+    --mat-sys-outline-variant: var(--hg-border);
+
+    --mat-sys-level1: var(--hg-shadow-sm);
+    --mat-sys-level2: var(--hg-shadow-md);
+    --mat-sys-level3: var(--hg-shadow-lg);
+
+    /* Tipografia: Inter ovunque */
+    --mat-sys-body-large-font: var(--hg-font);
+    --mat-sys-body-medium-font: var(--hg-font);
+    --mat-sys-body-small-font: var(--hg-font);
+    --mat-sys-label-large-font: var(--hg-font);
+    --mat-sys-label-medium-font: var(--hg-font);
+    --mat-sys-label-small-font: var(--hg-font);
+    --mat-sys-title-large-font: var(--hg-font);
+    --mat-sys-title-medium-font: var(--hg-font);
+    --mat-sys-title-small-font: var(--hg-font);
+    --mat-sys-headline-large-font: var(--hg-font);
+    --mat-sys-headline-medium-font: var(--hg-font);
+    --mat-sys-headline-small-font: var(--hg-font);
+    --mat-sys-display-large-font: var(--hg-font);
+    --mat-sys-display-medium-font: var(--hg-font);
+    --mat-sys-display-small-font: var(--hg-font);
+    --mat-sys-body-large-size: 15px;
+    --mat-sys-body-medium-size: 14px;
+    --mat-sys-label-large-weight: 600;
+
+    /* Card */
+    --mdc-elevated-card-container-shape: var(--hg-radius);
+    --mdc-elevated-card-container-color: var(--hg-surface);
+    --mdc-elevated-card-container-elevation: var(--hg-shadow-sm);
+    --mdc-outlined-card-container-shape: var(--hg-radius);
+    --mdc-outlined-card-outline-color: var(--hg-border);
+    --mat-card-title-text-font: var(--hg-font);
+    --mat-card-title-text-weight: 600;
+    --mat-card-title-text-size: 1.05rem;
+    --mat-card-subtitle-text-color: var(--hg-text-3);
+
+    /* Bottoni */
+    --mdc-filled-button-container-shape: 10px;
+    --mdc-protected-button-container-shape: 10px;
+    --mdc-outlined-button-container-shape: 10px;
+    --mdc-text-button-container-shape: 10px;
+    --mdc-filled-button-container-height: 40px;
+    --mdc-outlined-button-container-height: 40px;
+    --mdc-protected-button-container-height: 40px;
+    --mdc-outlined-button-outline-color: var(--hg-border-strong);
+    --mdc-protected-button-container-elevation-shadow: none;
+    --mdc-protected-button-hover-container-elevation-shadow: none;
+    --mdc-protected-button-focus-container-elevation-shadow: none;
+    --mdc-protected-button-pressed-container-elevation-shadow: none;
+    --mdc-protected-button-container-color: var(--hg-primary-soft);
+    --mdc-protected-button-label-text-color: var(--hg-primary-strong);
+    --mat-icon-button-state-layer-color: var(--hg-text);
+    --mat-icon-button-hover-state-layer-opacity: .06;
+
+    /* Campi */
+    --mdc-outlined-text-field-container-shape: 10px;
+    --mdc-outlined-text-field-outline-color: var(--hg-border-strong);
+    --mdc-outlined-text-field-hover-outline-color: #9fb0c3;
+    --mdc-outlined-text-field-focus-outline-color: var(--hg-primary);
+    --mdc-outlined-text-field-focus-outline-width: 2px;
+    --mdc-outlined-text-field-label-text-color: var(--hg-text-3);
+    --mdc-outlined-text-field-input-text-color: var(--hg-text);
+    --mdc-outlined-text-field-caret-color: var(--hg-primary);
+    --mdc-outlined-text-field-focus-label-text-color: var(--hg-primary);
+    --mdc-filled-text-field-container-color: #eef2f7;
+    --mat-form-field-container-height: 52px;
+    --mat-form-field-container-vertical-padding: 14px;
+    --mat-form-field-filled-with-label-container-padding-top: 22px;
+    --mat-select-enabled-arrow-color: var(--hg-text-3);
+    --mat-select-focused-arrow-color: var(--hg-primary);
+
+    /* Overlay: menu, select, autocomplete, datepicker */
+    --mat-menu-container-shape: var(--hg-radius);
+    --mat-menu-container-color: var(--hg-surface);
+    --mat-menu-item-label-text-size: 14px;
+    --mat-select-panel-background-color: var(--hg-surface);
+    --mat-autocomplete-background-color: var(--hg-surface);
+    --mat-option-selected-state-layer-color: var(--hg-primary-soft);
+    --mat-option-selected-state-label-text-color: var(--hg-primary-strong);
+    --mat-datepicker-calendar-container-shape: var(--hg-radius);
+
+    /* Dialog */
+    --mdc-dialog-container-shape: var(--hg-radius-lg);
+    --mat-dialog-container-min-width: min(560px, 92vw);
+    --mdc-dialog-container-color: var(--hg-surface);
+    --mdc-dialog-subhead-font: var(--hg-font);
+    --mdc-dialog-subhead-weight: 600;
+    --mdc-dialog-supporting-text-font: var(--hg-font);
+
+    /* Tabelle e paginator */
+    --mat-table-background-color: transparent;
+    --mat-table-header-container-height: 44px;
+    --mat-table-row-item-container-height: 52px;
+    --mat-table-header-headline-color: var(--hg-text-3);
+    --mat-table-header-headline-size: 12px;
+    --mat-table-header-headline-weight: 600;
+    --mat-table-row-item-label-text-size: 14px;
+    --mat-table-row-item-outline-color: var(--hg-border);
+    --mat-paginator-container-background-color: transparent;
+    --mat-paginator-container-text-color: var(--hg-text-2);
+
+    /* Tabs, chip, expansion, stepper, tooltip, snackbar, badge */
+    --mat-tab-header-active-label-text-color: var(--hg-primary);
+    --mat-tab-header-active-focus-label-text-color: var(--hg-primary);
+    --mat-tab-header-active-hover-label-text-color: var(--hg-primary);
+    --mdc-tab-indicator-active-indicator-color: var(--hg-primary);
+    --mat-tab-header-label-text-weight: 600;
+    --mdc-chip-container-shape-radius: 999px;
+    --mat-expansion-container-shape: var(--hg-radius);
+    --mat-expansion-container-background-color: var(--hg-surface);
+    --mat-expansion-header-text-size: 1rem;
+    --mat-expansion-header-text-weight: 600;
+    --mat-stepper-container-color: transparent;
+    --mat-stepper-header-selected-state-icon-background-color: var(--hg-primary);
+    --mat-stepper-header-done-state-icon-background-color: var(--hg-primary);
+    --mat-stepper-header-edit-state-icon-background-color: var(--hg-primary);
+    --mdc-plain-tooltip-container-color: #1e293b;
+    --mdc-plain-tooltip-container-shape: 6px;
+    --mdc-plain-tooltip-supporting-text-size: 12px;
+    --mdc-snackbar-container-color: #1e293b;
+    --mdc-snackbar-container-shape: 10px;
+    --mdc-snackbar-supporting-text-size: 14px;
+    --mat-snack-bar-button-color: #7cc4fa;
+    --mat-badge-background-color: #ef4444;
+    --mat-badge-text-color: #ffffff;
+    --mat-badge-small-size-container-size: 16px;
+    --mat-badge-small-size-text-size: 10px;
+    --mat-progress-spinner-active-indicator-color: var(--hg-primary);
+    --mdc-circular-progress-active-indicator-color: var(--hg-primary);
+    --mdc-linear-progress-active-indicator-color: var(--hg-primary);
+    --mdc-checkbox-selected-icon-color: var(--hg-primary);
+    --mdc-checkbox-selected-focus-icon-color: var(--hg-primary);
+    --mdc-checkbox-selected-hover-icon-color: var(--hg-primary);
+    --mdc-radio-selected-icon-color: var(--hg-primary);
+    --mdc-switch-selected-track-color: var(--hg-primary);
+    --mat-divider-color: var(--hg-border);
+}
+
+/* =====================================================================
+   Base
+   ===================================================================== */
+html, body { height: 100%; }
+
+body {
+    margin: 0;
+    font-family: var(--hg-font);
+    font-feature-settings: 'cv11', 'ss01';
+    background: var(--hg-bg);
+    color: var(--hg-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--hg-font);
+    color: var(--hg-text);
+    letter-spacing: -0.015em;
+    font-weight: 650;
+}
+
+a { text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+::selection { background: var(--hg-primary-soft-2); }
+
+* { scrollbar-width: thin; scrollbar-color: #c5cfdb transparent; }
+
+.text-muted { color: var(--hg-text-3) !important; }
+.text-primary { color: var(--hg-primary) !important; }
+.bg-light { background-color: var(--hg-bg) !important; }
+
+/* =====================================================================
+   Componenti Material — rifiniture
+   ===================================================================== */
+.mat-mdc-card {
+    border: 1px solid var(--hg-border);
+    box-shadow: var(--hg-shadow-xs) !important;
+    transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+}
+
+.mat-mdc-card-header { padding: 20px 20px 0 !important; }
+.mat-mdc-card-content:last-child { padding-bottom: 20px; }
+.mat-mdc-card-title { letter-spacing: -0.01em; }
+.mat-mdc-card-title > mat-icon, .mat-mdc-card-header mat-icon { color: var(--hg-primary); }
+
+.mat-mdc-button-base { letter-spacing: 0 !important; font-weight: 600 !important; }
+.mat-mdc-unelevated-button:not(:disabled) { box-shadow: 0 1px 2px rgba(10, 102, 168, .25); }
+.mat-mdc-outlined-button:not(:disabled) { background: var(--hg-surface); }
+
+.mat-mdc-dialog-container .mat-mdc-dialog-surface { box-shadow: var(--hg-shadow-lg); }
+.cdk-overlay-dark-backdrop { background: rgba(15, 27, 45, .45); backdrop-filter: blur(2px); }
+
+.mat-mdc-menu-panel {
+    border: 1px solid var(--hg-border);
+    box-shadow: var(--hg-shadow-lg) !important;
+}
+
+.mat-mdc-select-panel, .mat-mdc-autocomplete-panel {
+    border-radius: 10px !important;
+    border: 1px solid var(--hg-border);
+    box-shadow: var(--hg-shadow-lg) !important;
+}
+
+/* Tabelle Material */
+.mat-mdc-table {
+    background: transparent;
+
+    .mat-mdc-header-row { background: var(--hg-surface-2); }
+
+    .mat-mdc-header-cell {
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        border-bottom-color: var(--hg-border);
+    }
+
+    .mat-mdc-row { transition: background-color .15s ease; }
+    .mat-mdc-row:hover { background: #f6f9fc; }
+    .mat-mdc-row:last-child .mat-mdc-cell { border-bottom: none; }
+}
+
+.mat-mdc-paginator { border-top: 1px solid var(--hg-border); }
+
+.mat-mdc-tab-header { border-bottom: 1px solid var(--hg-border); }
+
+.mat-expansion-panel {
+    border: 1px solid var(--hg-border);
+    box-shadow: none !important;
+}
+
+/* =====================================================================
+   Bootstrap — armonizzazione
+   ===================================================================== */
+.card {
+    border: 1px solid var(--hg-border);
+    border-radius: var(--hg-radius);
+    box-shadow: var(--hg-shadow-xs);
+}
+
+.btn { border-radius: 10px; font-weight: 600; }
+.btn-primary {
+    --bs-btn-bg: var(--hg-primary);
+    --bs-btn-border-color: var(--hg-primary);
+    --bs-btn-hover-bg: var(--hg-primary-hover);
+    --bs-btn-hover-border-color: var(--hg-primary-hover);
+    --bs-btn-active-bg: var(--hg-primary-strong);
+    --bs-btn-active-border-color: var(--hg-primary-strong);
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--hg-primary);
+    --bs-btn-border-color: var(--hg-primary);
+    --bs-btn-hover-bg: var(--hg-primary);
+    --bs-btn-hover-border-color: var(--hg-primary);
+}
+.badge { font-weight: 600; letter-spacing: .01em; }
+.alert { border-radius: var(--hg-radius); }
+.bg-primary { background-color: var(--hg-primary) !important; }
+
+/* =====================================================================
+   Pattern condivisi H-Gate
+   ===================================================================== */
+
+/* Hero delle dashboard: stesso stile per tutti i ruoli */
+.hg-hero {
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    padding: 28px 32px;
+    border-radius: var(--hg-radius-lg);
+    background:
+        radial-gradient(1200px 300px at 100% 0%, rgba(20, 184, 166, .28), transparent 60%),
+        radial-gradient(600px 240px at 0% 100%, rgba(125, 211, 252, .18), transparent 60%),
+        linear-gradient(135deg, #0b3f66 0%, #0a5d97 55%, #0a66a8 100%);
+    box-shadow: var(--hg-shadow-md);
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px);
+        background-size: 18px 18px;
+        mask-image: linear-gradient(90deg, transparent 40%, #000);
+        pointer-events: none;
+    }
+
+    > * { position: relative; z-index: 1; }
+
+    h1, h2, h3 { color: #fff; font-weight: 700; letter-spacing: -0.02em; }
+    h1 { font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2rem); }
+    p { color: rgba(255, 255, 255, .82); }
+
+    .mat-mdc-button-base:not(.mat-mdc-icon-button) {
+        --mdc-protected-button-container-color: #fff;
+        --mdc-protected-button-label-text-color: var(--hg-primary-strong);
+        --mdc-filled-button-container-color: #fff;
+        --mdc-filled-button-label-text-color: var(--hg-primary-strong);
+        --mdc-outlined-button-label-text-color: #fff;
+        --mdc-outlined-button-outline-color: rgba(255, 255, 255, .5);
+        --mdc-text-button-label-text-color: #fff;
+    }
+
+    .mat-mdc-outlined-button:not(:disabled) { background: rgba(255, 255, 255, .08); }
+
+    /* Campi (es. selezione minore) su sfondo scuro */
+    .mat-mdc-form-field {
+        --mdc-outlined-text-field-outline-color: rgba(255, 255, 255, .45);
+        --mdc-outlined-text-field-hover-outline-color: rgba(255, 255, 255, .8);
+        --mdc-outlined-text-field-focus-outline-color: #fff;
+        --mdc-outlined-text-field-label-text-color: rgba(255, 255, 255, .75);
+        --mdc-outlined-text-field-focus-label-text-color: #fff;
+        --mdc-outlined-text-field-input-text-color: #fff;
+        --mat-select-enabled-trigger-text-color: #fff;
+        --mat-select-enabled-arrow-color: rgba(255, 255, 255, .8);
+        --mat-select-focused-arrow-color: #fff;
+        --mat-form-field-subscript-text-color: rgba(255, 255, 255, .75);
+    }
+
+    @media (max-width: 600px) { padding: 22px 20px; }
+}
+
+/* Card statistiche (KPI) delle dashboard */
+.mat-mdc-card.stat-card {
+    --stat-color: var(--hg-primary);
+    --stat-soft: var(--hg-primary-soft);
+    height: 100%;
+    cursor: default;
+
+    &:hover { box-shadow: var(--hg-shadow-md) !important; border-color: var(--hg-border-strong); }
+
+    &.stat-success { --stat-color: #0f9f6e; --stat-soft: #e3f6ee; }
+    &.stat-warning { --stat-color: #d97706; --stat-soft: #fdf1df; }
+    &.stat-danger  { --stat-color: #dc2626; --stat-soft: #fdeaea; }
+    &.stat-info    { --stat-color: #7c3aed; --stat-soft: #f0eafd; }
+
+    .mat-mdc-card-content { padding: 20px !important; }
+
+    .stat-title {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--hg-text-2);
+    }
+
+    .stat-value {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: var(--hg-text);
+        line-height: 1.2;
+    }
+
+    .stat-change { font-size: 12.5px; font-weight: 500; color: var(--hg-text-3); }
+    .stat-change.positive { color: #0f9f6e; }
+
+    .stat-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--stat-soft);
+
+        mat-icon {
+            font-size: 22px;
+            width: 22px;
+            height: 22px;
+            opacity: 1;
+            color: var(--stat-color);
+        }
+    }
+}
+
+/* Icona quadrata dei titoli di pagina */
+.hg-header-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--hg-primary-soft) !important;
+    color: var(--hg-primary);
+
+    mat-icon { color: var(--hg-primary) !important; }
+}
+
+/* Stato vuoto */
+.hg-empty {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--hg-text-3);
+
+    mat-icon { font-size: 40px; width: 40px; height: 40px; opacity: .6; }
+}
+
+/* Animazione d'ingresso per le pagine */
+@keyframes hg-fade-up {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+}
+
+.hg-page-enter > * { animation: hg-fade-up .28s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* =====================================================================
+   Stampa: niente navigazione, solo il contenuto della pagina
+   ===================================================================== */
+@page {
+    size: A4;
+    margin: 16mm 15mm 18mm;
+
+    @bottom-left {
+        content: "H-Gate · Documento riservato — dati sanitari";
+        font-family: 'Inter', sans-serif;
+        font-size: 7pt;
+        color: #6b7280;
+    }
+
+    @bottom-right {
+        content: "Pagina " counter(page) " di " counter(pages);
+        font-family: 'Inter', sans-serif;
+        font-size: 7pt;
+        color: #6b7280;
+    }
+}
+
+@media print {
+    html, body { background: #fff !important; }
+    .sidebar, .sidebar-backdrop, .topbar, .cdk-overlay-container { display: none !important; }
+    .main-area { margin-left: 0 !important; display: block !important; min-height: 0 !important; }
+    .content { padding: 0 !important; max-width: none !important; animation: none !important; }
+    .app-shell { background: #fff !important; min-height: 0 !important; }
 }

@@ -1,40 +1,174 @@
-// OTP Input styling
-.otp-input {
-    border: 2px solid #dee2e6;
-    border-radius: 8px;
-    transition: all 0.2s;
+:host { display: block; }
 
-    &:focus {
-        border-color: #006699;
-        box-shadow: 0 0 0 0.2rem rgba(0, 102, 153, 0.25);
-        outline: none;
+.auth-page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(420px, 46%) 1fr;
+    background: var(--hg-surface);
+}
+
+/* ---------- Pannello brand ---------- */
+.auth-brand.hg-hero {
+    border-radius: 0;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 56px;
+}
+
+.brand-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .25);
+}
+
+.brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.brand-copy {
+    max-width: 480px;
+
+    h1 {
+        font-size: clamp(1.8rem, 1.2rem + 1.6vw, 2.6rem) !important;
+        line-height: 1.15;
+        margin-bottom: 16px;
     }
 
-    &.ng-invalid.ng-touched {
-        border-color: #dc3545;
+    p { font-size: 16px; line-height: 1.6; margin-bottom: 32px; }
+}
+
+.brand-points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+
+    li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 15px;
+        color: rgba(255, 255, 255, .92);
+    }
+
+    mat-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, .12);
+        border: 1px solid rgba(255, 255, 255, .18);
+        flex-shrink: 0;
     }
 }
 
-// Card animations
-.card {
-    animation: fadeIn 0.3s ease-in-out;
+.brand-foot { font-size: 13px; color: rgba(255, 255, 255, .6); }
+
+/* ---------- Form ---------- */
+.auth-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    animation: hg-fade-up .3s ease-out both;
+
+    h2 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        margin: 0 0 6px;
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    .subtitle {
+        color: var(--hg-text-2);
+        margin: 0 0 28px;
+    }
+
+    mat-form-field { margin-bottom: 4px; }
+}
+
+.mobile-mark { display: none; }
+
+.field-icon {
+    color: var(--hg-text-3);
+    margin: 0 4px 0 12px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.submit-btn {
+    height: 46px !important;
+    font-size: 15px !important;
+    margin-top: 8px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 20px;
+    color: var(--hg-text-3);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+
+    &::before, &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--hg-border);
     }
 }
 
-// Loading button
-.spinner-border-sm {
-    width: 1rem;
-    height: 1rem;
-    border-width: 0.15em;
+.register-hint {
+    text-align: center;
+    color: var(--hg-text-2);
+    margin: 0;
+
+    a { font-weight: 600; margin-left: 4px; }
+}
+
+.spinner-border-sm { width: 1rem; height: 1rem; border-width: .15em; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+    .auth-page { grid-template-columns: 1fr; background: var(--hg-bg); }
+    .auth-brand { display: none !important; }
+
+    .auth-card {
+        background: var(--hg-surface);
+        border: 1px solid var(--hg-border);
+        border-radius: var(--hg-radius-lg);
+        box-shadow: var(--hg-shadow-md);
+        padding: 32px 24px;
+    }
+
+    .mobile-mark {
+        display: block;
+        width: 48px;
+        height: 48px;
+        border-radius: 13px;
+        margin-bottom: 20px;
+    }
 }

@@ -4,71 +4,10 @@
     margin: 0 auto;
 }
 
-.welcome-card-medico {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    padding: 32px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-}
-
-.welcome-card-medico h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.stat-card {
-    height: 100%;
-    transition: transform 0.3s, box-shadow 0.3s;
-    cursor: pointer;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-.stat-title {
-    font-size: 0.875rem;
-    color: #64748b;
-    font-weight: 600;
-    margin: 0;
-}
-
-.stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.stat-icon mat-icon {
-    font-size: 3rem;
-    width: 3rem;
-    height: 3rem;
-    opacity: 0.2;
-}
-
 .stat-change {
     font-size: 0.875rem;
     color: #64748b;
     font-weight: 600;
-}
-
-.stat-primary {
-    border-left: 4px solid #10b981;
-}
-
-.stat-success {
-    border-left: 4px solid #3b82f6;
-}
-
-.stat-warning {
-    border-left: 4px solid #f59e0b;
-}
-
-.stat-info {
-    border-left: 4px solid #8b5cf6;
 }
 
 mat-card-header {

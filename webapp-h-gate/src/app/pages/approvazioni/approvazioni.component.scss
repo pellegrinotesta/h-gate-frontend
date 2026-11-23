@@ -40,11 +40,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1565c0, #42a5f5);
+    background: var(--hg-primary-soft);
     flex-shrink: 0;
 
     mat-icon {
-        color: white;
+        color: var(--hg-primary);
     }
 }
 

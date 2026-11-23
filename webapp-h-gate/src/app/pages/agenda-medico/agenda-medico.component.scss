@@ -1,6 +1,6 @@
 /* Stats Cards */
 .stat-card-agenda {
-    border-left: 4px solid #10b981;
+    border-left: 4px solid var(--hg-primary);
     transition: transform 0.2s;
 
     &:hover {
@@ -20,12 +20,12 @@
     min-height: 300px;
 
     &.oggi {
-        border: 2px solid #10b981;
+        border: 2px solid var(--hg-primary);
     }
 }
 
 .oggi-numero {
-    background: #10b981;
+    background: var(--hg-primary);
     color: white;
     width: 40px;
     height: 40px;
@@ -36,7 +36,7 @@
 }
 
 .appuntamento-mini {
-    border-left: 3px solid #10b981;
+    border-left: 3px solid var(--hg-primary);
     cursor: pointer;
     transition: all 0.2s;
 
@@ -70,7 +70,7 @@
 }
 
 .oggi .giorno-mese-numero {
-    background: #10b981;
+    background: var(--hg-primary);
     color: white;
 }
 
@@ -78,7 +78,7 @@
     position: absolute;
     top: 4px;
     right: 4px;
-    background: #10b981;
+    background: var(--hg-primary);
     color: white;
     border-radius: 10px;
     padding: 2px 6px;
@@ -96,7 +96,7 @@
 /* Vista Giorno */
 .orario-grande {
     font-size: 1.5rem;
-    color: #10b981;
+    color: var(--hg-primary);
     background: #f0fdf4;
     border-radius: 8px;
 }
@@ -107,13 +107,13 @@
     transition: border-color 0.3s;
 
     &:hover {
-        border-color: #10b981;
+        border-color: var(--hg-primary);
     }
 }
 
 /* Chip stati */
 .chip-stato-confermato {
-    background: #d1fae5 !important;
+    background: var(--hg-primary-soft) !important;
     color: #065f46 !important;
 }
 

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="H-Gate">
+  <defs>
+    <linearGradient id="hg-g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0b4f86"/>
+      <stop offset=".55" stop-color="#0a66a8"/>
+      <stop offset="1" stop-color="#14b8a6"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#hg-g)"/>
+  <path d="M18 50V29a14 14 0 0 1 28 0v21" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M18 39h4.5M41.5 39h4.5" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="32" cy="34" r="3.6" fill="#fff"/>
+  <path d="M27 50a5 6.5 0 0 1 10 0" fill="#fff"/>
+</svg>

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,12 +6,9 @@ import { SharedModule } from '../../shared/shared.module';
 import { ITEMS_MENU } from '../../shared/constants/items-menu.constant';
 import { MenuItem } from '../../shared/models/menu-item.model';
 import { MatButtonModule } from '@angular/material/button';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthFacadeService } from '../../shared/services/auth/auth-facade.service';
-import { Paziente } from '../../models/paziente.model';
-import { MinoriStateService } from '../../shared/services/minore.service';
-import { RoutesEnum } from '../../shared/enums/routes.enum';
 
 @Component({
   selector: 'app-menu',
@@ -19,6 +16,7 @@ import { RoutesEnum } from '../../shared/enums/routes.enum';
   imports: [
     SharedModule,
     RouterLink,
+    RouterLinkActive,
     MatToolbarModule,
     MatButtonModule,
     MatTooltipModule,
@@ -31,6 +29,9 @@ import { RoutesEnum } from '../../shared/enums/routes.enum';
 export class MenuComponent {
 
   private authFacade = inject(AuthFacadeService);
+
+  /** Emesso al click su una voce (serve a chiudere la sidebar su mobile) */
+  @Output() navigate = new EventEmitter<void>();
 
   menuItems: MenuItem[] = [];
   isTutore = false;

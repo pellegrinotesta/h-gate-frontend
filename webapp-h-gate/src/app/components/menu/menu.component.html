@@ -1,12 +1,10 @@
-<div class="menu-wrapper">
-    <mat-toolbar color="primary" style="background-color: #006699;">
-
-        @for(item of menuItems; track item.title) {
-        <button mat-button [routerLink]="item.link" matTooltip="{{ item.tooltip }}" matTooltipPosition="below"
-            class="menu-item-link" style="color: #fff;">
-            {{ item.title }}
-        </button>
-        }
-
-    </mat-toolbar>
-</div>
+<nav class="side-nav" aria-label="Navigazione principale">
+    <div class="nav-label">Menu</div>
+    @for(item of menuItems; track item.link) {
+    <a class="nav-item" [routerLink]="item.link" routerLinkActive="active" [matTooltip]="item.tooltip ?? ''"
+        matTooltipPosition="right" [matTooltipShowDelay]="600" (click)="navigate.emit()">
+        <mat-icon class="material-icons-outlined">{{ item.icon || 'chevron_right' }}</mat-icon>
+        <span>{{ item.title }}</span>
+    </a>
+    }
+</nav>

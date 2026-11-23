@@ -40,6 +40,7 @@ export class LoginComponent extends FormBasePageComponent {
   otpForm!: FormGroup;
   showOtpForm = false;
   hidePassword = true;
+  readonly year = new Date().getFullYear();
 
   otpError = '';
   maskedEmail = '';
