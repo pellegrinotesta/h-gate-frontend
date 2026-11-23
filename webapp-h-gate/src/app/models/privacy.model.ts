@@ -83,6 +83,7 @@ export const AZIONI_LEGGIBILI: Record<AzioneAudit, string> = {
 
 export const RISORSE_LEGGIBILI: Record<string, string> = {
   PAZIENTE: 'Scheda paziente',
+  CARTELLA_CLINICA: 'Cartella clinica (PDF)',
   REFERTO: 'Referto',
   PRENOTAZIONE: 'Prenotazione',
   ALLEGATO: 'Allegato',

@@ -1,7 +1,7 @@
 @if(isLoading) {
 <app-loader></app-loader>
 } @else {
-<div class="cartella-container screen-only">
+<div class="cartella-container">
 
     <!-- Toolbar -->
     <div class="cartella-toolbar no-print">
@@ -13,9 +13,14 @@
             <span class="toolbar-name">{{ paziente() ? paziente()!.nome + ' ' + paziente()!.cognome : 'Paziente' }}</span>
         </div>
         <span class="toolbar-spacer"></span>
-        <button mat-stroked-button (click)="stampa()">
-            <mat-icon class="material-icons-outlined">print</mat-icon>
-            Stampa
+        <button mat-flat-button color="primary" (click)="scaricaPdf()" [disabled]="isExporting() || !paziente()">
+            @if(isExporting()) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+            Generazione…
+            } @else {
+            <mat-icon class="material-icons-outlined">picture_as_pdf</mat-icon>
+            Scarica PDF
+            }
         </button>
     </div>
 
@@ -338,228 +343,4 @@
     </div>
 </div>
 
-<!-- =====================================================================
-     DOCUMENTO DI STAMPA (A4) — visibile solo in stampa
-     ===================================================================== -->
-@if(paziente()) {
-<article class="print-doc" aria-hidden="true">
-
-    <!-- Carta intestata -->
-    <header class="pd-letterhead">
-        <div class="pd-brand">
-            <img src="assets/logo-mark.svg" alt="" class="pd-logo">
-            <div>
-                <div class="pd-brand-name">H-Gate</div>
-                <div class="pd-brand-sub">Servizio di Neuropsichiatria dell'Infanzia e dell'Adolescenza</div>
-            </div>
-        </div>
-        <div class="pd-docinfo">
-            <div class="pd-doctype">Cartella clinica</div>
-            <table class="pd-meta">
-                <tr><th>N. cartella</th><td>{{ numeroCartella }}</td></tr>
-                <tr><th>Data emissione</th><td>{{ today | date: 'dd/MM/yyyy, HH:mm' }}</td></tr>
-                @if(stampatoDa) {
-                <tr><th>Emessa da</th><td>{{ stampatoDa }}</td></tr>
-                }
-            </table>
-        </div>
-    </header>
-
-    <div class="pd-confidential">
-        Documento riservato contenente dati relativi alla salute (art. 9 Reg. UE 2016/679).
-        Ne è vietata la diffusione a soggetti non autorizzati.
-    </div>
-
-    <!-- 1. Paziente -->
-    <section class="pd-section">
-        <h2 class="pd-h2"><span class="pd-num">1</span>Dati del paziente</h2>
-        <table class="pd-grid">
-            <tr>
-                <th>Cognome e nome</th>
-                <td><strong>{{ paziente()!.cognome | uppercase }} {{ paziente()!.nome }}</strong></td>
-                <th>Codice fiscale</th>
-                <td class="pd-mono">{{ paziente()!.codiceFiscale }}</td>
-            </tr>
-            <tr>
-                <th>Data di nascita</th>
-                <td>{{ paziente()!.dataNascita | date: 'dd/MM/yyyy' }} ({{ getEta(paziente()!.dataNascita) }} anni)</td>
-                <th>Sesso</th>
-                <td>{{ sessoEsteso(paziente()!.sesso) }}</td>
-            </tr>
-            <tr>
-                <th>Residenza</th>
-                <td>{{ paziente()!.citta || '—' }}</td>
-                <th>Gruppo sanguigno</th>
-                <td>{{ paziente()!.gruppoSanguigno || '—' }}</td>
-            </tr>
-            <tr>
-                <th>Altezza</th>
-                <td>{{ paziente()!.altezzaCm ? paziente()!.altezzaCm + ' cm' : '—' }}</td>
-                <th>Peso</th>
-                <td>{{ paziente()!.pesoKg ? (paziente()!.pesoKg | number: '1.0-1') + ' kg' : '—' }}</td>
-            </tr>
-            <tr>
-                <th>Allergie</th>
-                <td colspan="3" [class.pd-alert]="haValore(paziente()!.allergie)">{{ paziente()!.allergie || 'Nessuna nota' }}</td>
-            </tr>
-            <tr>
-                <th>Patologie croniche</th>
-                <td colspan="3">{{ paziente()!.patologieCroniche || 'Nessuna nota' }}</td>
-            </tr>
-            @if(paziente()!.noteMediche) {
-            <tr>
-                <th>Note mediche</th>
-                <td colspan="3">{{ paziente()!.noteMediche }}</td>
-            </tr>
-            }
-        </table>
-    </section>
-
-    <!-- 2. Referti -->
-    <section class="pd-section">
-        <h2 class="pd-h2"><span class="pd-num">2</span>Referti medici <span class="pd-count">({{ referti().length }})</span></h2>
-        @if(referti().length === 0) {
-        <p class="pd-empty">Nessun referto registrato.</p>
-        }
-        @for(r of referti(); track r.id; let i = $index) {
-        <div class="pd-record">
-            <div class="pd-record-head">
-                <div>
-                    <span class="pd-record-idx">2.{{ i + 1 }}</span>
-                    <span class="pd-record-title">{{ r.titolo }}</span>
-                </div>
-                <span class="pd-record-date">{{ r.dataEmissione | date: 'dd/MM/yyyy' }}</span>
-            </div>
-            <div class="pd-record-sub">
-                Tipo: {{ r.tipoReferto || '—' }}
-                @if(r.medico) { · Specialista: {{ r.medico.nome }} {{ r.medico.cognome }}@if(r.medico.specializzazione) { ({{ r.medico.specializzazione }})} }
-                · {{ r.isFirmato ? 'Firmato digitalmente' + (r.dataFirma ? ' il ' + (r.dataFirma | date: 'dd/MM/yyyy') : '') : 'Non firmato' }}
-            </div>
-            <dl class="pd-fields">
-                @if(r.anamnesi) { <dt>Anamnesi</dt><dd>{{ r.anamnesi }}</dd> }
-                @if(r.esameObiettivo) { <dt>Esame obiettivo</dt><dd>{{ r.esameObiettivo }}</dd> }
-                @if(parametriVitaliTesto(r)) { <dt>Parametri vitali</dt><dd>{{ parametriVitaliTesto(r) }}</dd> }
-                <dt>Diagnosi</dt><dd class="pd-strong">{{ r.diagnosi || '—' }}</dd>
-                @if(r.terapia) { <dt>Terapia</dt><dd>{{ r.terapia }}</dd> }
-                @if(r.prescrizioni) { <dt>Prescrizioni</dt><dd>{{ r.prescrizioni }}</dd> }
-                @if(r.esamiRichiesti) { <dt>Esami richiesti</dt><dd>{{ r.esamiRichiesti }}</dd> }
-                @if(r.prossimoControllo) { <dt>Prossimo controllo</dt><dd>{{ r.prossimoControllo | date: 'dd/MM/yyyy' }}</dd> }
-                @if(r.noteMediche) { <dt>Note</dt><dd>{{ r.noteMediche }}</dd> }
-            </dl>
-        </div>
-        }
-    </section>
-
-    <!-- 3. Valutazioni -->
-    <section class="pd-section">
-        <h2 class="pd-h2"><span class="pd-num">3</span>Valutazioni psicologiche <span class="pd-count">({{ valutazioni().length }})</span></h2>
-        @if(valutazioni().length === 0) {
-        <p class="pd-empty">Nessuna valutazione registrata.</p>
-        }
-        @for(v of valutazioni(); track v.id; let i = $index) {
-        <div class="pd-record">
-            <div class="pd-record-head">
-                <div>
-                    <span class="pd-record-idx">3.{{ i + 1 }}</span>
-                    <span class="pd-record-title">{{ v.tipoTest }}</span>
-                </div>
-                <span class="pd-record-date">{{ v.dataValutazione | date: 'dd/MM/yyyy' }}</span>
-            </div>
-            @if(v.medico) {
-            <div class="pd-record-sub">Somministrata da: {{ v.medico.nome }} {{ v.medico.cognome }}</div>
-            }
-            @if(v.punteggi) {
-            <table class="pd-table pd-table--compact">
-                <thead><tr><th>Scala / indice</th><th class="pd-right">Punteggio</th></tr></thead>
-                <tbody>
-                    @for(e of $any(v.punteggi) | keyvalue; track e.key) {
-                    <tr><td>{{ e.key }}</td><td class="pd-right">{{ e.value }}</td></tr>
-                    }
-                </tbody>
-            </table>
-            }
-            @if(v.interpretazione) {
-            <dl class="pd-fields"><dt>Interpretazione</dt><dd>{{ v.interpretazione }}</dd></dl>
-            }
-        </div>
-        }
-    </section>
-
-    <!-- 4. Percorsi -->
-    <section class="pd-section">
-        <h2 class="pd-h2"><span class="pd-num">4</span>Percorsi terapeutici <span class="pd-count">({{ percorsi().length }})</span></h2>
-        @if(percorsi().length === 0) {
-        <p class="pd-empty">Nessun percorso terapeutico registrato.</p>
-        } @else {
-        <table class="pd-table">
-            <thead>
-                <tr>
-                    <th>Percorso</th>
-                    <th>Specialista</th>
-                    <th>Inizio</th>
-                    <th>Fine prevista</th>
-                    <th class="pd-right">Sedute</th>
-                    <th>Stato</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for(p of percorsi(); track p.id) {
-                <tr>
-                    <td>
-                        <strong>{{ p.titolo }}</strong>
-                        @if(p.obiettivi) { <div class="pd-cell-note">Obiettivi: {{ p.obiettivi }}</div> }
-                    </td>
-                    <td>{{ p.medico ? p.medico.nome + ' ' + p.medico.cognome : '—' }}</td>
-                    <td class="pd-nowrap">{{ p.dataInizio | date: 'dd/MM/yyyy' }}</td>
-                    <td class="pd-nowrap">{{ p.dataFinePrevista ? (p.dataFinePrevista | date: 'dd/MM/yyyy') : '—' }}</td>
-                    <td class="pd-right pd-nowrap">{{ p.numeroSeduteEffettuate ?? 0 }} / {{ p.numeroSedutePreviste ?? '—' }}</td>
-                    <td class="pd-nowrap">{{ p.stato | titlecase }}</td>
-                </tr>
-                }
-            </tbody>
-        </table>
-        }
-    </section>
-
-    <!-- 5. Allegati -->
-    <section class="pd-section">
-        <h2 class="pd-h2"><span class="pd-num">5</span>Documentazione allegata <span class="pd-count">({{ allegati().length }})</span></h2>
-        @if(allegati().length === 0) {
-        <p class="pd-empty">Nessun documento allegato.</p>
-        } @else {
-        <table class="pd-table">
-            <thead><tr><th>Documento</th><th>Tipo</th><th class="pd-right">Dimensione</th><th>Caricato il</th></tr></thead>
-            <tbody>
-                @for(a of allegati(); track a.id) {
-                <tr>
-                    <td>{{ a.nomeFile }}@if(a.descrizione) { <div class="pd-cell-note">{{ a.descrizione }}</div> }</td>
-                    <td>{{ a.tipoFile }}</td>
-                    <td class="pd-right pd-nowrap">{{ formatDimensione(a.sizeBytes) }}</td>
-                    <td class="pd-nowrap">{{ a.uploadedAt | date: 'dd/MM/yyyy' }}</td>
-                </tr>
-                }
-            </tbody>
-        </table>
-        }
-    </section>
-
-    <!-- Chiusura e firma -->
-    <section class="pd-closing">
-        <p class="pd-disclaimer">
-            Documento generato dal sistema H-Gate il {{ today | date: 'dd/MM/yyyy' }} alle {{ today | date: 'HH:mm' }}.
-            Le informazioni riportate corrispondono a quanto registrato nella cartella clinica elettronica alla data di emissione.
-        </p>
-        <div class="pd-signatures">
-            <div class="pd-sign">
-                <div class="pd-sign-line"></div>
-                <span>Luogo e data</span>
-            </div>
-            <div class="pd-sign">
-                <div class="pd-sign-line"></div>
-                <span>Timbro e firma del medico</span>
-            </div>
-        </div>
-    </section>
-</article>
-}
 }

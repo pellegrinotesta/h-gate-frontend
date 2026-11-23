@@ -76,8 +76,6 @@ export class CartellaClinicaComponent extends BasePageComponent {
   percorsoFields: FormItem[] = FormConfigs.FORM_PERCORSO_TERAPEUTICO_FIELDS;
 
   userRole = '';
-  /** Utente che genera la stampa (email dal token), riportato sul documento */
-  stampatoDa = '';
   isMedico = false;
 
   constructor() {
@@ -87,7 +85,6 @@ export class CartellaClinicaComponent extends BasePageComponent {
       const decoded = jwtDecode<AuthenticatedUser>(user.authentication);
       this.userRole = decoded.authorities[0] || '';
       this.isMedico = this.userRole === 'MEDICO';
-      this.stampatoDa = decoded.sub ?? '';
     }
   }
 
@@ -121,38 +118,6 @@ export class CartellaClinicaComponent extends BasePageComponent {
         this.isLoading = false;
       }
     });
-  }
-
-  /** Numero di cartella a 6 cifre per l'intestazione di stampa */
-  get numeroCartella(): string {
-    return String(this.paziente()?.id ?? 0).padStart(6, '0');
-  }
-
-  sessoEsteso(sesso: string | null | undefined): string {
-    if (sesso === 'M') return 'Maschile';
-    if (sesso === 'F') return 'Femminile';
-    return sesso || '—';
-  }
-
-  formatDimensione(bytes: number | null | undefined): string {
-    if (!bytes) return '—';
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-  }
-
-  /** Parametri vitali del referto in forma leggibile, solo quelli presenti */
-  parametriVitaliTesto(r: Referto): string {
-    const p = r.parametriVitali;
-    if (!p) return '';
-    const parti: string[] = [];
-    if (p.pressioneSistolica && p.pressioneDiastolica) parti.push(`PA ${p.pressioneSistolica}/${p.pressioneDiastolica} mmHg`);
-    if (p.frequenzaCardiaca) parti.push(`FC ${p.frequenzaCardiaca} bpm`);
-    if (p.temperatura) parti.push(`T ${p.temperatura} °C`);
-    if (p.saturazione) parti.push(`SpO₂ ${p.saturazione}%`);
-    if (p.peso) parti.push(`Peso ${p.peso} kg`);
-    if (p.altezza) parti.push(`Altezza ${p.altezza} cm`);
-    return parti.join(' · ');
   }
 
   /** Valore di ripiego per una sezione che il backend non restituisce (es. accesso negato). */
@@ -327,8 +292,28 @@ export class CartellaClinicaComponent extends BasePageComponent {
     this.router.navigate([route]);
   }
 
-  stampa(): void {
-    window.print();
+  /** Scarica il PDF ufficiale della cartella, generato dal backend (e registrato nel registro accessi). */
+  scaricaPdf(): void {
+    const id = this.paziente()?.id;
+    if (!id || this.isExporting()) return;
+    this.isExporting.set(true);
+    this.pazientiService.downloadCartellaClinica(id).subscribe({
+      next: ({ blob, nomeFile }) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = nomeFile;
+        link.click();
+        window.URL.revokeObjectURL(url);
+        link.remove();
+        this.isExporting.set(false);
+      },
+      error: (err) => {
+        console.error('Errore nella generazione del PDF:', err);
+        this.snackBar.openSnackBar(errorMessage(err, 'Impossibile generare il PDF della cartella clinica'), 'Chiudi');
+        this.isExporting.set(false);
+      }
+    });
   }
 
   tornaIndietro(): void {
